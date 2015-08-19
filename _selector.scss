@@ -1,0 +1,80 @@
+.selector {
+  position: relative;
+}
+
+.selector-button {
+  position: absolute;
+  top: 0;
+
+  width: $selectorButtonSize;
+  height: 100%;
+
+  font-size: 28px;
+  color: $lightTextSecondary;
+
+  background-color: $primary900;
+  @include box-shadow(0px 0 2px 0px $boxShadow);
+
+  cursor: pointer;
+}
+
+.selector-button:hover {
+  color: $lightTextPrimary;
+  @include box-shadow(0px 0 4px 1px $boxShadow);
+}
+
+.selector-button:active {
+  @include box-shadow(0px 0 2px 0px $boxShadow);
+}
+
+.selector-left {
+  left: 0;
+}
+
+.selector-content {
+  position: absolute;
+  top: 0;
+  left: $selectorButtonSize;
+
+  width: calc(100% - 50px); // update if $selectorButtonSize changes
+  height: 100%;
+}
+
+.selector-right {
+  right: 0;
+}
+
+#monster-selector {
+  position: relative;
+  height: 55px;
+}
+
+#monster-name {
+  line-height: 30px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#monster-selector.first {
+  .selector-left {
+    @include box-shadow(none);
+
+    cursor: default;
+
+    .fa {
+      display: none;
+    }
+  }
+}
+
+#monster-selector.last {
+  .selector-right {
+    @include box-shadow(none);
+
+    cursor: default;
+
+    .fa {
+      display: none;
+    }
+  }
+}

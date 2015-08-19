@@ -1,0 +1,69 @@
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: calc(100% - 25px); // update if $dropdownButtonSize changes
+
+  background-color: $primary700;
+
+  @include transition(height 200ms ease, box-shadow 200ms ease);
+}
+
+.dropdown-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: $dropdownButtonSize;
+  height: 100%;
+
+  color: $lightTextSecondary;
+
+  background-color: $primary500;
+  @include box-shadow(0px 7px 8px -8px $boxShadow inset, 0px 1px 4px 1px $boxShadow);
+
+  cursor: pointer;
+}
+
+.dropdown-button:hover {
+  color: $lightTextPrimary;
+
+  //background-color: $primary700;
+  @include box-shadow(0px 1px 6px 2px $boxShadow);
+
+}
+
+.dropdown-button:active {
+  @include box-shadow(0px 7px 8px -8px $boxShadow inset, 0px 1px 4px 1px $boxShadow);
+
+}
+
+.rotate{
+  @include transition(all, .4s, linear);
+}
+
+.rotate.down{
+  -moz-transform:scaleY(-1);
+  -webkit-transform:scaleY(-1);
+  transform:scaleY(-1);
+}
+
+#chimes-bar-dropdown,
+#damage-bar-dropdown {
+  height: $dropdownButtonSize;
+
+  .dropdown-content {
+    height: $dropdownButtonSize;
+  }
+
+  .dropdown-button {
+    height: $dropdownButtonSize;
+
+    line-height: $dropdownButtonSize;
+  }
+}

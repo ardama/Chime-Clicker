@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html ng-app="GameApp">
+<head>
+<title>Chime Clicker</title>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/angular.js"></script>
+<script src="js/main.js"></script>
+<script src="js/game.js"></script>
+<script src="js/classes.js"></script>
+<link href="output.css" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Rajdhani:400,600' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+</head>
+<body ng-controller="GameController">
+<div id="wrapper">
+	<div id="header" class="container title">
+		Chime Clicker
+	</div>
+	<div id="main-container" class="container">
+		<div class="row">
+			<div id="column-1" class="column">
+				<div id="meeps-row" class="row">
+					<div id="meeps-container" class="container">
+						<div id="meeps-status" class="status">
+							<text>
+								{{game.prettyInt(game.meeps)}}
+							</text>
+							<text id="meeps" class="title">
+								Meep{{game.isPlural(game.meeps)}}
+							</text>
+						</div>
+						<div id="chimes-bar-dropdown" class="dropdown" data-collapsed="false">
+							<div class="dropdown-content">
+								<div id="chimes-bar" class="bar">
+									<div id="chimes-bar-fill" class="bar-fill" style="width:{{game.getMeepProgressPercent()}}%"></div>
+									<div id="chimes-rate">
+										CPS {{game.prettyInt(game.chimesRate)}}
+									</div>
+									<div id="chimes-progress">
+										{{game.prettyIntCompact(game.chimes)}}/{{game.prettyIntCompact(game.chimesPerMeepFloor)}}	chimes
+									</div>
+								</div>
+							</div>
+							<div class="dropdown-button">
+								<i class="fa fa-angle-up fa-lg rotate"></i>
+							</div>
+						</div>
+					</div>
+					<div id="chimes-container" class="container">
+						<div id="chimes-button" class="click-button button"></div>
+					</div>
+				</div>
+
+				<div id="monster-row" class="row">
+					<div id="damage-container" class="container">
+						<div id="damage-status" class="status">
+							<div id="monster-selector" class="selector {{game.isFirstMonster()}} {{game.isLastMonster()}}">
+								<div class="selector-button selector-left">
+									<i class="fa fa-angle-left"></i>
+								</div>
+								<div class="selector-content">
+									<div id="monster-name">
+										{{game.monster}}
+									</div>
+									<div id="monster-gold">
+										<i class="fa fa-database fa-sm icon-gold"></i>
+										{{game.prettyIntCompact(game.monsters[game.monster].gold)}}
+									</div>
+									<div id="monster-experience">
+										{{game.prettyIntCompact(game.monsters[game.monster].experience, 2)}} xp
+									</div>
+								</div>
+								<div class="selector-button selector-right">
+									<i class="fa fa-angle-right"></i>
+								</div>
+							</div>
+						</div>
+						<div id="damage-bar-dropdown" class="dropdown" data-collapsed="false">
+							<div class="dropdown-content">
+								<div id="damage-bar" class="bar">
+									<div id="damage-bar-fill" class="bar-fill" style="width:{{game.getMonsterHealthPercent()}}%"></div>
+									<div id="damage-rate">
+										DPS {{game.prettyInt(game.damageRate)}}
+									</div>
+									<div id="damage-progress">
+										{{game.prettyIntCompact(game.monsterHealth, 2)}} / {{game.prettyIntCompact(game.monsters[game.monster].health, 2)}} hp
+									</div>
+								</div>
+							</div>
+							<div class="dropdown-button">
+								<i class="fa fa-angle-up fa-lg rotate"></i>
+							</div>
+						</div>
+					</div>
+					<div id="monster-container" class="container">
+						<div id="monster-button" class="click-button button" style="background-image:url({{game.getMonsterImageUrl(game.monster)}})"></div>
+					</div>
+				</div>
+
+			</div>
+			<div id="column-2" class="column">
+				<div id="game-status">
+					<div id="game-status-wrapper">
+						<div id="game-status-top">
+						</div>
+						<div id="experience-bar" class="bar">
+							<div id="experience-bar-fill" class="bar-fill" style="width:{{game.experiencePercent}}%"></div>
+
+							<div id="experience-progress">
+								{{game.prettyInt(game.experience)}} / {{game.prettyInt(game.experienceNeeded)}} xp
+							</div>
+						</div>
+						<div id="level" class="title">
+							{{game.level}}
+						</div>
+					</div>
+				</div>
+				<div id="items-container">
+					<div class="item-divider"></div>
+					<div ng-repeat="item in game.itemsAvailable" class="item container">
+						<div class="item-header">
+							<text class="item-gold"><div class="gold-icon"></div></text>
+							<text class="item-cost">
+								{{game.prettyIntCompact(game.items[item].cost)}}
+							</text>
+							<text class="item-name">
+								{{item}}{{game.isPlural(game.items[item].count, item)}}
+							</text>
+							<text class="item-count">
+								{{game.prettyIntCompact(game.items[item].count)}}
+							</text>
+
+						</div>
+						<div class="item-left">
+							<div style="background-image:url({{game.getItemImageUrl(item)}})" class="item-image button" ng-click="game.buyItem(item)"></div>
+						</div>
+						<div class="item-middle">
+							<div class="item-stats">
+								<div class="item-stat {{game.items[item].isZero('discovery')}} discovery">Discovery</div>
+								<div class="item-stat {{game.items[item].isZero('swiftness')}} swiftness">Swiftness</div>
+								<div class="item-stat {{game.items[item].isZero('power')}} power">Power</div>
+								<div class="item-stat {{game.items[item].isZero('agility')}} agility">Agility</div>
+								<div class="item-stat {{game.items[item].isZero('income')}} income">Income</div>
+							</div>
+							<div class="item-stat-values">
+								<div class="item-stat-value {{game.items[item].isZero('discovery')}} discovery">
+									{{game.prettyIntCompact(game.items[item].discovery)}}
+								</div>
+								<div class="item-stat-value {{game.items[item].isZero('swiftness')}} swiftness">
+									{{game.prettyIntCompact(game.items[item].swiftness)}}
+								</div>
+								<div class="item-stat-value {{game.items[item].isZero('power')}} power">
+									{{game.prettyIntCompact(game.items[item].power)}}
+								</div>
+								<div class="item-stat-value {{game.items[item].isZero('agility')}} agility">
+									{{game.prettyIntCompact(game.items[item].agility)}}
+								</div>
+								<div class="item-stat-value {{game.items[item].isZero('income')}} income">
+									{{game.prettyIntCompact(game.items[item].income)}}
+								</div>
+							</div>
+						</div>
+
+						<div class="item-right">
+							<div class="item-upgrade-container">
+								<div ng-repeat="upgrade in game.items[item].upgrades" style="background-image:url({{game.getItemImageUrl(upgrade)}})" class="item-upgrade button"></div>
+							</div>
+						</div>
+						<div class="item-divider"></div>
+					</div>
+				</div>
+			</div>
+			<div id="column-3" class="column">
+
+
+				<div class="upgrade upgrade-item" ng-repeat="upgrade in game.upgradesAvailable">
+					<div class="upgrade-container container button {{game.getUpgradeWidth()}}" ng-click="game.buyUpgrade(upgrade)">
+						<div class="upgrade-header">
+							<div class="upgrade-gold">
+								<div class="gold-icon"></div>
+								<div class="upgrade-cost">{{game.prettyIntCompact(game.upgrades[upgrade].cost, 1)}}</div>
+							</div>
+							<div class="upgrade-count"></div>
+							<div class="upgrade-name">
+								{{upgrade}}
+							</div>
+						</div>
+						<div class="upgrade-left">
+							<div style="background-image:url({{game.getItemImageUrl(upgrade)}})"class="upgrade-image button"></div>
+						</div>
+						<div class="upgrade-middle">
+							<div class="upgrade-stat upgrade-discovery {{game.upgrades[upgrade].isZero('discovery')}}">
+								<text class="upgrade-stat-value">+{{game.prettyIntCompact(game.upgrades[upgrade].discovery)}}</text> Discovery
+							</div>
+							<div class="upgrade-stat upgrade-swiftness {{game.upgrades[upgrade].isZero('swiftness')}}">
+								<text class="upgrade-stat-value">+{{game.prettyIntCompact(game.upgrades[upgrade].swiftness)}}</text> Swiftness
+							</div>
+							<div class="upgrade-stat upgrade-power {{game.upgrades[upgrade].isZero('power')}}">
+								<text class="upgrade-stat-value">+{{game.prettyIntCompact(game.upgrades[upgrade].power)}}</text> Power
+							</div>
+							<div class="upgrade-stat upgrade-agility {{game.upgrades[upgrade].isZero('agility')}}">
+								<text class="upgrade-stat-value">+{{game.prettyIntCompact(game.upgrades[upgrade].agility)}}</text> Agility
+							</div>
+							<div class="upgrade-stat upgrade-income {{game.upgrades[upgrade].isZero('income')}}">
+								<text class="upgrade-stat-value">+{{game.prettyIntCompact(game.upgrades[upgrade].income)}}</text> Income
+							</div>
+							<div class="upgrade-description">
+							</div>
+						</div>
+
+
+						<div class="upgrade-right">
+							<div class="upgrade-stats">
+								<div class="upgrade-stat"></div>
+								<div class="upgrade-stat"></div>
+							</div>
+						</div>
+						<div class="upgrade-footer">
+						</div>
+					</div>
+				</div>
+
+
+
+
+				<div class="upgrade upgrade-spell container">
+
+
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<div style="display:none;">
+
+</br>
+<text id="meeps-progress">
+	{{game.prettyIntCompact(game.chimes)}}/{{game.prettyIntCompact(game.chimesPerMeepFloor)}} Chimes to next Meep
+</text>
+</br>
+<text id="chimes-rate">
+	({{game.prettyIntCompact(game.chimesRate)}} Chimes/s)
+</text>
+
+<div id="chimes-stats" class="stats">
+	<div id="chimes-stats-left" class="stats-left">
+		<div id="discovery" class="game-stat">Discovery</div></br>
+		<div id="swiftness" class="game-stat">Swiftness</div>
+	</div>
+	<div id="chimes-stats-right" class="stats-right">
+		<div id="discovery-value" class="game-stat-value">
+			{{game.prettyIntCompact(game.chimesPerClick)}} <!-- Chime{{game.isPlural(game.chimesPerClick)}} -->
+		</div>
+		</br>
+		<div id="swiftness-value" class="game-stat-value">
+			{{game.prettyIntCompact(game.chimesClickRate)}} <!-- Click{{game.isPlural(game.chimesClickRate)}} -->
+		</div>
+	</div>
+</div>
+
+<div id="damage-stats" class="stats">
+	<div id="damage-stats-left" class="stats-left">
+		<div id="power" class="game-stat">Power</div></br>
+		<div id="agility" class="game-stat">Agility</div>
+	</div>
+	<div id="damage-stats-right" class="stats-right">
+		<div id="power-value" class="game-stat-value">
+			{{game.prettyIntCompact(game.damagePerClick)}} <!-- Damage -->
+		</div>
+		</br>
+		<div id="agility-value" class="game-stat-value">
+			{{game.prettyIntCompact(game.damageClickRate)}} <!-- Click{{game.isPlural(game.damageClickRate)}} -->
+		</div>
+	</div>
+</div>
+
+<div id="gold-status">
+	<div id="gold"><div class="gold-icon"></div></div>
+	<div id="gold-value" class="title">
+		{{game.prettyInt(game.gold)}}
+	</div>
+</div>
+
+<div id="income-status">
+	<div id="income">Income</div>
+	<div class="gold-icon"></div>
+	<div id="income-value">
+		{{game.prettyInt(game.goldRate)}}
+	</div>
+</div>
+
+<div id="monster-stats" class="stats">
+	<div id="monster-stats-left" class="stats-left">
+		<div id="monster-experience" class="game-stat">Experience</div></br>
+		<div id="monster-reward" class="game-stat">Reward</div>
+	</div>
+	<div id="monster-stats-right" class="stats-right">
+		<div id="monster-experience-value" class="game-stat-value">
+			{{game.prettyIntCompact(game.monsters[game.monster].experience, 2)}} xp
+		</div></br>
+		<div id="monster-reward-value" class="game-stat-value">
+			<div class="gold-icon"></div>
+			{{game.prettyIntCompact(game.monsters[game.monster].gold)}}
+		</div>
+	</div>
+</div>
+
+
+</div>
+
+</body>
+</html>

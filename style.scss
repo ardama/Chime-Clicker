@@ -1,0 +1,862 @@
+@import 'variables';
+@import 'mixins';
+
+@import 'bar';
+@import 'dropdown';
+@import 'selector';
+
+// CONTENT CONTAINERS //////////////////////////////////////
+html {
+
+}
+
+body {
+	padding: 0;
+	margin: 0;
+
+	font-family: "Rajdhani", "Trebuchet MS", sans-serif;
+	overflow-y: hidden;
+}
+
+// body::-webkit-scrollbar {
+//   width: 5px;
+// }
+//
+// body::-webkit-scrollbar-track {
+// 	background-color: rgba($black, .4);
+// }
+//
+// body::-webkit-scrollbar-thumb {
+//   background: rgba($gray100, .8);
+// }
+//
+// body::-webkit-scrollbar-thumb:hover {
+//   background: rgba($gray100, 1);
+// }
+
+.title {
+}
+
+#wrapper {
+	padding: 36px 0 0 0;
+}
+
+#header {
+	min-width: 885px;
+	height: 36px;
+
+	padding-left: 15px;
+	margin-top: -36px;
+
+	color: $lightTextPrimary;
+	font-size: 20px;
+	line-height: 36px;
+
+	background-color: $gray900;
+}
+
+#main-container {
+	float: left;
+
+	width: 100%;
+	min-width: 900px;
+
+	// TODO mixin
+	cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* ROWS & COLUMNS ///////////////////////////////////// */
+
+.row {
+	float: left;
+	position: relative;
+
+	width: 100%;
+}
+
+.column {
+	float: left;
+
+	height: calc(100vh - 36px);
+	overflow-y: auto;
+}
+
+.column::-webkit-scrollbar {
+  width: 8px;
+}
+
+.column::-webkit-scrollbar-track {
+	background-color: rgba($gray900, 1);
+}
+
+.column::-webkit-scrollbar-thumb {
+  background: rgba($gray100, .7);
+}
+
+.column::-webkit-scrollbar-thumb:hover {
+  background: rgba($gray100, 1);
+}
+
+#column-1 {
+	float: left;
+
+	width: calc(30% + 30px);
+
+	color: $lightTextPrimary;
+	text-align: center;
+
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-image: url(images/backgrounds/Nidalee_Splash_Left.png);
+}
+
+#column-2 {
+	float: left;
+
+	width: calc(70% - 130px);
+	height: calc(100vh - 121px); // header + status
+
+	margin-top: 85px;
+
+	color: #444444;
+
+	background-color:#ffffff;
+
+	@include box-shadow(0px 0px 12px 2px $boxShadow inset);
+}
+
+#column-3 {
+	float: left;
+
+	width: calc(100px);
+
+	color: #eee;
+	text-align: center;
+
+	background-color: black;
+
+	@include box-shadow(0px 2px 10px 1px $boxShadow inset);
+}
+#meeps-row {
+	height: calc(40% + 70px);
+	min-height: 325px;
+
+  // TODO cleanup
+	// background-repeat: no-repeat;
+	// background-size: cover;
+	// background-image: url(images/backgrounds/Nidalee_Splash_Left.png);
+	// background-color: #ffffff;
+}
+
+#monster-row {
+	height: calc(60% - 70px);
+	min-height: 325px;
+
+	// TODO cleanup
+	// background-repeat: no-repeat;
+	// background-size: cover;
+	// background-image: url(images/backgrounds/Left_column.png);
+	// background-color: #ffffff;
+}
+
+
+/* COLUMN CONTAINERS ///////////////////////////////////// */
+
+.container {
+	font-size: 16px;
+}
+
+#meeps-container {
+	float: left;
+
+	width: 100%;
+}
+
+#damage-container {
+	float: left;
+
+	width: 100%;
+}
+
+#chimes-container {
+	float: left;
+
+	width: 100%;
+	height: calc(100% - 80px);
+}
+
+#monster-container {
+	float: left;
+
+	width: 100%;
+	height: calc(100% - 80px);
+}
+
+/* STATUS CONTAINERS ///////////////////////////////////// */
+
+.status {
+	min-height: 55px;
+
+	position: relative;
+	z-index: 2;
+
+	line-height: 55px;
+	font-size: 32px;
+
+	background-color: $primary900;
+	@include box-shadow(0 0 4px 1px $boxShadow);
+}
+
+#meeps-status {
+
+}
+
+#damage-status {
+	position: relative;
+}
+
+#monster-gold {
+	position: absolute;
+	bottom: 0;
+	left: 10%;
+
+	color: $lightTextSecondary;
+	line-height: 25px;
+	font-size: 16px;
+}
+
+#monster-experience {
+	position: absolute;
+	bottom: 0;
+	right: 10%;
+
+	color: $lightTextSecondary;
+	line-height: 25px;
+	font-size: 16px;
+}
+
+#chimes-stats {
+
+}
+
+#damage-stats {
+	padding-top: 5px;
+}
+
+#monster-stats {
+
+}
+
+/* GAME STATUS BAR ///////////////////////////////////// */
+
+#game-status {
+	position: absolute;
+	top: 0;
+	left: calc(30% + 30px); /* width of #column-1 */
+
+	width: calc(70% - 130px); /* width of #column-2 */
+	height: 85px;
+
+	color: #eee;
+
+	background-color: $primary900;
+
+	@include box-shadow(6px 3px 12px -6px $boxShadow inset);
+}
+
+#game-status-wrapper {
+	float: left;
+
+	width: 100%;
+	height: 100%;
+	min-height: 75px;
+
+	@include box-shadow(-6px 3px 12px -6px $boxShadow inset);
+}
+
+#game-status-top {
+	float: left;
+
+	width: calc(100% - 85px);
+	height: 55px;
+
+	margin-top: 0px;
+}
+
+#gold {
+	width: 100%;
+}
+#gold-status {
+	float: left;
+
+	width: calc(70% - 20px);
+
+	line-height: 32px;
+}
+
+#gold-value {
+	float: left;
+
+	width: calc(100% - 32px);
+
+	margin-left: 2px;
+
+	// TODO color
+	color: rgba(179, 100, 45, 100);
+	font-size: 32px;
+	font-weight: bold;
+}
+
+#gold .gold-icon {
+	float: left;
+
+	width: 20px;
+	height: 24px;
+
+	margin: 4px 0 0 10px;
+}
+
+#level {
+	float: right;
+	position: absolute;
+	top: 6px;
+	right: 6px;
+
+	width:73px;
+
+	padding: 0 5px;
+	border-radius: 36px;
+
+	line-height: 73px;
+	text-align: center;
+	font-size: 60px;
+	font-weight: bold;
+
+	background-color: $secondary900;
+}
+
+#income-status {
+	float: left;
+
+	width: 50%;
+
+	padding-top: 5px;
+}
+
+#income {
+	float: left;
+
+	padding-left: 10px;
+
+	// TODO color
+	color: rgba(179, 100, 45, 100);
+	font-weight: bold;
+}
+
+#income-value {
+	float: left;
+
+	padding-left: 1px;
+}
+
+#income-status .gold-icon {
+	float: left;
+
+	height: 13px;
+	width: 12px;
+
+	margin: 3px 0 0 10px;
+}
+
+
+/* STAT VALUES ///////////////////////////////////// */
+
+#meeps {
+	font-weight: bold;
+}
+
+.stats {
+	padding: 10px 0;
+}
+.stats-left {
+	float: left;
+
+	width: 50%;
+
+	text-align: right;
+}
+
+.stats-right {
+	float: left;
+
+	width: 50%;
+
+	text-align: left;
+}
+
+.game-stat {
+	float: right;
+
+	font-weight: bold;
+}
+.game-stat-value {
+	float: left;
+
+	padding-left: 10px;
+}
+
+#discovery {
+	color: $lightTextSecondary;
+}
+
+#swiftness {
+	color: $lightTextSecondary;
+}
+
+#dps {
+	font-size: 32px;
+	font-weight: bold;
+}
+
+#power {
+	color: $lightTextSecondary;
+}
+
+#agility {
+	color: $lightTextSecondary;;
+}
+
+// #monster-reward {
+// 	color: $lightTextSecondary;;
+// }
+//
+// #monster-reward-value .gold-icon {
+// 	float: left;
+//
+// 	width: 10px;
+// 	height: 12px;
+//
+// 	margin: 4px 2px 0 2px;
+// }
+//
+// #monster-experience {
+// 	color: $lightTextSecondary;
+// }
+
+
+/* CLICK BUTTONS ///////////////////////////////////// */
+
+.click-button {
+	display:none;
+
+	margin: 25px auto 0 auto;
+	border-radius: 100%;
+
+	border: solid 3px $primary900;
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: 50%;
+	background-color: #111;
+}
+
+.click-button:hover {
+	border-color: $primary500;
+
+}
+
+.click-button:active {
+
+}
+
+#chimes-button {
+	background-image: url(images/Chimes_1.png);
+}
+
+#chimes-button:hover {
+
+}
+
+#monster-button {
+
+}
+
+#monster-button:hover {
+
+}
+
+/* ITEMS ///////////////////////////////////// */
+#items-container {
+	height: 100%;
+}
+
+.item {
+	float: left;
+
+	width: 100%;
+	height: 112px;
+
+	font-size: 14px;
+}
+
+.item:hover {
+
+}
+
+.item-divider {
+	float: left;
+
+	width: 100%;
+	height: 1px;
+
+	border-top: solid 1px $gray900;
+	background-color: $darkDivider;
+}
+
+.item-header {
+	float: left;
+
+	width: 100%;
+	height: 20px;
+
+	padding: 5px 0 0 0;
+}
+
+.item-left {
+	float: left;
+
+	width: 90px;
+	height: 74px;
+
+	padding: 5px 0;
+}
+
+.item-middle {
+	float: left;
+
+	width: 30%;
+	height: 80px;
+
+	padding-top: 5px;
+
+	font-size: 13px;
+	line-height: 16px;
+}
+
+.item-right {
+	float: left;
+
+	width: calc(70% - 90px);
+	height: 80px;
+}
+
+.item-count {
+	float: right;
+
+	margin-right: 5px;
+
+	font-size: 17px;
+	font-weight: bold;
+}
+
+.item-name {
+	float: right;
+
+	margin: 5px 8px 0 0;
+
+	color: $darkTextSecondary;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.item-cost {
+	float: left;
+
+	margin-left: 3px;
+
+	font-size: 17px;
+	font-weight: bold;
+}
+
+.item-gold .gold-icon{
+	float: left;
+
+	width: 10px;
+	height: 14px;
+
+	margin: 4px 0 0 8px;
+
+}
+
+.item-image {
+	width: 70px;
+	height: 70px;
+
+	margin: 0 auto;
+	border-radius: 35px;
+
+	border: solid 2px #222;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.item-image:hover {
+	// TODO color
+	border-color: rgb(200, 200, 200);
+}
+
+.item-image:active {
+	@include box-shadow(0 0 50px 10px $boxShadow inset);
+}
+
+.item-stats {
+	float: left;
+
+	width: 70px;
+	height: 100%;
+
+	text-align: right;
+	font-size: 12px;
+	line-height: 15px;
+}
+
+.item-stat {
+	font-weight: bold;
+}
+
+.item-stat.discovery {
+	color: $darkTextPrimary;
+}
+
+.item-stat.swiftness {
+	color: $darkTextPrimary;
+}
+
+.item-stat.power {
+	color: $darkTextPrimary;
+}
+
+.item-stat.agility {
+	color: $darkTextPrimary;
+}
+
+.item-stat.income {
+	color: $darkTextPrimary;
+}
+
+.item-stat.item-zero {
+	color: $darkTextSecondary;
+}
+
+.item-stat-values {
+	float: right;
+
+	width: calc(100% - 80px);
+	height: 100%;
+
+	padding-left: 10px;
+
+	text-align: left;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 15px;
+
+}
+
+.item-stat-value.item-zero {
+	color: $darkTextSecondary;
+}
+
+.item-upgrade-container {
+	padding-top: 5px;
+
+	text-align: right;
+}
+.item-upgrade {
+	display: inline-block;
+
+	width: 30px;
+	height: 30px;
+
+	margin: 5px 5px 0 0;
+	border-radius: 15px;
+
+	background-size: cover;
+}
+
+/* UPGRADES ///////////////////////////////////// */
+.upgrade-container {
+	float: left;
+
+	width: calc(100% - 14px);
+	height: 70px;
+
+	margin: 0 0 6px 6px;
+
+	color: #eee;
+	font-size: 12px;
+
+	background-color: rgba(30, 30, 30, 1);
+
+	@include box-shadow(2px 2px 5px 0px $boxShadow);
+}
+
+.upgrade-container-half {
+	width: calc(50% - 11px);
+}
+
+.upgrade-container:hover {
+	// TODO color
+	background-color: rgba(40, 40, 40, 1);
+}
+
+.upgrade-container:active {
+	@include box-shadow(1px 1px 5px 0px $boxShadow);
+}
+
+.upgrade:first-of-type {
+	margin-top: 6px;
+}
+
+.upgrade-header {
+	float: left;
+
+	width: 100%;
+	height: 16px;
+
+	padding: 3px 0 0 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.upgrade-gold {
+	float: left;
+
+	margin: 0 0 0 7px;
+}
+
+.upgrade-gold .gold-icon {
+	display: inline-block;
+
+	width: 8px;
+	height: 10px;
+}
+
+.upgrade-cost {
+	display: inline-block;
+
+	font-size: 14px;
+}
+
+.upgrade-name {
+	float: right;
+
+	margin: 2px 7px 0 0;
+
+	color: $lightTextSecondary;
+}
+
+.upgrade-left {
+	float: left;
+
+	width: 55px;
+	height: 48px;
+}
+
+.upgrade-image {
+	width: 42px;
+	height: 42px;
+
+	margin: 4px auto;
+	border-radius: 20px;
+
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.upgrade-middle {
+	float: left;
+
+	width: calc(100% - 65px);
+	height: 100%;
+}
+
+.upgrade-description {
+	overflow: hidden;
+
+	color: rgb(200, 200, 200);
+	text-align: center;
+	font-style: italic;
+
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-flex-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+
+}
+
+.upgrade-footer {
+	float: left;
+
+	width: 100%;
+
+	line-height: 12px;
+}
+
+.upgrade-stat {
+	padding: 2px 5px 0px 0;
+}
+
+.upgrade-stat-value {
+	color: $lightTextPrimary;
+}
+
+.upgrade-zero {
+	display: none;
+}
+
+.upgrade-discovery,
+.upgrade-swiftness {
+	// TODO color
+	color: rgba(79, 133, 100, 100);
+}
+
+.upgrade-power,
+.upgrade-agility {
+	// TODO color
+	color: rgba(17, 75, 95, 100);
+}
+
+.upgrade-income {
+	// TODO color
+	color: rgba(179, 100, 45, 100);
+}
+
+
+/* OTHER ///////////////////////////////////// */
+
+.gold-icon {
+	background-image: url(images/Gold.gif);
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.icon-gold {
+	color: $secondary500 	!important;
+	font-size: .8em				!important;
+	vertical-align: 10%		!important;
+}
+
+.button {
+	cursor: pointer;
+}

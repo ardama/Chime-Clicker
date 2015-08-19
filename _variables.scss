@@ -1,0 +1,57 @@
+// Colors
+$primary500: #607D8B;
+$primary700: #455A64;
+$primary900: #263238;
+
+$secondary500: #FFC107;
+$secondary700: #FFA000;
+$secondary900: #FF6F00;
+
+// $secondary500: #FF9800;
+// $secondary700: #F57C00;
+// $secondary900: #E65100;
+
+$black: #000000;
+$white: #FFFFFF;
+$transparent: rgba(0,0,0,0);
+
+$gray100: #F5F5F5;
+$gray300: #E0E0E0;
+$gray500: #9E9E9E;
+$gray700: #616161;
+$gray900: #212121;
+
+// For light backgrounds (dark text)
+$darkTextPrimary: rgba(0,0,0,.87);
+$darkTextSecondary: rgba(0,0,0,.54);
+$darkTextDisabled: rgba(0,0,0,.38);
+$darkDivider: rgba(0,0,0,.12);
+
+// For dark backgrounds (light text)
+$lightTextPrimary: rgba(255,255,255, 1);
+$lightTextSecondary: rgba(255,255,255,.70);
+$lightTextDisabled: rgba(255,255,255,.30);
+$lightDivider: rgba(255,255,255,.12);
+
+$boxShadow: rgba(0,0,0,.75);
+
+// Alternate Colors
+	// blue: rgb(14, 91, 207)
+	// green: rgb(79, 151, 100)
+	// dark-green: rgb(79, 151, 100)
+	// orange: rgb(253, 171, 0)
+	// purple: rgb(107, 7, 228)
+	// red: rgb(217, 79, 19)
+	// gray: rgba(44, 62, 80, 1)
+	// darker: rgba(34, 49, 63, 1)
+	//
+	// $color1 - green: #4f8564; //rgba(79, 133, 100, 100)
+	// $color2 - blue: #114b5f; //rgba(17, 75, 95, 100)
+	// $color3 - dark blue: #092327; //rgba(9, 35, 39, 100)
+	// $color4 - red: #ac3931; //rgba(172, 57, 49, 100)
+	// $color5 - orange: #b3642d; //rgba(179, 100, 45, 100)
+
+
+// Other
+$dropdownButtonSize: 25px;
+$selectorButtonSize: 25px;
