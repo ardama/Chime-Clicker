@@ -42,6 +42,9 @@ body {
 }
 
 #header {
+	position: relative;
+	z-index: 10;
+
 	min-width: 885px;
 	height: 36px;
 
@@ -53,6 +56,7 @@ body {
 	line-height: 36px;
 
 	background-color: $gray900;
+	@include box-shadow(0px 0px 12px 2px $boxShadow);
 }
 
 #main-container {
@@ -105,6 +109,8 @@ body {
 
 #column-1 {
 	float: left;
+	position: relative;
+	z-index: 9;
 
 	width: calc(30% + 30px);
 
@@ -113,22 +119,24 @@ body {
 
 	background-repeat: no-repeat;
 	background-size: cover;
-	background-image: url(images/backgrounds/Nidalee_Splash_Left.png);
+	background-image: url(images/backgrounds/Summoners_Rift_Center.png);
+
+	@include box-shadow(0px 0px 8px 1px $boxShadow);
+
 }
 
 #column-2 {
 	float: left;
 
 	width: calc(70% - 130px);
-	height: calc(100vh - 121px); // header + status
+	height: calc(100vh - 116px); // header + status
 
-	margin-top: 85px;
+	margin-top: 80px;
 
-	color: #444444;
+	color: $lightTextPrimary;
 
-	background-color:#ffffff;
-
-	@include box-shadow(0px 0px 12px 2px $boxShadow inset);
+	// background-image: url(images/backgrounds/patterns/dark-cardboard.png);
+	background-color: $gray1000;
 }
 
 #column-3 {
@@ -143,6 +151,7 @@ body {
 
 	@include box-shadow(0px 2px 10px 1px $boxShadow inset);
 }
+
 #meeps-row {
 	height: calc(40% + 70px);
 	min-height: 325px;
@@ -150,7 +159,7 @@ body {
   // TODO cleanup
 	// background-repeat: no-repeat;
 	// background-size: cover;
-	// background-image: url(images/backgrounds/Nidalee_Splash_Left.png);
+	// background-image: url(images/backgrounds/Summoners_Rift_Center.png);
 	// background-color: #ffffff;
 }
 
@@ -161,7 +170,7 @@ body {
 	// TODO cleanup
 	// background-repeat: no-repeat;
 	// background-size: cover;
-	// background-image: url(images/backgrounds/Left_column.png);
+	// background-image: url(images/backgrounds/Nidalee_Splash_Left.png);
 	// background-color: #ffffff;
 }
 
@@ -214,7 +223,7 @@ body {
 }
 
 #meeps-status {
-
+	font-weight: bold;
 }
 
 #damage-status {
@@ -261,7 +270,7 @@ body {
 	left: calc(30% + 30px); /* width of #column-1 */
 
 	width: calc(70% - 130px); /* width of #column-2 */
-	height: 85px;
+	height: 80px;
 
 	color: #eee;
 
@@ -275,162 +284,178 @@ body {
 
 	width: 100%;
 	height: 100%;
-	min-height: 75px;
 
 	@include box-shadow(-6px 3px 12px -6px $boxShadow inset);
 }
 
 #game-status-top {
+	position: relative;
+	z-index: 1;
 	float: left;
 
-	width: calc(100% - 85px);
+	width: calc(100% - 75px);
 	height: 55px;
 
-	margin-top: 0px;
+	background-color: $primary900;
+	@include box-shadow(0 0 4px 1px $boxShadow);
 }
 
-#gold {
-	width: 100%;
-}
 #gold-status {
 	float: left;
 
-	width: calc(70% - 20px);
-
-	line-height: 32px;
+	padding-right: 10px;
 }
 
 #gold-value {
-	float: left;
+	margin-top: 6px;
+	margin-left: 12px;
 
-	width: calc(100% - 32px);
-
-	margin-left: 2px;
-
-	// TODO color
-	color: rgba(179, 100, 45, 100);
-	font-size: 32px;
-	font-weight: bold;
-}
-
-#gold .gold-icon {
-	float: left;
-
-	width: 20px;
-	height: 24px;
-
-	margin: 4px 0 0 10px;
-}
-
-#level {
-	float: right;
-	position: absolute;
-	top: 6px;
-	right: 6px;
-
-	width:73px;
-
-	padding: 0 5px;
-	border-radius: 36px;
-
-	line-height: 73px;
-	text-align: center;
-	font-size: 60px;
-	font-weight: bold;
-
-	background-color: $secondary900;
-}
-
-#income-status {
-	float: left;
-
-	width: 50%;
-
-	padding-top: 5px;
-}
-
-#income {
-	float: left;
-
-	padding-left: 10px;
-
-	// TODO color
-	color: rgba(179, 100, 45, 100);
+	color: $lightTextPrimary;
+	line-height: 28px;
+	font-size: 28px;
 	font-weight: bold;
 }
 
 #income-value {
 	float: left;
 
-	padding-left: 1px;
+	margin: 1px 0 0 10px;
+
+	font-size: 16px;
+	line-height: 20px;
+	font-weight: bold;
+
+	div {
+		float: left;
+		padding-right: 5px;
+		color: $lightTextSecondary;
+		font-weight: normal;
+	}
 }
 
-#income-status .gold-icon {
+#level {
+	position: relative;
+	z-index: 9;
+	float: right;
+
+	width: 75px;
+	height: 80px;
+	line-height: 80px;
+	text-align: center;
+	font-size: 60px;
+	font-weight: bold;
+
+	background-color: $gray500;
+	@include box-shadow(0 0 4px 1px $boxShadow);
+}
+
+#game-stats {
+	float: right;
+
+	width: 270px;
+	height: 100%;
+}
+
+.game-stat {
 	float: left;
 
-	height: 13px;
-	width: 12px;
+	font-size: 16px;
+	font-weight: bold;
 
-	margin: 3px 0 0 10px;
+	div {
+		float: left;
+
+		color: $lightTextSecondary;
+		font-weight: normal;
+	}
 }
 
+
+.game-stat-top {
+	height: 50%;
+
+	margin-top: 10px;
+}
+
+.game-stat-bottom {
+	height: 50%;
+
+	margin-top: -10px;
+}
+
+.game-stat-left {
+	width: 55%;
+
+ 	div{
+		width: 70px;
+	}
+}
+
+.game-stat-right  {
+	width: 45%;
+
+	div{
+		width: 45px;
+	}
+}
 
 /* STAT VALUES ///////////////////////////////////// */
 
 #meeps {
-	font-weight: bold;
-}
-
-.stats {
-	padding: 10px 0;
-}
-.stats-left {
-	float: left;
-
-	width: 50%;
-
-	text-align: right;
-}
-
-.stats-right {
-	float: left;
-
-	width: 50%;
-
-	text-align: left;
-}
-
-.game-stat {
-	float: right;
-
-	font-weight: bold;
-}
-.game-stat-value {
-	float: left;
-
-	padding-left: 10px;
-}
-
-#discovery {
 	color: $lightTextSecondary;
+	font-weight: normal;
 }
 
-#swiftness {
-	color: $lightTextSecondary;
-}
-
-#dps {
-	font-size: 32px;
-	font-weight: bold;
-}
-
-#power {
-	color: $lightTextSecondary;
-}
-
-#agility {
-	color: $lightTextSecondary;;
-}
+// .stats {
+// 	padding: 10px 0;
+// }
+// .stats-left {
+// 	float: left;
+//
+// 	width: 50%;
+//
+// 	text-align: right;
+// }
+//
+// .stats-right {
+// 	float: left;
+//
+// 	width: 50%;
+//
+// 	text-align: left;
+// }
+//
+// .game-stat {
+// 	float: right;
+//
+// 	font-weight: bold;
+// }
+// .game-stat-value {
+// 	float: left;
+//
+// 	padding-left: 10px;
+// }
+//
+// #discovery {
+// 	color: $lightTextSecondary;
+// }
+//
+// #swiftness {
+// 	color: $lightTextSecondary;
+// }
+//
+// #dps {
+// 	font-size: 32px;
+// 	font-weight: bold;
+// }
+//
+// #power {
+// 	color: $lightTextSecondary;
+// }
+//
+// #agility {
+// 	color: $lightTextSecondary;;
+// }
 
 // #monster-reward {
 // 	color: $lightTextSecondary;;
@@ -453,20 +478,32 @@ body {
 /* CLICK BUTTONS ///////////////////////////////////// */
 
 .click-button {
+	position: relative;
 	display:none;
 
 	margin: 25px auto 0 auto;
 	border-radius: 100%;
 
-	border: solid 3px $primary900;
+	// border: solid 3px $primary900;
 	background-repeat: no-repeat;
 	background-size: contain;
 	background-position: 50%;
 	background-color: #111;
+
+	@include transition(box-shadow 100ms);
+
+	.counter {
+		position: absolute;
+
+		font-size: 24px;
+		font-weight: bold;
+
+		text-shadow: 1px 1px 1px $black;
+	}
 }
 
 .click-button:hover {
-	border-color: $primary500;
+	// border-color: $primary500;
 
 }
 
@@ -475,33 +512,47 @@ body {
 }
 
 #chimes-button {
-	background-image: url(images/Chimes_1.png);
+	background-image: url(images/Chimes_2x.png);
+	@include box-shadow(0 0 4px 0px $black, 0 0 140px 0 rgba(0, 0, 0, .3) inset);
 }
 
 #chimes-button:hover {
+	@include box-shadow(0 0 8px 1px $black);
+}
 
+#chimes-button:active {
+	@include box-shadow(0 0 4px 1px $black, 0 0 140px 0 rgba(0, 0, 0, .1) inset);
 }
 
 #monster-button {
-
+	@include box-shadow(0 0 4px 0px $boxShadow, 0 0 140px 0 rgba(0, 0, 0, .3) inset);
 }
 
 #monster-button:hover {
+	@include box-shadow(0 0 8px 1px $boxShadow);
+}
 
+#monster-button:active {
+	@include box-shadow(0 0 4px 1px $boxShadow, 0 0 140px 0 rgba(0, 0, 0, .1) inset);
 }
 
 /* ITEMS ///////////////////////////////////// */
 #items-container {
-	height: 100%;
+
 }
 
 .item {
 	float: left;
 
 	width: 100%;
-	height: 112px;
 
 	font-size: 14px;
+
+	background-color: $gray1000;
+}
+
+.item:last-child {
+	margin-bottom: 18px;
 }
 
 .item:hover {
@@ -514,337 +565,516 @@ body {
 	width: 100%;
 	height: 1px;
 
-	border-top: solid 1px $gray900;
-	background-color: $darkDivider;
+	border-top: solid 1px $black;
+	background-color: $gray900;
 }
 
 .item-header {
 	float: left;
 
-	width: 100%;
-	height: 20px;
-
-	padding: 5px 0 0 0;
-}
-
-.item-left {
-	float: left;
-
-	width: 90px;
-	height: 74px;
-
-	padding: 5px 0;
-}
-
-.item-middle {
-	float: left;
-
-	width: 30%;
-	height: 80px;
-
-	padding-top: 5px;
-
-	font-size: 13px;
-	line-height: 16px;
-}
-
-.item-right {
-	float: left;
-
-	width: calc(70% - 90px);
-	height: 80px;
+	width: calc(100% - 110px);
+	height: 30px;
 }
 
 .item-count {
 	float: right;
 
-	margin-right: 5px;
+	margin: 5px 5px 0 0;
 
-	font-size: 17px;
+	line-height: 25px;
+	font-size: 18px;
 	font-weight: bold;
 }
 
 .item-name {
 	float: right;
 
-	margin: 5px 8px 0 0;
+	margin: 8px 8px 0 0;
 
-	color: $darkTextSecondary;
-	font-weight: bold;
-	font-size: 12px;
+	color: $lightTextSecondary;
+	line-height: 22px;
+	font-size: 14px;
 }
+
+.item-buy {
+	float: left;
+
+	width: 50px;
+	height: $itemBuyButtonSize;
+
+	margin: 5px 5px 0 0;
+
+	font-size: 16px;
+	line-height: $itemBuyButtonSize;
+	text-align: center;
+
+	background-color: $primary900;
+	@include box-shadow(0 0 2px 0px $boxShadow);
+	@include transition(background-color 100ms, box-shadow 100ms);
+
+	cursor: pointer;
+}
+
+.item-buy:hover {
+	background-color: $primary700;
+	@include box-shadow(0 0 5px 1px $boxShadow);
+}
+
+.item-buy:active {
+	background-color: $primary700;
+	@include box-shadow(0 0 2px 0px $boxShadow inset);
+}
+
+.item-left {
+	position: relative;
+	float: left;
+
+	width: 100px;
+
+	margin: 5px;
+
+	background-color: $primary900;
+	@include transition(background-color 100ms);
+
+	cursor: pointer;
+}
+
+.item-left:hover {
+	background-color: $primary700;
+}
+
+.item-left:active {
+	background-color: $primary700;
+}
+
+.item-left-shadow {
+	position: absolute;
+
+	width: 100%;
+	height: 100%;
+
+	@include box-shadow(0 0 2px 0px $boxShadow);
+	@include transition(box-shadow 100ms);
+}
+
+.item-left-shadow:hover {
+	@include box-shadow(0 0 5px 1px $boxShadow);
+}
+
+.item-left-shadow:active {
+	@include box-shadow(0 0 2px 0px $boxShadow inset);
+}
+
 
 .item-cost {
 	float: left;
 
-	margin-left: 3px;
+	padding-left: 5px;
 
-	font-size: 17px;
+	font-size: 18px;
+	line-height: $itemBuyButtonSize;
 	font-weight: bold;
 }
 
-.item-gold .gold-icon{
+.item-image {
 	float: left;
 
-	width: 10px;
-	height: 14px;
+	width: 100px;
+	height: 100px;
 
-	margin: 4px 0 0 8px;
-
-}
-
-.item-image {
-	width: 70px;
-	height: 70px;
-
-	margin: 0 auto;
-	border-radius: 35px;
-
-	border: solid 2px #222;
 	background-repeat: no-repeat;
 	background-size: cover;
 }
 
-.item-image:hover {
-	// TODO color
-	border-color: rgb(200, 200, 200);
+.item-middle {
+	float: left;
+
+	width: 120px;
+	height: 100px;
+
+	margin-top: 8px;
+
+	border-right: 1px solid $black;
 }
 
-.item-image:active {
-	@include box-shadow(0 0 50px 10px $boxShadow inset);
+
+.item-right {
+	float: left;
+
+	width: calc(100% - 232px);
+	height: 100px;
+
+	margin-top: 8px;
+
 }
 
 .item-stats {
 	float: left;
 
 	width: 70px;
-	height: 100%;
 
 	text-align: right;
-	font-size: 12px;
-	line-height: 15px;
+	font-size: 14px;
+	line-height: 18px;
 }
 
 .item-stat {
-	font-weight: bold;
-}
-
-.item-stat.discovery {
-	color: $darkTextPrimary;
-}
-
-.item-stat.swiftness {
-	color: $darkTextPrimary;
-}
-
-.item-stat.power {
-	color: $darkTextPrimary;
-}
-
-.item-stat.agility {
-	color: $darkTextPrimary;
-}
-
-.item-stat.income {
-	color: $darkTextPrimary;
+	color: $lightTextPrimary;
 }
 
 .item-stat.item-zero {
-	color: $darkTextSecondary;
+	color: $lightTextDisabled;
 }
 
 .item-stat-values {
 	float: right;
 
-	width: calc(100% - 80px);
+	width: 40px;
 	height: 100%;
 
 	padding-left: 10px;
 
 	text-align: left;
-	font-size: 12px;
+	font-size: 14px;
+	line-height: 18px;
 	font-weight: bold;
-	line-height: 15px;
 
 }
 
 .item-stat-value.item-zero {
-	color: $darkTextSecondary;
+	color: $lightTextDisabled;
 }
 
 .item-upgrade-container {
-	padding-top: 5px;
+	float: left;
+
+	width: 100%;
+	height: 100%;
 
 	text-align: right;
+
 }
+
+.item-upgrades-wrapper {
+	float: left;
+
+	width: calc(100% - 131px);
+	height: 100%;
+
+	overflow-x: auto;
+
+	border-left: 1px solid $gray900;
+	border-right: 1px solid $black;
+}
+
+.item-upgrades-wrapper::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+.item-upgrades-wrapper::-webkit-scrollbar-track {
+	background-color: rgba($gray900, 1);
+}
+
+.item-upgrades-wrapper::-webkit-scrollbar-thumb {
+  background: rgba($gray100, .7);
+}
+
+.item-upgrades-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba($gray100, 1);
+}
+
+.item-upgrades {
+	float: left;
+	display: inline-flex;
+	flex-wrap: nowrap;
+}
+
 .item-upgrade {
-	display: inline-block;
+	float: left;
 
-	width: 30px;
-	height: 30px;
+	width: 40px;
+	height: 40px;
 
-	margin: 5px 5px 0 0;
-	border-radius: 15px;
+	margin: 30px 8px 0;
+	border-radius: 20px;
 
 	background-size: cover;
 }
 
 /* UPGRADES ///////////////////////////////////// */
-.upgrade-container {
-	float: left;
 
-	width: calc(100% - 14px);
-	height: 70px;
-
-	margin: 0 0 6px 6px;
-
-	color: #eee;
-	font-size: 12px;
-
-	background-color: rgba(30, 30, 30, 1);
-
-	@include box-shadow(2px 2px 5px 0px $boxShadow);
-}
-
-.upgrade-container-half {
-	width: calc(50% - 11px);
-}
-
-.upgrade-container:hover {
-	// TODO color
-	background-color: rgba(40, 40, 40, 1);
-}
-
-.upgrade-container:active {
-	@include box-shadow(1px 1px 5px 0px $boxShadow);
-}
-
-.upgrade:first-of-type {
-	margin-top: 6px;
-}
-
-.upgrade-header {
-	float: left;
-
-	width: 100%;
-	height: 16px;
-
-	padding: 3px 0 0 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.upgrade-gold {
-	float: left;
-
-	margin: 0 0 0 7px;
-}
-
-.upgrade-gold .gold-icon {
-	display: inline-block;
-
-	width: 8px;
-	height: 10px;
-}
-
-.upgrade-cost {
-	display: inline-block;
-
-	font-size: 14px;
-}
-
-.upgrade-name {
+.upgrade-wrapper {
 	float: right;
 
-	margin: 2px 7px 0 0;
-
-	color: $lightTextSecondary;
-}
-
-.upgrade-left {
-	float: left;
-
-	width: 55px;
-	height: 48px;
-}
-
-.upgrade-image {
-	width: 42px;
-	height: 42px;
-
-	margin: 4px auto;
-	border-radius: 20px;
-
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-
-.upgrade-middle {
-	float: left;
-
-	width: calc(100% - 65px);
+	width: 120px;
 	height: 100%;
-}
 
-.upgrade-description {
-	overflow: hidden;
+	padding: 6px 4px 4px 4px;
 
-	color: rgb(200, 200, 200);
-	text-align: center;
-	font-style: italic;
-
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: -moz-box;
-	display: -ms-flexbox;
-	display: flex;
-	-webkit-flex-align: center;
-	-ms-flex-align: center;
-	-webkit-align-items: center;
-	align-items: center;
+	border-left: 1px solid $gray900;
 
 }
 
-.upgrade-footer {
+.upgrade {
+	float: right;
+
+	width: 120px;
+	height: 90px;
+
+	font-size: 14px;
+
+	background-color: $primary900;
+	@include box-shadow(0 0 2px 0 $boxShadow);
+	@include transition(background-color 100ms, box-shadow 100ms);
+
+	cursor: pointer;
+}
+
+.upgrade:hover {
+	background-color: $primary700;
+	@include box-shadow(0 0 5px 1px $boxShadow);
+}
+
+.upgrade:active {
+	@include box-shadow(0 0 2px 0 $boxShadow inset);
+}
+
+.upgrade-stats {
 	float: left;
 
-	width: 100%;
+	width: 24px;
 
-	line-height: 12px;
-}
+	padding: 0 2px 0 4px;
 
-.upgrade-stat {
-	padding: 2px 5px 0px 0;
-}
-
-.upgrade-stat-value {
-	color: $lightTextPrimary;
+	line-height: 18px;
+	font-weight: bold;
+	text-align: left;
 }
 
 .upgrade-zero {
-	display: none;
+	color: $lightTextDisabled;
 }
 
-.upgrade-discovery,
-.upgrade-swiftness {
-	// TODO color
-	color: rgba(79, 133, 100, 100);
+.upgrade-image {
+	float: left;
+
+	width: 90px;
+	height: 90px;
 }
 
-.upgrade-power,
-.upgrade-agility {
-	// TODO color
-	color: rgba(17, 75, 95, 100);
+.upgrade-cost {
+	float: left;
+
+	width: 80px;
+
+	margin-top: 50px;
+	padding: 4px 5px 0 5px;
+
+	line-height: 16px;
+	font-size: 16px;
+	font-weight: bold;
+
+	background-color: $darkTextPrimary;
 }
 
-.upgrade-income {
-	// TODO color
-	color: rgba(179, 100, 45, 100);
+.upgrade-name {
+	float: left;
+
+	width: 80px;
+	height: 20px;
+
+	padding: 0 5px;
+
+	line-height: 20px;
+	font-size: 14px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+
+	background-color: $darkTextPrimary;
 }
+
+
+// .upgrade-container {
+// 	float: left;
+//
+// 	width: calc(100% - 14px);
+// 	height: 70px;
+//
+// 	margin: 0 0 6px 6px;
+//
+// 	color: #eee;
+// 	font-size: 12px;
+//
+// 	background-color: rgba(30, 30, 30, 1);
+//
+// 	@include box-shadow(2px 2px 5px 0px $boxShadow);
+// }
+//
+// .upgrade-container-half {
+// 	width: calc(50% - 11px);
+// }
+//
+// .upgrade-container:hover {
+// 	// TODO color
+// 	background-color: rgba(40, 40, 40, 1);
+// }
+//
+// .upgrade-container:active {
+// 	@include box-shadow(1px 1px 5px 0px $boxShadow);
+// }
+//
+// .upgrade:first-of-type {
+// 	margin-top: 6px;
+// }
+//
+// .upgrade-header {
+// 	float: left;
+//
+// 	width: 100%;
+// 	height: 16px;
+//
+// 	padding: 3px 0 0 0;
+// 	overflow: hidden;
+// 	text-overflow: ellipsis;
+// }
+//
+// .upgrade-gold {
+// 	float: left;
+//
+// 	margin: 0 0 0 7px;
+// }
+//
+// .upgrade-gold .gold-icon {
+// 	display: inline-block;
+//
+// 	width: 8px;
+// 	height: 10px;
+// }
+//
+// .upgrade-cost {
+// 	display: inline-block;
+//
+// 	font-size: 14px;
+// }
+//
+// .upgrade-name {
+// 	float: right;
+//
+// 	margin: 2px 7px 0 0;
+//
+// 	color: $lightTextSecondary;
+// }
+//
+// .upgrade-left {
+// 	float: left;
+//
+// 	width: 55px;
+// 	height: 48px;
+// }
+//
+// .upgrade-image {
+// 	width: 42px;
+// 	height: 42px;
+//
+// 	margin: 4px auto;
+// 	border-radius: 20px;
+//
+// 	background-repeat: no-repeat;
+// 	background-size: cover;
+// }
+//
+// .upgrade-middle {
+// 	float: left;
+//
+// 	width: calc(100% - 65px);
+// 	height: 100%;
+// }
+//
+// .upgrade-description {
+// 	overflow: hidden;
+//
+// 	color: rgb(200, 200, 200);
+// 	text-align: center;
+// 	font-style: italic;
+//
+// 	display: -webkit-box;
+// 	display: -webkit-flex;
+// 	display: -moz-box;
+// 	display: -ms-flexbox;
+// 	display: flex;
+// 	-webkit-flex-align: center;
+// 	-ms-flex-align: center;
+// 	-webkit-align-items: center;
+// 	align-items: center;
+//
+// }
+//
+// .upgrade-footer {
+// 	float: left;
+//
+// 	width: 100%;
+//
+// 	line-height: 12px;
+// }
+//
+// .upgrade-stat {
+// 	padding: 2px 5px 0px 0;
+// }
+//
+// .upgrade-stat-value {
+// 	color: $lightTextPrimary;
+// }
+//
+// .upgrade-zero {
+// 	display: none;
+// }
+//
+// .upgrade-discovery,
+// .upgrade-swiftness {
+// 	// TODO color
+// 	color: rgba(79, 133, 100, 1);
+// }
+//
+// .upgrade-power,
+// .upgrade-agility {
+// 	// TODO color
+// 	color: rgba(17, 75, 95, 1);
+// }
+//
+// .upgrade-income {
+// 	// TODO color
+// 	color: rgba(179, 100, 45, 1);
+// }
 
 
 /* OTHER ///////////////////////////////////// */
+#time-container {
+	float: left;
 
+	width: 100%;
+
+	padding: 5px 0;
+
+	text-align: left;
+
+	#time {
+		float: left;
+
+		padding-left: 8px;
+
+		color: $lightTextSecondary;
+	}
+
+	#time-value {
+		float: left;
+
+		padding-left: 5px;
+
+		font-weight: bold;
+	}
+}
 .gold-icon {
 	background-image: url(images/Gold.gif);
 	background-size: contain;
@@ -853,8 +1083,8 @@ body {
 
 .icon-gold {
 	color: $secondary500 	!important;
-	font-size: .8em				!important;
-	vertical-align: 10%		!important;
+	font-size: .6em			!important;
+	vertical-align: 12.5%		!important;
 }
 
 .button {

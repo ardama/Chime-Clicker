@@ -76,14 +76,15 @@ var VILEMAW = "Vilemaw";
 var BARON_NASHOR = "Baron Nashor";
 var CHO_GATH = "Cho'Gath";
 var DR_MUNDO = "Dr. Mundo";
+var SION = "Sion";
 var TEEMO = "Teemo";
 
 // Constant Arrays
 var MONSTERS = [CASTER_MINION, RIFT_SCUTTLER, MELEE_MINION, CANNON_MINION, RAZORBEAK,
                 MURK_WOLF, KRUG, GROMP, BLUE_SENTINEL, RED_BRAMBLEBACK, SUPER_MINION,
-                TIBBERS, DRAGON, VILEMAW, BARON_NASHOR, CHO_GATH, DR_MUNDO, TEEMO];
+                TIBBERS, DRAGON, VILEMAW, BARON_NASHOR, CHO_GATH, DR_MUNDO, SION, TEEMO];
 var IGNORE_PLURALS = [BOOTS_OF_SPEED, BOOTS_OF_SWIFTNESS, BOOTS_OF_MOBILITY, IONIAN_BOOTS_OF_LUCIDITY,
-                      SORCERERS_SHOES, MERCURYS_TREADS, TWIN_SHADOWS, TIBBERS];
+                      SORCERERS_SHOES, MERCURYS_TREADS, TWIN_SHADOWS, TIBBERS, FLASH];
 var SPECIAL_PLURALS = [ZHONYAS_HOURGLASS, LUDENS_ECHO, FIENDISH_CODEX];
 
 // Default Values
@@ -98,10 +99,11 @@ var MONSTER_REWARD = 25;
 var SCALE_CHIMES_PER_MEEP = 1.00;
 var SCALE_ITEM_COST = 0.10;
 var SCALE_MONSTER_REWARD = 0.03;
-var SCALE_MONSTER_DIFFICULTY = 0.05;
-var SCALE_MONSTER_LEVEL = 5;
+var SCALE_MONSTER_HEALTH = 0.05;
+var SCALE_MONSTER_LEVEL_REWARD = 5;
+var SCALE_MONSTER_LEVEL_HEALTH = {'easy' : 5, 'medium' : 5.5, 'hard' : 6, 'expert' : 6.5, 'impossible' : 8}
 var SCALE_EXPERIENCE_NEEDED = 5;
-var SCALE_MEEP_STRENGTH = 1; //1.2;
+var SCALE_MEEP_STRENGTH = 1;
 
 
 ///// Styling /////
@@ -151,15 +153,15 @@ var prettyIntBigCompact = function(num, fixed) {
     if(num >= 1000000000000000000000)
         return prettyInt(num)
     if(num >= 1000000000000000000)
-        return (num / 1000000000000000000).toFixed(fixed) + 'QT';
+        return (num / 1000000000000000000).toFixed(fixed) + 'qt';
     if(num >= 1000000000000000)
-        return (num / 1000000000000000).toFixed(fixed) + 'Q';
+        return (num / 1000000000000000).toFixed(fixed) + 'q';
     if(num >= 1000000000000)
-        return (num / 1000000000000).toFixed(fixed) + 'T';
+        return (num / 1000000000000).toFixed(fixed) + 't';
     if(num >= 1000000000)
-        return (num / 1000000000).toFixed(fixed) + 'B';
+        return (num / 1000000000).toFixed(fixed) + 'b';
     if(num >= 1000000)
-        return (num / 1000000).toFixed(fixed) + 'M';
+        return (num / 1000000).toFixed(fixed) + 'm';
     return prettyInt(num);
 }
 
@@ -173,18 +175,24 @@ var prettyInt = function(num) {
 var GameApp = angular.module('GameApp', []);
 GameApp.controller('GameController', function($scope) {
     window.SCOPE = $scope;
-    $scope.game = new Game($scope);
+    $scope.game = new Game($scope, 'medium');
     $scope.game.start();
 
-    var fps = 30;
-    var stepSize = 1 / fps;
-    window.setInterval(function() {
-        $scope.game.step(stepSize);
-    }, stepSize * 1000);
-
     $('#chimes-button').on({
-      click: function() {
+      click: function(e) {
         $scope.game.chimesClick();
+
+
+        var posX = e.pageX - $(this).offset().left - 10;
+        var posY = e.pageY - $(this).offset().top - 30;
+        var $obj = $("<div>", {class:'counter'});
+        $obj.html("+" + $scope.game.prettyIntCompact($scope.game.chimesPerClick));
+        $obj.css({left: posX + 'px', top: posY + 'px'});
+
+        $(this).append($obj);
+        $obj.animate({top: '-=100', left:'+=' + (60 * Math.random() - 30), opacity: 0}, 1000, function() {
+          $(this).remove();
+        });
       },
       mouseenter: function() {
         $(this).stop();
@@ -204,8 +212,19 @@ GameApp.controller('GameController', function($scope) {
       },
     });
 
-    $('#monster-button').click(function() {
+    $('#monster-button').click(function(e) {
       $scope.game.damageClick();
+
+      var posX = e.pageX - $(this).offset().left - 10;
+      var posY = e.pageY - $(this).offset().top - 30;
+      var $obj = $("<div>", {class:'counter'});
+      $obj.html("-" + $scope.game.prettyIntCompact($scope.game.damagePerClick));
+      $obj.css({left: posX + 'px', top: posY + 'px'});
+
+      $(this).append($obj);
+      $obj.animate({top: '-=100', left:'+=' + (60 * Math.random() - 30), opacity: 0}, 1000, function() {
+        $(this).remove();
+      });
     });
 
     $(".dropdown-button").click(function(){

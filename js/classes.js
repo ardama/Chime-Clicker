@@ -15,6 +15,7 @@ Item.prototype.Init = function(game, cost, level, discovery, swiftness, power, a
 
     this.count = 0;
     this.upgrades = [];
+    this.upgradesAvailable = [];
 };
 
 Item.prototype.isZero = function(stat) {
@@ -46,6 +47,8 @@ Upgrade.prototype.Init = function(game, item, cost, level, discovery, swiftness,
 Upgrade.prototype.isZero = function(stat) {
     return this[stat] == 0 ? 'upgrade-zero' : '';
 };
+
+// TODO create Spell class, remove type from Upgrade
 
 var Monster = function(game, level, health, experience, gold) {
     this.Init(game, level, health, experience, gold);
