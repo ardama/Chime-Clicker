@@ -58,6 +58,8 @@
 
 #chimes-bar-dropdown,
 #damage-bar-dropdown {
+  z-index: 1;
+  
   height: $dropdownButtonSize;
 
   .dropdown-content {

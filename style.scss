@@ -48,7 +48,6 @@ body {
 	min-width: 885px;
 	height: 36px;
 
-	padding-left: 15px;
 	margin-top: -36px;
 
 	color: $lightTextPrimary;
@@ -57,7 +56,17 @@ body {
 
 	background-color: $gray900;
 	@include box-shadow(0px 0px 12px 2px $boxShadow);
+
+	#header-icon {
+		float: left;
+
+		height: 24px;
+
+		padding: 6px 12px 6px 18px;
+	}
 }
+
+
 
 #main-container {
 	float: left;
@@ -117,9 +126,9 @@ body {
 	color: $lightTextPrimary;
 	text-align: center;
 
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-image: url(images/backgrounds/Summoners_Rift_Center.png);
+	// background-repeat: no-repeat;
+	// background-size: cover;
+	// background-image: url(images/backgrounds/screenshot1_U.png);
 
 	@include box-shadow(0px 0px 8px 1px $boxShadow);
 
@@ -155,23 +164,11 @@ body {
 #meeps-row {
 	height: calc(40% + 70px);
 	min-height: 325px;
-
-  // TODO cleanup
-	// background-repeat: no-repeat;
-	// background-size: cover;
-	// background-image: url(images/backgrounds/Summoners_Rift_Center.png);
-	// background-color: #ffffff;
 }
 
 #monster-row {
 	height: calc(60% - 70px);
 	min-height: 325px;
-
-	// TODO cleanup
-	// background-repeat: no-repeat;
-	// background-size: cover;
-	// background-image: url(images/backgrounds/Nidalee_Splash_Left.png);
-	// background-color: #ffffff;
 }
 
 
@@ -195,16 +192,36 @@ body {
 
 #chimes-container {
 	float: left;
+	position: relative;
 
 	width: 100%;
 	height: calc(100% - 80px);
+
+	padding-top: 30px;
+	margin-top: -30px;
+
+	// TODO cleanup
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-image: url(images/backgrounds/Summoners_Rift_Top.png);
+	background-color: #ffffff;
 }
 
 #monster-container {
 	float: left;
+	position: relative;
 
 	width: 100%;
 	height: calc(100% - 80px);
+
+	padding-top: 30px;
+	margin-top: -30px;
+
+	// TODO cleanup
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-image: url(images/backgrounds/valley_1.png);
+	background-color: #ffffff;
 }
 
 /* STATUS CONTAINERS ///////////////////////////////////// */
@@ -477,20 +494,33 @@ body {
 
 /* CLICK BUTTONS ///////////////////////////////////// */
 
+.click-button-wrapper {
+	position: absolute;
+
+}
 .click-button {
-	position: relative;
+	position: absolute;
+	top: 14px;
+	left: 15px;
 	display:none;
 
-	margin: 25px auto 0 auto;
-	border-radius: 100%;
+	z-index: 1;
 
-	// border: solid 3px $primary900;
+	border-radius: 50%;
+
 	background-repeat: no-repeat;
 	background-size: contain;
 	background-position: 50%;
 	background-color: #111;
 
-	@include transition(box-shadow 100ms);
+	@include transition(box-shadow 100ms, top 100ms);
+
+	@include box-shadow(0 20px 30px -19px $lightTextPrimary inset,
+											0 -20px 30px -18px $black inset,
+											0 4px 10px -2px $boxShadow);
+
+	border-top: 1px solid $lightTextSecondary;
+	border-bottom: 1px solid $black;
 
 	.counter {
 		position: absolute;
@@ -503,37 +533,52 @@ body {
 }
 
 .click-button:hover {
-	// border-color: $primary500;
-
+	top: 12px;
+	@include box-shadow(0 20px 30px -18px $lightTextPrimary inset,
+											0 -20px 36px -18px $black inset,
+											0 6px 14px 0px $darkTextSecondary);
 }
 
 .click-button:active {
+	top: 15px;
 
+	@include box-shadow(0 20px 30px -20px $lightTextPrimary inset,
+											0 -20px 36px -18px $black inset,
+											0 8px 8px -6px $black);
+
+	border-top: 1px solid $lightTextSecondary;
+	border-bottom: 1px solid $black;
+}
+
+.click-button-holder {
+	position: absolute;
+	display:none;
+
+	z-index: 0;
+
+  border-radius: 50%;
+
+  background-color: $primary900;
+  @include box-shadow(inset 0px 1px 4px 1px $boxShadow);
 }
 
 #chimes-button {
 	background-image: url(images/Chimes_2x.png);
-	@include box-shadow(0 0 4px 0px $black, 0 0 140px 0 rgba(0, 0, 0, .3) inset);
 }
 
 #chimes-button:hover {
-	@include box-shadow(0 0 8px 1px $black);
 }
 
 #chimes-button:active {
-	@include box-shadow(0 0 4px 1px $black, 0 0 140px 0 rgba(0, 0, 0, .1) inset);
 }
 
 #monster-button {
-	@include box-shadow(0 0 4px 0px $boxShadow, 0 0 140px 0 rgba(0, 0, 0, .3) inset);
 }
 
 #monster-button:hover {
-	@include box-shadow(0 0 8px 1px $boxShadow);
 }
 
 #monster-button:active {
-	@include box-shadow(0 0 4px 1px $boxShadow, 0 0 140px 0 rgba(0, 0, 0, .1) inset);
 }
 
 /* ITEMS ///////////////////////////////////// */
@@ -808,7 +853,7 @@ body {
 	float: right;
 
 	width: 120px;
-	height: 100%;
+	height: calc(100% - 10px);
 
 	padding: 6px 4px 4px 4px;
 

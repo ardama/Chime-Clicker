@@ -108,23 +108,51 @@ var SCALE_MEEP_STRENGTH = 1;
 
 ///// Styling /////
 // update this if style changes
-var buttonYMargin = 25 + 3; // margin + border
-var buttonXMargin = 35 + 3; // margin + border
-var buttonMaxSize = 280;
+var buttonYMargin = 35;
+var buttonXMargin = 45;
+var buttonMaxSize = 260;
+var buttonOffset = 1; // for press animation
 
 var updateButtons = function() {
   $('.click-button').each(function() {
     $(this).show();
 
-    // ensure margin-top > 25px
-    var height = $(this).parent().height() - 2 * buttonYMargin;
-    // ensure margin-left > 35px;
-    var width = $(this).parent().width() - 2 * buttonXMargin;
+    var $wrapper = $(this).parent();
+    var h = $wrapper.parent().height();
+    var w = $wrapper.parent().width();
+
+    // ensure margin-top > 35px
+    var height = h - 2 * buttonYMargin;
+    // ensure margin-left > 45px;
+    var width = w - 2 * buttonXMargin;
 
     var size = Math.min(height, width, buttonMaxSize);
 
     $(this).height(size);
     $(this).width(size);
+  });
+
+
+  $('.click-button-holder').each(function() {
+    $(this).show();
+
+    var $wrapper = $(this).parent();
+    var h = $wrapper.parent().height();
+    var w = $wrapper.parent().width();
+
+    // ensure margin-top > 25px
+    var height = h - 2 * buttonYMargin;
+    // ensure margin-left > 35px;
+    var width = w - 2 * buttonXMargin;
+
+    var size = Math.min(height, width, buttonMaxSize);
+
+    $(this).height(size + 30);
+    $(this).width(size + 30);
+
+    $wrapper.css('left', (w - size - 30) / 2);
+    $wrapper.css('top', 25 + (h - size - 30) / 2);
+
   });
 };
 
@@ -195,20 +223,20 @@ GameApp.controller('GameController', function($scope) {
         });
       },
       mouseenter: function() {
-        $(this).stop();
-//        $(this).animate({height: "225px", width: "225px", marginTop: "20px", marginBottom: "0px"}, 200);
+        // $(this).stop();
+        // $(this).animate({height: "+=10px", width: "+=10px", top: "-=5px", left: "-=5px"}, 200);
       },
       mouseleave: function() {
-        $(this).stop();
-//        $(this).animate({height: "215px", width: "215px", marginTop: "25px", marginBottom: "5px"}, 200);
+        // $(this).stop();
+        // $(this).animate({height: "-=10px", width: "-=10px", top: "+=5px", left: "+=5px"}, 200);
       },
       mouseup: function() {
-        $(this).stop();
-//        $(this).animate({height: "225px", width: "225px", marginTop: "20px", marginBottom: "0px"}, 200);
+        // $(this).stop();
+        // $(this).animate({height: "225px", width: "225px", top: "65px"}, 200);
       },
       mousedown: function() {
-        $(this).stop();
-//        $(this).animate({height: "215px", width: "215px", marginTop: "25px", marginBottom: "5px"}, 200);
+        // $(this).stop();
+        // $(this).animate({height: "215px", width: "215px", top: "65px"}, 200);
       },
     });
 

@@ -8,6 +8,8 @@
 <script src="js/main.js"></script>
 <script src="js/game.js"></script>
 <script src="js/classes.js"></script>
+<link rel="shortcut icon" href="favicon.ico" type="image/icon">
+<link rel="icon" href="favicon.ico" type="image/icon">
 <link href="output.css" rel="stylesheet" type="text/css">
 <link href='http://fonts.googleapis.com/css?family=Rajdhani:400,600' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -16,6 +18,7 @@
 <body ng-controller="GameController">
 <div id="wrapper">
 	<div id="header" class="container title">
+		<img id="header-icon" src="images/Mask_negative.png"></img>
 		Chime Clicker
 	</div>
 	<div id="main-container" class="container">
@@ -49,7 +52,10 @@
 						</div>
 					</div>
 					<div id="chimes-container" class="container">
-						<div id="chimes-button" class="click-button button"></div>
+						<div id="monster-button-wrapper" class="click-button-wrapper">
+							<div id="chimes-button-holder" class="click-button-holder"></div>
+							<div id="chimes-button" class="click-button button"></div>
+						</div>
 					</div>
 				</div>
 
@@ -95,7 +101,10 @@
 						</div>
 					</div>
 					<div id="monster-container" class="container">
-						<div id="monster-button" class="click-button button" style="background-image:url({{game.getMonsterImageUrl(game.monster)}})"></div>
+						<div id="monster-button-wrapper" class="click-button-wrapper">
+							<div id="monster-button-holder" class="click-button-holder"></div>
+							<div id="monster-button" class="click-button button" style="background-image:url({{game.getMonsterImageUrl(game.monster)}})"></div>
+						</div>
 					</div>
 				</div>
 

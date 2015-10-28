@@ -261,6 +261,10 @@ Game.prototype.updateStats = function() {
 };
 
 Game.prototype.updateView = function() {
+    this.scope.$applyAsync();
+};
+
+Game.prototype.updateViewButtons = function() {
     this.scope.$applyAsync(function(scope) {updateButtons();});
 };
 
@@ -390,6 +394,7 @@ Game.prototype.selectMonster = function(direction) {
 
   this.monster = this.monstersAvailable[index];
   this.monsterHealth = this.monsters[this.monster].health;
+  this.updateViewButtons();
 };
 
 // Threshold functions
@@ -431,6 +436,7 @@ Game.prototype.levelUp = function(levels) {
         this.updateMonsters();
 
         levels--;
+        this.updateViewButtons();
     };
 };
 

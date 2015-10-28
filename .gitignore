@@ -1,2 +1,7 @@
 # SASS cache
 *.sass-cache
+
+#KeyPair
+KeyPair1.pem
+KeyPair1.ppk
+KeyPair2.ppk
