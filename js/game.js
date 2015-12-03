@@ -261,10 +261,6 @@ Game.prototype.updateStats = function() {
 };
 
 Game.prototype.updateView = function() {
-    this.scope.$applyAsync();
-};
-
-Game.prototype.updateViewButtons = function() {
     this.scope.$applyAsync(function(scope) {updateButtons();});
 };
 
@@ -300,6 +296,9 @@ Game.prototype.updateMonsters = function() {
                 this.monstersAvailable.push(monster);
                 this.monster = monster;
                 this.monsterHealth = this.monsters[monster].health;
+            }
+            if (this.level - 1 == this.monsters[monster].level) {
+                this.monsters[monster].experience /= 5;
             }
         }
     }
@@ -394,7 +393,6 @@ Game.prototype.selectMonster = function(direction) {
 
   this.monster = this.monstersAvailable[index];
   this.monsterHealth = this.monsters[this.monster].health;
-  this.updateViewButtons();
 };
 
 // Threshold functions
@@ -416,7 +414,7 @@ Game.prototype.killMonster = function() {
 };
 
 Game.prototype.levelUp = function(levels) {
-    levels = levels ? levels : 1;
+    levels = levels || 1;
     while (levels > 0 && this.level < 19) {
         this.level += 1;
 
@@ -436,7 +434,6 @@ Game.prototype.levelUp = function(levels) {
         this.updateMonsters();
 
         levels--;
-        this.updateViewButtons();
     };
 };
 

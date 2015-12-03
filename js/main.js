@@ -98,8 +98,8 @@ var MONSTER_REWARD = 25;
 // Scale Values
 var SCALE_CHIMES_PER_MEEP = 1.00;
 var SCALE_ITEM_COST = 0.10;
-var SCALE_MONSTER_REWARD = 0.03;
-var SCALE_MONSTER_HEALTH = 0.05;
+var SCALE_MONSTER_REWARD = 0.00;
+var SCALE_MONSTER_HEALTH = 0.02;
 var SCALE_MONSTER_LEVEL_REWARD = 5;
 var SCALE_MONSTER_LEVEL_HEALTH = {'easy' : 5, 'medium' : 5.5, 'hard' : 6, 'expert' : 6.5, 'impossible' : 8}
 var SCALE_EXPERIENCE_NEEDED = 5;
