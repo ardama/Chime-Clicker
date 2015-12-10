@@ -164,45 +164,45 @@ var updateButtons = function(force) {
 
 ///// Utility /////
 var prettyIntBig = function(num, fixed) {
-    if (!fixed)
-        fixed = 3;
-    if(num >= 1000000000000000000000)
-        return prettyInt(num)
-    if(num >= 1000000000000000000)
-        return (num / 1000000000000000000).toFixed(fixed) + ' quintillion';
-    if(num >= 1000000000000000)
-        return (num / 1000000000000000).toFixed(fixed) + ' quadrillion';
-    if(num >= 1000000000000)
-        return (num / 1000000000000).toFixed(fixed) + ' trillion';
-    if(num >= 1000000000)
-        return (num / 1000000000).toFixed(fixed) + ' billion';
-    if(num >= 1000000)
-        return (num / 1000000).toFixed(fixed) + ' million';
-    return prettyInt(num);
+  if (!fixed)
+    fixed = 3;
+  if(num >= 1000000000000000000000)
+    return prettyInt(num)
+  if(num >= 1000000000000000000)
+    return (num / 1000000000000000000).toFixed(fixed) + ' quintillion';
+  if(num >= 1000000000000000)
+    return (num / 1000000000000000).toFixed(fixed) + ' quadrillion';
+  if(num >= 1000000000000)
+    return (num / 1000000000000).toFixed(fixed) + ' trillion';
+  if(num >= 1000000000)
+    return (num / 1000000000).toFixed(fixed) + ' billion';
+  if(num >= 1000000)
+    return (num / 1000000).toFixed(fixed) + ' million';
+  return prettyInt(num);
 }
 
 var prettyIntBigCompact = function(num, fixed) {
-    if (!fixed)
-        fixed = 3;
-    if(num >= 1000000000000000000000)
-        return prettyInt(num)
-    if(num >= 1000000000000000000)
-        return (num / 1000000000000000000).toFixed(fixed) + 'qt';
-    if(num >= 1000000000000000)
-        return (num / 1000000000000000).toFixed(fixed) + 'q';
-    if(num >= 1000000000000)
-        return (num / 1000000000000).toFixed(fixed) + 't';
-    if(num >= 1000000000)
-        return (num / 1000000000).toFixed(fixed) + 'b';
-    if(num >= 1000000)
-        return (num / 1000000).toFixed(fixed) + 'm';
-    return prettyInt(num);
+  if (!fixed)
+    fixed = 3;
+  if(num >= 1000000000000000000000)
+    return prettyInt(num)
+  if(num >= 1000000000000000000)
+    return (num / 1000000000000000000).toFixed(fixed) + 'qt';
+  if(num >= 1000000000000000)
+    return (num / 1000000000000000).toFixed(fixed) + 'q';
+  if(num >= 1000000000000)
+    return (num / 1000000000000).toFixed(fixed) + 't';
+  if(num >= 1000000000)
+    return (num / 1000000000).toFixed(fixed) + 'b';
+  if(num >= 1000000)
+    return (num / 1000000).toFixed(fixed) + 'm';
+  return prettyInt(num);
 }
 
 var prettyInt = function(num) {
-    num = Math.floor(num);
-    var str = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return str;
+  num = Math.floor(num);
+  var str = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return str;
 }
 
 ///// Initialize Game /////
