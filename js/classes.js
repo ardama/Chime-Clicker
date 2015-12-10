@@ -22,11 +22,11 @@ Item.prototype.isZero = function(stat) {
     return this[stat] == 0 ? 'item-zero' : '';
 };
 
-var Upgrade = function(game, item, cost, level, discovery, swiftness, power, agility, income, requirements, type) {
-    this.Init(game, item, cost, level, discovery, swiftness, power, agility, income, requirements, type);
+var Upgrade = function(game, item, cost, level, discovery, swiftness, power, agility, income, requirements) {
+    this.Init(game, item, cost, level, discovery, swiftness, power, agility, income, requirements);
 };
 
-Upgrade.prototype.Init = function(game, item, cost, level, discovery, swiftness, power, agility, income, requirements, type) {
+Upgrade.prototype.Init = function(game, item, cost, level, discovery, swiftness, power, agility, income, requirements) {
     this.game = game;
     this.item = item;
     this.cost = cost;
@@ -38,17 +38,26 @@ Upgrade.prototype.Init = function(game, item, cost, level, discovery, swiftness,
     this.income = income;
     this.level = level;
     this.requirements = requirements;
-    this.type = type;
-
-    // TODO: count or purchased
-    this.count = 0;
+    this.purchased = false;
 };
 
 Upgrade.prototype.isZero = function(stat) {
     return this[stat] == 0 ? 'upgrade-zero' : '';
 };
 
-// TODO create Spell class, remove type from Upgrade
+var Spell = function(game, cost, level, duration, cooldown, effect) {
+    this.Init(game, cost, level, duration, cooldown, effect);
+}
+
+Spell.prototype.Init = function(game, cost, level, duration, cooldown, effect) {
+    this.game = game;
+    this.cost = cost;
+    this.level = level;
+    this.duration = duration;
+    this.cooldown = cooldown;
+    this.effect = effect;
+    this.purchased = false;
+}
 
 var Monster = function(game, level, health, experience, gold) {
     this.Init(game, level, health, experience, gold);

@@ -584,19 +584,21 @@ body {
   -webkit-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75);
-  -webkit-transition: background-color 100ms, box-shadow 100ms;
-  -moz-transition: background-color 100ms, box-shadow 100ms;
-  -o-transition: background-color 100ms, box-shadow 100ms;
-  transition: background-color 100ms, box-shadow 100ms;
+  -webkit-transition: background-color 100ms;
+  -moz-transition: background-color 100ms;
+  -o-transition: background-color 100ms;
+  transition: background-color 100ms;
   cursor: pointer; }
 
 .item-buy:hover {
+  margin-top: 4px;
   background-color: #455a64;
   -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
   box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75); }
 
 .item-buy:active {
+  margin-top: 5px;
   background-color: #455a64;
   -webkit-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset;
   -moz-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset;
@@ -615,10 +617,12 @@ body {
   cursor: pointer; }
 
 .item-left:hover {
-  background-color: #455a64; }
+  background-color: #455a64;
+  margin-top: 4px; }
 
 .item-left:active {
-  background-color: #455a64; }
+  background-color: #455a64;
+  margin-top: 5px; }
 
 .item-left-shadow {
   position: absolute;
@@ -626,11 +630,7 @@ body {
   height: 100%;
   -webkit-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75);
-  box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75);
-  -webkit-transition: box-shadow 100ms;
-  -moz-transition: box-shadow 100ms;
-  -o-transition: box-shadow 100ms;
-  transition: box-shadow 100ms; }
+  box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75); }
 
 .item-left-shadow:hover {
   -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
@@ -724,7 +724,7 @@ body {
 
 .item-upgrades {
   float: left;
-  display: inline-flex;
+  display: flex;
   flex-wrap: nowrap; }
 
 .item-upgrade {
@@ -733,7 +733,10 @@ body {
   height: 40px;
   margin: 30px 8px 0;
   border-radius: 20px;
-  background-size: cover; }
+  background-size: cover;
+  -webkit-box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.75) inset;
+  -moz-box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.75) inset;
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.75) inset; }
 
 /* UPGRADES ///////////////////////////////////// */
 .upgrade-wrapper {
@@ -752,19 +755,21 @@ body {
   -webkit-box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.75);
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.75);
-  -webkit-transition: background-color 100ms, box-shadow 100ms;
-  -moz-transition: background-color 100ms, box-shadow 100ms;
-  -o-transition: background-color 100ms, box-shadow 100ms;
-  transition: background-color 100ms, box-shadow 100ms;
+  -webkit-transition: background-color 100ms;
+  -moz-transition: background-color 100ms;
+  -o-transition: background-color 100ms;
+  transition: background-color 100ms;
   cursor: pointer; }
 
 .upgrade:hover {
+  margin-top: -1px;
   background-color: #455a64;
   -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
   box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75); }
 
 .upgrade:active {
+  margin-top: 0px;
   -webkit-box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.75) inset;
   -moz-box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.75) inset;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.75) inset; }

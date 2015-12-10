@@ -91,59 +91,59 @@ Game.prototype.createUpgrades = function() {
     var upgrades = {};
 
     // Boots of Speed
-    upgrades[BOOTS_OF_SWIFTNESS] = new Upgrade(this, BOOTS_OF_SPEED,        8000, 4, 0, 1, 0, 0, 0, [], ITEM_UPGRADE);
-    upgrades[BOOTS_OF_MOBILITY] = new Upgrade(this, BOOTS_OF_SPEED,         160000, 6, 0, 3, 0, 0, 0, [BOOTS_OF_SWIFTNESS], ITEM_UPGRADE);
-    upgrades[IONIAN_BOOTS_OF_LUCIDITY] = new Upgrade(this, BOOTS_OF_SPEED,  20000000, 9, 0, 4, 0, 5, 0, [BOOTS_OF_MOBILITY], ITEM_UPGRADE);
-    upgrades[MERCURYS_TREADS] = new Upgrade(this, BOOTS_OF_SPEED,           1200000000, 12, 60, 6, 0, 0, 0, [IONIAN_BOOTS_OF_LUCIDITY], ITEM_UPGRADE);
-    upgrades[SORCERERS_SHOES] = new Upgrade(this, BOOTS_OF_SPEED,           300000000000, 15, 0, 15, 120, 0, 0, [MERCURYS_TREADS], ITEM_UPGRADE);
+    upgrades[BOOTS_OF_SWIFTNESS] = new Upgrade(this, BOOTS_OF_SPEED,        8000, 4, 0, 1, 0, 0, 0, []);
+    upgrades[BOOTS_OF_MOBILITY] = new Upgrade(this, BOOTS_OF_SPEED,         160000, 6, 0, 3, 0, 0, 0, [BOOTS_OF_SWIFTNESS]);
+    upgrades[IONIAN_BOOTS_OF_LUCIDITY] = new Upgrade(this, BOOTS_OF_SPEED,  20000000, 9, 0, 4, 0, 5, 0, [BOOTS_OF_MOBILITY]);
+    upgrades[MERCURYS_TREADS] = new Upgrade(this, BOOTS_OF_SPEED,           1200000000, 12, 60, 6, 0, 0, 0, [IONIAN_BOOTS_OF_LUCIDITY]);
+    upgrades[SORCERERS_SHOES] = new Upgrade(this, BOOTS_OF_SPEED,           300000000000, 15, 0, 15, 120, 0, 0, [MERCURYS_TREADS]);
 
 
     // Ancient Coin
-    upgrades[NOMADS_MEDALLION] = new Upgrade(this, ANCIENT_COIN,            60000, 5, 0, 2, 0, 0, 25, [], ITEM_UPGRADE);
-    upgrades[TALISMAN_OF_ASCENSION] = new Upgrade(this, ANCIENT_COIN,       5000000, 8, 0, 3, 0, 2, 170, [NOMADS_MEDALLION], ITEM_UPGRADE);
+    upgrades[NOMADS_MEDALLION] = new Upgrade(this, ANCIENT_COIN,            60000, 5, 0, 2, 0, 0, 25, []);
+    upgrades[TALISMAN_OF_ASCENSION] = new Upgrade(this, ANCIENT_COIN,       5000000, 8, 0, 3, 0, 2, 170, [NOMADS_MEDALLION]);
 
 
     // Spellthief's Edge
-    upgrades[FROSTFANG] = new Upgrade(this, SPELLTHIEFS_EDGE,               30000, 5, 0, 0, 20, 0, 12, [], ITEM_UPGRADE);
-    upgrades[FROST_QUEENS_CLAIM] = new Upgrade(this, SPELLTHIEFS_EDGE,      3500000, 8, 0, 0, 90, 2, 85, [FROSTFANG], ITEM_UPGRADE);
+    upgrades[FROSTFANG] = new Upgrade(this, SPELLTHIEFS_EDGE,               30000, 5, 0, 0, 20, 0, 12, []);
+    upgrades[FROST_QUEENS_CLAIM] = new Upgrade(this, SPELLTHIEFS_EDGE,      3500000, 8, 0, 0, 90, 2, 85, [FROSTFANG]);
 
 
     // Relic Shield
-    upgrades[TARGONS_BRACE] = new Upgrade(this, RELIC_SHIELD,               30000, 5, 3, 0, 0, 0, 9, [], ITEM_UPGRADE);
-    upgrades[FACE_OF_THE_MOUNTAIN] = new Upgrade(this, RELIC_SHIELD,        3500000, 8, 6, 0, 0, 2, 70, [TARGONS_BRACE], ITEM_UPGRADE);
+    upgrades[TARGONS_BRACE] = new Upgrade(this, RELIC_SHIELD,               30000, 5, 3, 0, 0, 0, 9, []);
+    upgrades[FACE_OF_THE_MOUNTAIN] = new Upgrade(this, RELIC_SHIELD,        3500000, 8, 6, 0, 0, 2, 70, [TARGONS_BRACE]);
 
 
     // Ruby Crystal
-    upgrades[KINDLEGEM] = new Upgrade(this, RUBY_CRYSTAL,                   80000, 5, 5, 0, 0, 1, 0, [], ITEM_UPGRADE);
-    upgrades[LOCKET_OF_THE_IRON_SOLARI] = new Upgrade(this, RUBY_CRYSTAL,   500000000000, 15, 80, 0, 0, 4, 0, [KINDLEGEM], ITEM_UPGRADE);
+    upgrades[KINDLEGEM] = new Upgrade(this, RUBY_CRYSTAL,                   80000, 5, 5, 0, 0, 1, 0, []);
+    upgrades[LOCKET_OF_THE_IRON_SOLARI] = new Upgrade(this, RUBY_CRYSTAL,   500000000000, 15, 80, 0, 0, 4, 0, [KINDLEGEM]);
 
-    upgrades[GIANTS_BELT] = new Upgrade(this, RUBY_CRYSTAL,                 25000000, 9, 20, 0, 0, 0, 0, [], ITEM_UPGRADE);
-    upgrades[WARMOGS_ARMOR] = new Upgrade(this, RUBY_CRYSTAL,               500000000, 11, 40, 0, 0, 0, 0, [GIANTS_BELT], ITEM_UPGRADE);
-    upgrades[FROZEN_MALLET] = new Upgrade(this, RUBY_CRYSTAL,               12500000000000, 17, 130, 0, 250, 0, 0, [GIANTS_BELT], ITEM_UPGRADE);
+    upgrades[GIANTS_BELT] = new Upgrade(this, RUBY_CRYSTAL,                 25000000, 9, 20, 0, 0, 0, 0, []);
+    upgrades[WARMOGS_ARMOR] = new Upgrade(this, RUBY_CRYSTAL,               500000000, 11, 40, 0, 0, 0, 0, [GIANTS_BELT]);
+    upgrades[FROZEN_MALLET] = new Upgrade(this, RUBY_CRYSTAL,               12500000000000, 17, 130, 0, 250, 0, 0, [GIANTS_BELT]);
 
-    upgrades[CRYSTALLINE_BRACER] = new Upgrade(this, RUBY_CRYSTAL,          800000, 7, 10, 0, 0, 0, 0, [], ITEM_UPGRADE);
-    upgrades[RIGHTEOUS_GLORY] = new Upgrade(this, RUBY_CRYSTAL,             12000000000, 13, 60, 5, 0, 0, 0, [CRYSTALLINE_BRACER], ITEM_UPGRADE);
+    upgrades[CRYSTALLINE_BRACER] = new Upgrade(this, RUBY_CRYSTAL,          800000, 7, 10, 0, 0, 0, 0, []);
+    upgrades[RIGHTEOUS_GLORY] = new Upgrade(this, RUBY_CRYSTAL,             12000000000, 13, 60, 5, 0, 0, 0, [CRYSTALLINE_BRACER]);
 
 
     // Amplifying Tome
-    upgrades[FIENDISH_CODEX] = new Upgrade(this, AMPLIFYING_TOME,           200000, 6, 0, 0, 100, 1, 0, [], ITEM_UPGRADE);
-    upgrades[TWIN_SHADOWS] = new Upgrade(this, AMPLIFYING_TOME,             6000000, 8, 0, 2, 150, 1, 0, [FIENDISH_CODEX], ITEM_UPGRADE);
-    upgrades[MORELLONOMICON] = new Upgrade(this, AMPLIFYING_TOME,           2500000000, 12, 0, 0, 200, 3, 0, [FIENDISH_CODEX], ITEM_UPGRADE);
+    upgrades[FIENDISH_CODEX] = new Upgrade(this, AMPLIFYING_TOME,           200000, 6, 0, 0, 100, 1, 0, []);
+    upgrades[TWIN_SHADOWS] = new Upgrade(this, AMPLIFYING_TOME,             6000000, 8, 0, 2, 150, 1, 0, [FIENDISH_CODEX]);
+    upgrades[MORELLONOMICON] = new Upgrade(this, AMPLIFYING_TOME,           2500000000, 12, 0, 0, 200, 3, 0, [FIENDISH_CODEX]);
 
-    upgrades[NEEDLESSLY_LARGE_ROD] = new Upgrade(this, AMPLIFYING_TOME,     100000000, 10, 0, 0, 300, 0, 0, [], ITEM_UPGRADE);
-    upgrades[LUDENS_ECHO] = new Upgrade(this, AMPLIFYING_TOME,              50000000000, 14, 0, 3, 450, 0, 0, [NEEDLESSLY_LARGE_ROD], ITEM_UPGRADE);
-    upgrades[ZHONYAS_HOURGLASS] = new Upgrade(this, AMPLIFYING_TOME,        1500000000000, 16, 80, 0, 600, 0, 0, [NEEDLESSLY_LARGE_ROD], ITEM_UPGRADE);
-    upgrades[RABADONS_DEATHCAP] = new Upgrade(this, AMPLIFYING_TOME,        30000000000000, 18, 0, 0, 1100, 0, 0, [NEEDLESSLY_LARGE_ROD], ITEM_UPGRADE);
+    upgrades[NEEDLESSLY_LARGE_ROD] = new Upgrade(this, AMPLIFYING_TOME,     100000000, 10, 0, 0, 300, 0, 0, []);
+    upgrades[LUDENS_ECHO] = new Upgrade(this, AMPLIFYING_TOME,              50000000000, 14, 0, 3, 450, 0, 0, [NEEDLESSLY_LARGE_ROD]);
+    upgrades[ZHONYAS_HOURGLASS] = new Upgrade(this, AMPLIFYING_TOME,        1500000000000, 16, 80, 0, 600, 0, 0, [NEEDLESSLY_LARGE_ROD]);
+    upgrades[RABADONS_DEATHCAP] = new Upgrade(this, AMPLIFYING_TOME,        30000000000000, 18, 0, 0, 1100, 0, 0, [NEEDLESSLY_LARGE_ROD]);
 
     // Dagger
-    upgrades[RECURVE_BOW] = new Upgrade(this, DAGGER,                       250000, 6, 0, 0, 0, 2, 0, [], ITEM_UPGRADE);
-    upgrades[RUNAANS_HURRICANE] = new Upgrade(this, DAGGER,                 7500000, 8, 0, 0, 20, 3, 0, [RECURVE_BOW], ITEM_UPGRADE);
-    upgrades[WITS_END] = new Upgrade(this, DAGGER,                          5000000000, 12, 50, 0, 80, 5, 0, [RECURVE_BOW], ITEM_UPGRADE);
+    upgrades[RECURVE_BOW] = new Upgrade(this, DAGGER,                       250000, 6, 0, 0, 0, 2, 0, []);
+    upgrades[RUNAANS_HURRICANE] = new Upgrade(this, DAGGER,                 7500000, 8, 0, 0, 20, 3, 0, [RECURVE_BOW]);
+    upgrades[WITS_END] = new Upgrade(this, DAGGER,                          5000000000, 12, 50, 0, 80, 5, 0, [RECURVE_BOW]);
 
-    upgrades[ZEAL] = new Upgrade(this, DAGGER,                              200000000, 10, 0, 3, 0, 4, 0, [], ITEM_UPGRADE);
-    upgrades[STATIKK_SHIV] = new Upgrade(this, DAGGER,                      100000000000, 14, 0, 3, 150, 5, 0, [ZEAL], ITEM_UPGRADE);
-    upgrades[PHANTOM_DANCER] = new Upgrade(this, DAGGER,                    3000000000000, 16, 0, 4, 0, 10, 0, [ZEAL], ITEM_UPGRADE);
-    upgrades[TRINITY_FORCE] = new Upgrade(this, DAGGER,                     75000000000000, 18, 100, 5, 150, 10, 0, [ZEAL], ITEM_UPGRADE);
+    upgrades[ZEAL] = new Upgrade(this, DAGGER,                              200000000, 10, 0, 3, 0, 4, 0, []);
+    upgrades[STATIKK_SHIV] = new Upgrade(this, DAGGER,                      100000000000, 14, 0, 3, 150, 5, 0, [ZEAL]);
+    upgrades[PHANTOM_DANCER] = new Upgrade(this, DAGGER,                    3000000000000, 16, 0, 4, 0, 10, 0, [ZEAL]);
+    upgrades[TRINITY_FORCE] = new Upgrade(this, DAGGER,                     75000000000000, 18, 100, 5, 150, 10, 0, [ZEAL]);
 
 
     // TODO: Spell Upgrades
@@ -261,10 +261,6 @@ Game.prototype.updateStats = function() {
 };
 
 Game.prototype.updateView = function() {
-    this.scope.$applyAsync();
-};
-
-Game.prototype.updateViewButtons = function() {
     this.scope.$applyAsync(function(scope) {updateButtons();});
 };
 
@@ -353,7 +349,7 @@ Game.prototype.buyUpgrade = function(name) {
     var upgrade = this.upgrades[name];
     if (this.gold >= upgrade.cost) {
         this.gold -= upgrade.cost;
-        upgrade.count += 1;
+        upgrade.purchased = true;
 
         if (upgrade.type == ITEM_UPGRADE) {
 
@@ -394,7 +390,6 @@ Game.prototype.selectMonster = function(direction) {
 
   this.monster = this.monstersAvailable[index];
   this.monsterHealth = this.monsters[this.monster].health;
-  this.updateViewButtons();
 };
 
 // Threshold functions
@@ -436,7 +431,6 @@ Game.prototype.levelUp = function(levels) {
         this.updateMonsters();
 
         levels--;
-        this.updateViewButtons();
     };
 };
 

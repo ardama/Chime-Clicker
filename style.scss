@@ -655,17 +655,21 @@ body {
 
 	background-color: $primary900;
 	@include box-shadow(0 0 2px 0px $boxShadow);
-	@include transition(background-color 100ms, box-shadow 100ms);
+	@include transition(background-color 100ms);
 
 	cursor: pointer;
 }
 
 .item-buy:hover {
+	margin-top: 4px;
+
 	background-color: $primary700;
 	@include box-shadow(0 0 5px 1px $boxShadow);
 }
 
 .item-buy:active {
+	margin-top: 5px;
+
 	background-color: $primary700;
 	@include box-shadow(0 0 2px 0px $boxShadow inset);
 }
@@ -686,10 +690,12 @@ body {
 
 .item-left:hover {
 	background-color: $primary700;
+	margin-top: 4px;
 }
 
 .item-left:active {
 	background-color: $primary700;
+	margin-top: 5px;
 }
 
 .item-left-shadow {
@@ -699,7 +705,6 @@ body {
 	height: 100%;
 
 	@include box-shadow(0 0 2px 0px $boxShadow);
-	@include transition(box-shadow 100ms);
 }
 
 .item-left-shadow:hover {
@@ -831,7 +836,7 @@ body {
 
 .item-upgrades {
 	float: left;
-	display: inline-flex;
+	display: flex;
 	flex-wrap: nowrap;
 }
 
@@ -845,6 +850,7 @@ body {
 	border-radius: 20px;
 
 	background-size: cover;
+	@include box-shadow(0 0 2px 2px $boxShadow inset);
 }
 
 /* UPGRADES ///////////////////////////////////// */
@@ -871,17 +877,21 @@ body {
 
 	background-color: $primary900;
 	@include box-shadow(0 0 2px 0 $boxShadow);
-	@include transition(background-color 100ms, box-shadow 100ms);
+	@include transition(background-color 100ms);
 
 	cursor: pointer;
 }
 
 .upgrade:hover {
+	margin-top: -1px;
+
 	background-color: $primary700;
 	@include box-shadow(0 0 5px 1px $boxShadow);
 }
 
 .upgrade:active {
+	margin-top: 0px;
+
 	@include box-shadow(0 0 2px 0 $boxShadow inset);
 }
 

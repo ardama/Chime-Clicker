@@ -113,8 +113,11 @@ var buttonXMargin = 45;
 var buttonMaxSize = 260;
 var buttonOffset = 1; // for press animation
 
-var updateButtons = function() {
+var updateButtons = function(force) {
   $('.click-button').each(function() {
+    if ( $(this).css('display') != 'none' && !force)
+      return;
+
     $(this).show();
 
     var $wrapper = $(this).parent();
@@ -134,6 +137,9 @@ var updateButtons = function() {
 
 
   $('.click-button-holder').each(function() {
+    if ( $(this).css('display') != 'none' && !force)
+      return;
+
     $(this).show();
 
     var $wrapper = $(this).parent();
@@ -284,9 +290,9 @@ GameApp.controller('GameController', function($scope) {
 
 ///// Other /////
 $(window).resize(function() {
-  updateButtons();
+  updateButtons(true);
 });
 
 $(window).load(function() {
-  updateButtons();
+  updateButtons(true);
 });
