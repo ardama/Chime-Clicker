@@ -297,6 +297,9 @@ Game.prototype.updateMonsters = function() {
                 this.monster = monster;
                 this.monsterHealth = this.monsters[monster].health;
             }
+            if (this.level - 1 == this.monsters[monster].level) {
+                this.monsters[monster].experience /= 5;
+            }
         }
     }
 };
@@ -411,7 +414,7 @@ Game.prototype.killMonster = function() {
 };
 
 Game.prototype.levelUp = function(levels) {
-    levels = levels ? levels : 1;
+    levels = levels || 1;
     while (levels > 0 && this.level < 19) {
         this.level += 1;
 
