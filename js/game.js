@@ -72,13 +72,18 @@ Game.prototype.Init = function(scope, difficulty) {
   this.spoilsOfWarBonus = .0;
   this.tributeBonus = 0;
 
-  this.smiteBonus = .0;
+  this.smiteBonus = 0;
   this.ghostBonus = 1.0;
   this.flashBonus = 1.05;
   this.exhaustBonus = 1.0;
   this.igniteDamageRate = 0;
 
-
+  // Status Values
+  this.LOCKED = LOCKED;
+  this.AVAILABLE = AVAILABLE;
+  this.PURCHASED = PURCHASED
+  this.ACTIVE = ACTIVE;
+  this.COOLDOWN = COOLDOWN;
 
 };
 
@@ -101,8 +106,6 @@ Game.prototype.createItems = function() {
 
 Game.prototype.createUpgrades = function() {
   var upgrades = {};
-
-  // TODO: replace with requirements function
 
   // Boots of Speed
   upgrades[BOOTS_OF_SWIFTNESS] = new Upgrade(this, BOOTS_OF_SPEED,        8000, 4, 0, 1, 0, 0, 0, []);
@@ -165,45 +168,45 @@ Game.prototype.createSpells = function() {
     var spells = {};
 
     // game, duration, cooldown, start, end, unlock, tooltip
-
-
     spells[FAVOR] = new Spell(this, 0, 0,
-        function(game) {game.favor = true;},
         function(game) {},
-        function(game) {return game.upgradesPurchased.indexOf(TALISMAN_OF_ASCENSION) > -1},
-        function(game) {return "Gain " + game.getFavorGold() + "% bonus gold from monsters killed.  Gold scales with number of Ancient Coins owned."}
+        function(game) {},
+        function(game) {return game.upgrades[TALISMAN_OF_ASCENSION].status == game.PURCHASED;},
+        function(game) {return "Gain " + game.getFavorBonus().toFixed(1) + "% bonus reward gold from monsters killed.  Gold scales with number of Ancient Coins owned."}
     );
-    spells[SPOILS_OF_WAR] = new Spell(this, 0, 0,
-        function(game) {game.spoilsOfWar = true},
+    spells[SPOILS_OF_WAR] = new Spell(this, 0, 10,
+        function(game) {game.spoilsOfWarBonus = game.getSpoilsOfWarBonus() / 100; game.killMonster(); game.spoilsOfWarBonus = 0;},
         function(game) {},
-        function(game) {return game.upgradesPurchased.indexOf(FACE_OF_THE_MOUNTAIN) > -1},
-        function(game) {return "Once every minute, execute a monster below 10% max health on click, gaining " + game.getSpoilsOfWarGold() + "% bonus gold.  Gold scales with number of Relic Shields owned."}
+        function(game) {return game.upgrades[FACE_OF_THE_MOUNTAIN].status == game.PURCHASED;},
+        function(game) {return "Once every minute, execute a monster below 20% max health on click, gaining " + game.getSpoilsOfWarBonus().toFixed(1) + "% bonus reward gold.  Gold scales with number of Relic Shields owned."}
     );
-    spells[TRIBUTE] = new Spell(this, 0, 0,
-        function(game) {game.tribute = true;},
+    spells[TRIBUTE] = new Spell(this, 0, 10,
+        function(game) {game.gold += Math.ceil(game.monsters[game.monster].gold * game.getTributeBonus() / 100);},
         function(game) {},
-        function(game) {return game.upgradesPurchased.indexOf(FROST_QUEENS_CLAIM) > -1},
-        function(game) {return "Once every 30 seconds, gain " + game.getTributeGold() + " bonus gold on monster click.  Gold amount scales with number of Spellthiefs Edges owned."},
+        function(game) {return game.upgrades[FROST_QUEENS_CLAIM].status == game.PURCHASED;},
+        function(game) {return "Once every 30 seconds, gain " + game.getTributeBonus().toFixed(1) + "% of reward gold on monster click.  Gold scales with number of Spellthief's Edges owned."}
     );
 
     // instant damage to jungle monsters
-    spells[SMITE] = new Spell(this, 0, 30,
-        function(game) {game.addDamage(game.smiteDamage)},
+    spells[SMITE] = new Spell(this, 0, 15,
+        function(game) {game.smiteBonus = .20;
+                        game.addDamage(game.getSmiteDamage(), true);
+                        game.smiteBonus = 0;},
         function(game) {},
         function(game) {return game.level >= 1;},
-        function(game) {}
+        function(game) {return "Once every 60 seconds, instantly deal " + game.prettyIntCompact(game.getSmiteDamage()) + " damage to current monster.  Monster kills with smite grant 20% bonus gold."}
     );
     // increased chime collection for duration
     spells[GHOST] = new Spell(this, 10, 30,
         function(game) {game.ghostActive = true;},
-        function(game) {game.ghostActive = false},
+        function(game) {game.ghostActive = false;},
         function(game) {return game.level >= 3},
         function(game) {}
     );
     // instant increase meeps by %
     spells[FLASH] = new Spell(this, 0, 30,
-        function(game) {game.flashActive = true;},
-        function(game) {game.flashActive = false},
+        function(game) {game.addMeeps(Math.floor(game.meeps * .1));},
+        function(game) {},
         function(game) {return game.level >= 5},
         function(game) {}
     );
@@ -276,7 +279,7 @@ Game.prototype.createMonsters = function() {
     scaleReward *= 10;
     }
 
-    type = CHAMPIONS.indexOf(monster) > -1 ? MONSTER_ : "monster";
+    type = CHAMPIONS.indexOf(monster) > -1 ? MONSTER_CHAMPION : MONSTER_JUNGLE;
     monsters[monster] = new Monster(this, i + 1, MONSTER_HEALTH * scaleHealth,
                                                  MONSTER_EXPERIENCE * scaleExp,
                                                  MONSTER_REWARD * scaleReward,
@@ -323,17 +326,18 @@ Game.prototype.addDamage = function(damage, user) {
   this.userDamage += damage;
 
   var monster = this.monsters[this.monster];
-  var percent = (monster.currentHealth - damage) / monster.maxHealth;
-  if (user && this.spells[SPOILS_OF_WAR].status == AVAILABLE && percent < 15) {
+  var executeThreshold = .20 * monster.maxHealth;
+  var excessDamage = executeThreshold - (monster.currentHealth - damage);
+  if (user && this.spells[SPOILS_OF_WAR].status == this.AVAILABLE && excessDamage >= 0) {
     this.activateSpell(SPOILS_OF_WAR);
-    return;
+    damage = excessDamage;
   }
 
-  while (this.damage >= monster.currentHealth) {
+  while (damage >= monster.currentHealth) {
     damage -= monster.currentHealth;
     this.killMonster();
   }
-  monster.currentHealth -= this.damage;
+  monster.currentHealth -= damage;
 };
 
 Game.prototype.addGold = function(gold) {
@@ -357,22 +361,23 @@ Game.prototype.addMeeps = function(meeps) {
 };
 
 Game.prototype.addSpellTime = function(time) {
-  // TODO: check variable names
-  var activeSpells = this.getSpells(ACTIVE);
-  var cooldownSpells = this.getSpells(COOLDOWN);
+  var activeSpells = this.getObjectsByStatus(this.spells, this.ACTIVE);
+  var cooldownSpells = this.getObjectsByStatus(this.spells, this.COOLDOWN);
 
-  for (var activeSpell in activeSpells) {
+  for (var i = 0; i < activeSpells.length; i++) {
+    var activeSpell = this.spells[activeSpells[i]];
     activeSpell.durationLeft -= time;
     if (activeSpell.durationLeft <= 0) {
       activeSpell.end(this);
-      activeSpell.status = COOLDOWN;
+      activeSpell.status = this.COOLDOWN;
       activeSpell.cooldownLeft = activeSpell.cooldown;
     }
   }
-  for (var cooldownSpell in cooldownSpells) {
-    cooldownSpell.durationLeft -= time;
+  for (var i = 0; i < cooldownSpells.length; i++) {
+    var cooldownSpell = this.spells[cooldownSpells[i]];
+    cooldownSpell.cooldownLeft -= time;
     if (cooldownSpell.cooldownLeft <= 0) {
-      cooldownSpell.status = AVAILABLE;
+      cooldownSpell.status = this.AVAILABLE;
     }
   }};
 
@@ -387,6 +392,10 @@ Game.prototype.updateStats = function() {
   this.damageRate = this.damagePerClick * this.damageClickRate * this.exhaustBonus + this.igniteDamageRate;
 
   this.goldRate = (this.meeps * this.meepGold) + (this.incomeBase * this.incomeBonus);
+
+  if (this.spells[FAVOR].status == this.AVAILABLE) {
+    this.favorBonus = this.getFavorBonus() / 100;
+  }
 };
 
 Game.prototype.updateView = function() {
@@ -394,28 +403,33 @@ Game.prototype.updateView = function() {
 };
 
 Game.prototype.unlockItems = function() {
-  var items = this.getObjectsByStatus(this.items, LOCKED);
-  for (var item in items) {
+  var items = this.getObjectsByStatus(this.items, this.LOCKED);
+  for (var i = 0; i < items.length; i++) {
+    var item = this.items[items[i]];
     if (item.unlock(this)) {
-      item.status = AVAILABLE;
+      item.status = this.AVAILABLE;
     }
   }
 };
 
 Game.prototype.unlockUpgrades = function() {
-  var upgrades = this.getObjectsByStatus(this.upgrades, LOCKED);
-  for (var upgrade in upgrades) {
+  var upgrades = this.getObjectsByStatus(this.upgrades, this.LOCKED);
+  for (var i = 0; i < upgrades.length; i++) {
+    var upgrade = this.upgrades[upgrades[i]];
+    var item = this.items[upgrade.item];
     if (upgrade.unlock(this)) {
-      upgrade.status = AVAILABLE;
+      upgrade.status = this.AVAILABLE;
+      item.upgradesAvailable.push(upgrades[i]);
     }
   }
 };
 
 Game.prototype.unlockSpells = function() {
-  var spells = this.getObjectsByStatus(this.spells, LOCKED);
-  for (var spell in spells) {
+  var spells = this.getObjectsByStatus(this.spells, this.LOCKED);
+  for (var i = 0; i < spells.length; i++) {
+    var spell = this.spells[spells[i]];
     if (spell.unlock(this)) {
-      spell.status = AVAILABLE;
+      spell.status = this.AVAILABLE;
     }
   }
 };
@@ -427,7 +441,6 @@ Game.prototype.updateMonsters = function() {
       if (this.level == monster.level) {
         this.monstersAvailable.push(monsterName);
         this.monster = monsterName;
-        this.smiteDamage = monster.health * .25;
       }
       if (this.level - 1 == monster.level) {
         monster.experience /= 5;
@@ -443,7 +456,7 @@ Game.prototype.chimesClick = function() {
 };
 
 Game.prototype.damageClick = function() {
-  if (this.spells[TRIBUTE].status == AVAILABLE)
+  if (this.spells[TRIBUTE].status == this.AVAILABLE)
     this.activateSpell(TRIBUTE);
 
   this.addDamage(this.damagePerClick, true);
@@ -452,13 +465,12 @@ Game.prototype.damageClick = function() {
 
 Game.prototype.activateSpell = function(name) {
   var spell = this.spells[name];
-  if (!spell.status == AVAILABLE) {
+  if (!spell.status == this.AVAILABLE) {
     return;
   }
-  spell.start(game);
-  // TODO: check variable name
+  spell.start(this);
   spell.durationLeft = spell.duration
-  spell.status = ACTIVE;
+  spell.status = this.ACTIVE;
 
   this.updateView();
 };
@@ -498,18 +510,20 @@ Game.prototype.buyItem = function(name, count) {
 
 Game.prototype.buyUpgrade = function(name) {
   var upgrade = this.upgrades[name];
-  if (upgrade.status == AVAILABLE && this.gold >= upgrade.cost) {
+  if (upgrade.status == this.AVAILABLE && this.gold >= upgrade.cost) {
     this.gold -= upgrade.cost;
-    upgrade.status = PURCHASED;
+    upgrade.status = this.PURCHASED;
 
     // Upgrade all future items
     var item = this.items[upgrade.item];
-    item.upgrades.push(name);
     item.discovery += upgrade.discovery;
     item.swiftness += upgrade.swiftness;
     item.power += upgrade.power;
     item.agility += upgrade.agility;
     item.income += upgrade.income;
+
+    item.upgrades.push(name);
+    item.upgradesAvailable.splice(item.upgradesAvailable.indexOf(name), 1);
 
     // Upgrade all previously bought items
     var count = item.count;
@@ -520,6 +534,7 @@ Game.prototype.buyUpgrade = function(name) {
     this.incomeBase += count * upgrade.income;
 
     this.unlockUpgrades();
+    this.unlockSpells();
     this.updateStats();
     this.updateView();
   }
@@ -544,7 +559,7 @@ Game.prototype.killMonster = function() {
   // use smite and/or spoils of war bonus if either/both dealt killing blow
   // otherwise grant favor bonus
   var bonus = this.smiteBonus + this.spoilsOfWarBonus || this.favorBonus;
-  var gold = monster.gold * (1 + bonus);
+  var gold = Math.ceil(monster.gold * (1 + bonus));
 
   monster.maxHealth += monster.startHealth * SCALE_MONSTER_HEALTH;
   monster.currentHealth = monster.maxHealth;
@@ -577,7 +592,7 @@ Game.prototype.levelUp = function(levels) {
     this.updateStats();
     this.unlockItems();
     this.unlockUpgrades();
-    this.unlockSpells
+    this.unlockSpells();
     this.updateMonsters();
 
     levels--;
@@ -646,28 +661,30 @@ Game.prototype.getExperiencePercent = function() {
   return 100 * this.experience / this.experienceNeeded;
 };
 
-Game.prototype.getFavorGold = function(game) {
-    return 2 + getBaseLog(3, game.items[ANCIENT_COIN].count).toFloat(1);
+Game.prototype.getFavorBonus = function() {
+  return 2 + getBaseLog(3, this.items[ANCIENT_COIN].count + 1);
 };
 
-Game.prototype.getSpoilsOfWarGold = function(game) {
-    return 10 + getBaseLog(1.2, game.items[RELIC_SHIELD].count).toFloat(1);
+Game.prototype.getSpoilsOfWarBonus = function() {
+  return 10 + getBaseLog(1.2, this.items[RELIC_SHIELD].count + 1);
 };
 
-Game.prototype.getTributeGold = function(game) {
-    var monsterGold = game.monstersAvailable[game.level - 1].gold;
-    var percent = .03 + getBaseLog(5, game.items[SPELLTHIEFS_EDGE].count) / 100;
-    return Math.ceil(monsterGold * percent);
+Game.prototype.getTributeBonus = function() {
+  return 3 + getBaseLog(5, this.items[SPELLTHIEFS_EDGE].count + 1);
+};
+
+Game.prototype.getSmiteDamage = function() {
+  return MONSTER_HEALTH * Math.pow(this.scaleMonsterLevelHealth, this.level - 1) * .2;
 };
 
 Game.prototype.isFirstMonster = function() {
-    var index = this.monstersAvailable.indexOf(this.monster);
-    return index == 0 ? 'first' : '';
+  var index = this.monstersAvailable.indexOf(this.monster);
+  return index == 0 ? 'first' : '';
 };
 
 Game.prototype.isLastMonster = function() {
-    var index = this.monstersAvailable.indexOf(this.monster);
-    return index == this.monstersAvailable.length - 1 ? 'last' : '';
+  var index = this.monstersAvailable.indexOf(this.monster);
+  return index == this.monstersAvailable.length - 1 ? 'last' : '';
 };
 
 Game.prototype.getObjectsByStatus = function(objectMap, status) {
@@ -675,8 +692,8 @@ Game.prototype.getObjectsByStatus = function(objectMap, status) {
   for (var objectName in objectMap) {
     if (objectMap.hasOwnProperty(objectName)) {
       var object = objectMap[objectName];
-      if (!status || object.status == status) {
-        objects.push(object);
+      if (isNaN(status) || object.status == status) {
+        objects.push(objectName);
       }
     }
   }

@@ -1,20 +1,25 @@
-var Item = function(game, cost, discovery, swiftness, power, agility, income, unlock) {
-  this.Init(game, cost, discovery, swiftness, power, agility, income, unlock);
+var Item = function(game, cost, level, discovery, swiftness, power, agility, income) {
+  this.Init(game, cost, level, discovery, swiftness, power, agility, income);
 };
 
-Item.prototype.Init = function(game, cost, discovery, swiftness, power, agility, income, unlock) {
+Item.prototype.Init = function(game, cost, level, discovery, swiftness, power, agility, income) {
   this.game = game;
   this.cost = cost;
+  this.level = level;
   this.startCost = cost;
   this.discovery = discovery;
   this.swiftness = swiftness;
   this.power = power;
   this.agility = agility;
   this.income = income;
-  this.unlock = unlock;
+
+  this.unlock = function(game) {
+    return game.level >= this.level;
+  };
 
   this.status = LOCKED;
   this.count = 0;
+
   this.upgrades = [];
   this.upgradesAvailable = [];
 };
@@ -23,14 +28,15 @@ Item.prototype.isZero = function(stat) {
   return this[stat] == 0 ? 'item-zero' : '';
 };
 
-var Upgrade = function(game, item, cost, discovery, swiftness, power, agility, income, unlock) {
-  this.Init(game, item, cost, discovery, swiftness, power, agility, income, unlock);
+var Upgrade = function(game, item, cost, level, discovery, swiftness, power, agility, income, requirements) {
+  this.Init(game, item, cost, level, discovery, swiftness, power, agility, income, requirements);
 };
 
-Upgrade.prototype.Init = function(game, item, cost, discovery, swiftness, power, agility, income, unlock) {
+Upgrade.prototype.Init = function(game, item, cost, level, discovery, swiftness, power, agility, income, requirements) {
   this.game = game;
   this.item = item;
   this.cost = cost;
+  this.level = level;
   this.startCost = cost;
   this.discovery = discovery;
   this.swiftness = swiftness;
@@ -38,7 +44,18 @@ Upgrade.prototype.Init = function(game, item, cost, discovery, swiftness, power,
   this.agility = agility;
   this.income = income;
 
-  this.unlock = unlock;
+  this.unlock = function(game) {
+    if (game.level < this.level)
+      return false;
+    if (!this.requirements || !this.requirements.length)
+      return true;
+    for (var i = 0; i < this.requirements.length; i++) {
+      if (game.upgrades[this.requirements[i]].status != PURCHASED)
+        return false;
+    }
+    return true;
+  };
+
   this.status = LOCKED;
 };
 

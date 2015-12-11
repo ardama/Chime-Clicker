@@ -91,7 +91,7 @@
 										DPS {{game.prettyInt(game.damageRate)}}
 									</div>
 									<div id="damage-progress">
-										{{game.prettyIntCompact(game.monsterHealth, 2)}} / {{game.prettyIntCompact(game.monsters[game.monster].health, 2)}} hp
+										{{game.prettyIntCompact(game.monsters[game.monster].currentHealth, 2)}} / {{game.prettyIntCompact(game.monsters[game.monster].maxHealth, 2)}} hp
 									</div>
 								</div>
 							</div>
@@ -157,7 +157,7 @@
 
 
 				<div id="items-container">
-					<div ng-repeat="item in game.itemsAvailable" class="item container">
+					<div ng-repeat="item in game.getObjectsByStatus(game.items, game.AVAILABLE)" class="item container">
 
 						<div class="item-left" ng-click="game.buyItem(item)">
 							<div class="item-cost">

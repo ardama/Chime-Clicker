@@ -99,13 +99,6 @@ var IGNORE_PLURALS = [BOOTS_OF_SPEED, BOOTS_OF_SWIFTNESS, BOOTS_OF_MOBILITY, ION
                       SORCERERS_SHOES, MERCURYS_TREADS, TWIN_SHADOWS, TIBBERS, FLASH];
 var SPECIAL_PLURALS = [ZHONYAS_HOURGLASS, LUDENS_ECHO, FIENDISH_CODEX];
 
-// Status Values
-var LOCKED = 0;
-var AVAILABLE = 1;
-var PURCHASED = 2;
-var ACTIVE = 3;
-var COOLDOWN = 4;
-
 // Default Values
 var STARTING_GOLD = 375;
 var CHIMES_PER_MEEP = 5;
@@ -124,6 +117,13 @@ var SCALE_MONSTER_LEVEL_REWARD = 5;
 var SCALE_MONSTER_LEVEL_HEALTH = {'easy' : 5, 'medium' : 5.5, 'hard' : 6, 'expert' : 6.5, 'impossible' : 8}
 var SCALE_EXPERIENCE_NEEDED = 5;
 var SCALE_MEEP_STRENGTH = 1;
+
+// Status Values
+var LOCKED = 0;
+var AVAILABLE = 1;
+var PURCHASED = 2;
+var ACTIVE = 3;
+var COOLDOWN = 4;
 
 
 ///// STYLING ////////////////////
