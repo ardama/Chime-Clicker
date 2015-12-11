@@ -16,6 +16,9 @@ Game.prototype.Init = function(scope, difficulty) {
     this.upgrades = this.createUpgrades();
     this.upgradesAvailable = [];
     this.upgradesPurchased = [];
+    this.spells = this.createSpells();
+    this.spellsAvailable = [];
+    this.spellsPurchased = [];
     this.monsters = this.createMonsters();
     this.monstersAvailable = [];
 
@@ -145,20 +148,103 @@ Game.prototype.createUpgrades = function() {
     upgrades[PHANTOM_DANCER] = new Upgrade(this, DAGGER,                    3000000000000, 16, 0, 4, 0, 10, 0, [ZEAL]);
     upgrades[TRINITY_FORCE] = new Upgrade(this, DAGGER,                     75000000000000, 18, 100, 5, 150, 10, 0, [ZEAL]);
 
-
-    // TODO: Spell Upgrades
-    // upgrades[FLASH] = new Upgrade(this, null, 1000, 5, 0, 1, 0, 0, 0, [], SPELL_UPGRADE);
-    // upgrades[GHOST] = new Upgrade(this, null, 1000, 5, 0, 1, 0, 0, 0, [], SPELL_UPGRADE);
-    // upgrades[BARRIER] = new Upgrade(this, null, 1000, 5, 0, 1, 0, 0, 0, [], SPELL_UPGRADE);
-    // upgrades[HEAL] = new Upgrade(this, null, 1000, 5, 0, 1, 0, 0, 0, [], SPELL_UPGRADE);
-    // upgrades[SMITE] = new Upgrade(this, null, 1000, 5, 0, 1, 0, 0, 0, [], SPELL_UPGRADE);
-    // upgrades[IGNITE] = new Upgrade(this, null, 1000, 5, 0, 1, 0, 0, 0, [], SPELL_UPGRADE);
-    // upgrades[EXHAUST] = new Upgrade(this, null, 1000, 5, 0, 1, 0, 0, 0, [], SPELL_UPGRADE);
-    // upgrades[CLEANSE] = new Upgrade(this, null, 1000, 5, 0, 1, 0, 0, 0, [], SPELL_UPGRADE);
-    // upgrades[TELEPORT] = new Upgrade(this, null, 1000, 5, 0, 1, 0, 0, 0, [], SPELL_UPGRADE);
-
     return upgrades;
 };
+
+Game.prototype.createSpells = function() {
+    var spells = {};
+
+    // game, duration, cooldown, start, end, unlock, tooltip
+
+
+    spells[FAVOR] = new Spell(this, 0, 0,
+        function(game) {game.favor = true;},
+        function(game) {},
+        function(game) {return game.upgradesPurchased.indexOf(TALISMAN_OF_ASCENSION) > -1},
+        function(game) {return "Gain " + game.getFavorGold() + "% bonus gold from monsters killed.  Gold scales with number of Ancient Coins owned."}
+    );
+    spells[SPOILS_OF_WAR] = new Spell(this, 0, 0,
+        function(game) {game.spoilsOfWar = true},
+        function(game) {},
+        function(game) {return game.upgradesPurchased.indexOf(FACE_OF_THE_MOUNTAIN) > -1},
+        function(game) {return "Once every minute, execute a monster below 10% max health on click, gaining " + game.getSpoilsOfWarGold() + "% bonus gold.  Gold scales with number of Relic Shields owned."}
+    );
+    spells[TRIBUTE] = new Spell(this, 0, 0,
+        function(game) {game.tribute = true;},
+        function(game) {},
+        function(game) {return game.upgradesPurchased.indexOf(FROST_QUEENS_CLAIM) > -1},
+        function(game) {return "Once every 30 seconds, gain " + game.getTributeGold() + " bonus gold on monster click.  Gold amount scales with number of Spellthiefs Edges owned."},
+    );
+
+    // instant damage to jungle monsters
+    spells[SMITE] = new Spell(this, 0, 30,
+        function(game) {game.addDamage(game.smiteDamage)},
+        function(game) {},
+        function(game) {return game.level >= 1;},
+        function(game) {}
+    );
+    // increased chime collection for duration
+    spells[GHOST] = new Spell(this, 10, 30,
+        function(game) {game.ghostActive = true;},
+        function(game) {game.ghostActive = false},
+        function(game) {return game.level >= 3},
+        function(game) {}
+    );
+    // instant increase meeps by %
+    spells[FLASH] = new Spell(this, 0, 30,
+        function(game) {game.flashActive = true;},
+        function(game) {game.flashActive = false},
+        function(game) {return game.level >= 5},
+        function(game) {}
+    );
+
+    //
+
+
+    spells[BARRIER] = new Spell(this, 10, 30,
+        function(game) {game.barrierActive = true;},
+        function(game) {game.barrierActive = false},
+        function(game) {},
+        function(game) {}
+    );
+    spells[HEAL] = new Spell(this, 10, 30,
+        function(game) {game.healActive = true;},
+        function(game) {game.healActive = false},
+        function(game) {},
+        function(game) {}
+    );
+    spells[TELEPORT] = new Spell(this, 10, 30,
+        function(game) {game.teleportActive = true;},
+        function(game) {game.teleportActive = false},
+        function(game) {},
+        function(game) {}
+    );
+    spells[CLEANSE] = new Spell(this, 10, 30,
+        function(game) {game.cleanseActive = true;},
+        function(game) {game.cleanseActive = false},
+        function(game) {},
+        function(game) {}
+    );
+
+    // increased damage to champions for duration
+    spells[EXHAUST] = new Spell(this, 10, 30,
+        function(game) {game.exhaustActive = true;},
+        function(game) {game.exhaustActive = false},
+        function(game) {},
+        function(game) {}
+    );
+    // bonus damage to champions for short duration
+    spells[IGNITE] = new Spell(this, 10, 30,
+        function(game) {game.igniteActive = true;},
+        function(game) {game.igniteActive = false},
+        function(game) {},
+        function(game) {}
+    );
+
+
+
+    return spells;
+}
 
 Game.prototype.createMonsters = function() {
     var monsters = {};
@@ -166,6 +252,7 @@ Game.prototype.createMonsters = function() {
     var scaleHealth;
     var scaleExp;
     var scaleReward;
+    var type;
     var i;
 
     for (i = 0; i < MONSTERS.length; i++) {
@@ -178,9 +265,12 @@ Game.prototype.createMonsters = function() {
           scaleExp = 999999000000000000 / MONSTER_EXPERIENCE;
           scaleReward *= 10;
         }
+
+        type = CHAMPIONS.indexOf(monster) > -1 ? MONSTER_ : "monster";
         monsters[monster] = new Monster(this, i + 1, MONSTER_HEALTH * scaleHealth,
                                                  MONSTER_EXPERIENCE * scaleExp,
-                                                 MONSTER_REWARD * scaleReward);
+                                                 MONSTER_REWARD * scaleReward,
+                                                 type);
     }
     return monsters;
 };
@@ -296,6 +386,7 @@ Game.prototype.updateMonsters = function() {
                 this.monstersAvailable.push(monster);
                 this.monster = monster;
                 this.monsterHealth = this.monsters[monster].health;
+                this.smiteDamage = monster.health * .25;
             }
             if (this.level - 1 == this.monsters[monster].level) {
                 this.monsters[monster].experience /= 5;
@@ -354,29 +445,26 @@ Game.prototype.buyUpgrade = function(name) {
         this.gold -= upgrade.cost;
         upgrade.purchased = true;
 
-        if (upgrade.type == ITEM_UPGRADE) {
+        // Upgrade all future items
+        var item = this.items[upgrade.item];
+        item.upgrades.push(name);
+        item.discovery += upgrade.discovery;
+        item.swiftness += upgrade.swiftness;
+        item.power += upgrade.power;
+        item.agility += upgrade.agility;
+        item.income += upgrade.income;
 
-            // Upgrade all future items
-            var item = this.items[upgrade.item];
-            item.upgrades.push(name);
-            item.discovery += upgrade.discovery;
-            item.swiftness += upgrade.swiftness;
-            item.power += upgrade.power;
-            item.agility += upgrade.agility;
-            item.income += upgrade.income;
+        // Upgrade all previously bought items
+        var count = item.count;
+        this.discoveryBase += count * upgrade.discovery;
+        this.swiftnessBase += count * upgrade.swiftness;
+        this.powerBase += count * upgrade.power;
+        this.agilityBase += count * upgrade.agility;
+        this.incomeBase += count * upgrade.income;
 
-            // Upgrade all previously bought items
-            var count = item.count;
-            this.discoveryBase += count * upgrade.discovery;
-            this.swiftnessBase += count * upgrade.swiftness;
-            this.powerBase += count * upgrade.power;
-            this.agilityBase += count * upgrade.agility;
-            this.incomeBase += count * upgrade.income;
-
-            item.upgradesAvailable.splice(item.upgradesAvailable.indexOf(name), 1);
-            this.upgradesPurchased.push(name);
-            this.updateUpgrades();
-        }
+        item.upgradesAvailable.splice(item.upgradesAvailable.indexOf(name), 1);
+        this.upgradesPurchased.push(name);
+        this.updateUpgrades();
 
         this.updateStats();
         this.updateView();
@@ -505,12 +593,26 @@ Game.prototype.getMonsterHealthPercent = function() {
     return 100 * this.monsterHealth / this.monsters[this.monster].health;
 };
 
+Game.prototype.getFavorGold = function(game) {
+    return 2 + getBaseLog(3, game.items[ANCIENT_COIN].count).toFloat(1);
+};
+
+Game.prototype.getSpoilsOfWarGold = function(game) {
+    return 10 + getBaseLog(1.2, game.items[RELIC_SHIELD].count).toFloat(1);
+};
+
+Game.prototype.getTributeGold = function(game) {
+    var monsterGold = game.monstersAvailable[game.level - 1].gold;
+    var percent = .03 + getBaseLog(5, game.items[SPELLTHIEFS_EDGE].count) / 100;
+    return Math.ceil(monsterGold * percent);
+};
+
 Game.prototype.isFirstMonster = function() {
-  var index = this.monstersAvailable.indexOf(this.monster);
-  return index == 0 ? 'first' : '';
+    var index = this.monstersAvailable.indexOf(this.monster);
+    return index == 0 ? 'first' : '';
 };
 
 Game.prototype.isLastMonster = function() {
-  var index = this.monstersAvailable.indexOf(this.monster);
-  return index == this.monstersAvailable.length - 1 ? 'last' : '';
+    var index = this.monstersAvailable.indexOf(this.monster);
+    return index == this.monstersAvailable.length - 1 ? 'last' : '';
 };
