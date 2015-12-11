@@ -27,8 +27,8 @@ Game.prototype.Init = function(scope, difficulty) {
   this.chimesRate = 0;
 
   this.meeps = 0;
-  this.meepGold = 0; //1 / 1.2;
-  this.meepDamage = 5; //1 / 1.2;
+  this.meepGold = 0;
+  this.meepDamage = MEEPS_DAMAGE[difficulty];
 
   this.gold = STARTING_GOLD;
   this.goldRate = 0;
@@ -58,13 +58,22 @@ Game.prototype.Init = function(scope, difficulty) {
   this.damagePerClick = 0;
   this.damageClickRate = 0;
   this.monster = null;
-  this.monsterHealth = 0;
 
   this.level = 0;
   this.experience = 0;
   this.experienceRate = 0;
   this.experienceNeeded = EXPERIENCE_NEEDED;
-  this.experiencePercent = 0;
+
+  // spell variables
+  this.favorBonus = .0;
+  this.spoilsOfWarBonus = .0;
+  this.tributeBonus = 0;
+
+  this.smiteBonus = .0;
+  this.ghostBonus = 1.0;
+  this.flashBonus = 1.05;
+  this.exhaustBonus = 1.0;
+  this.igniteDamageRate = 0;
 
 
 
@@ -89,6 +98,8 @@ Game.prototype.createItems = function() {
 
 Game.prototype.createUpgrades = function() {
   var upgrades = {};
+
+  // TODO: replace with requirements function
 
   // Boots of Speed
   upgrades[BOOTS_OF_SWIFTNESS] = new Upgrade(this, BOOTS_OF_SPEED,        8000, 4, 0, 1, 0, 0, 0, []);
@@ -198,10 +209,11 @@ Game.prototype.start = function() {
 
 // Increment functions
 Game.prototype.step = function(step) {
-  this.addChimes(this.chimesPerClick * this.chimesClickRate * step);
-  this.addDamage(this.damagePerClick * this.damageClickRate * step);
+  this.addChimes(this.chimesPerClick * this.chimesClickRate * this.ghostBonus * step);
+  this.addDamage((this.damagePerClick * this.damageClickRate * this.exhaustBonus + this.igniteDamageRate) * step);
   this.addGold(this.goldRate * step);
   this.addExperience(this.experienceRate * step);
+  this.addSpellTime(step);
 
   this.steps++;
 
@@ -217,13 +229,22 @@ Game.prototype.addChimes = function(chimes) {
   }
 };
 
-Game.prototype.addDamage = function(damage) {
+Game.prototype.addDamage = function(damage, user) {
   this.damage += damage;
-  while (this.damage >= this.monsters[this.monster].health) {
-    this.damage -= this.monsters[this.monster].health;
+  this.userDamage += damage;
+
+  var monster = this.monsters[this.monster];
+  var percent = (monster.currentHealth - damage) / monster.maxHealth;
+  if (user && this.spells[SPOILS_OF_WAR].status == AVAILABLE && percent < 15) {
+    this.activateSpell(SPOILS_OF_WAR);
+    return;
+  }
+
+  while (this.damage >= monster.currentHealth) {
+    damage -= monster.currentHealth;
     this.killMonster();
   }
-  this.monsterHealth = this.monsters[this.monster].health - this.damage;
+  monster.currentHealth -= this.damage;
 };
 
 Game.prototype.addGold = function(gold) {
@@ -236,7 +257,6 @@ Game.prototype.addExperience = function(experience) {
     this.experience -= this.experienceNeeded;
     this.levelUp();
   }
-  this.experiencePercent = 100 * this.experience / this.experienceNeeded;
 };
 
 Game.prototype.addMeeps = function(meeps) {
@@ -247,15 +267,35 @@ Game.prototype.addMeeps = function(meeps) {
   this.updateStats();
 };
 
+Game.prototype.addSpellTime = function(time) {
+  // TODO: check variable names
+  var activeSpells = this.getSpells(ACTIVE);
+  var cooldownSpells = this.getSpells(COOLDOWN);
+
+  for (var activeSpell in activeSpells) {
+    activeSpell.durationLeft -= time;
+    if (activeSpell.durationLeft <= 0) {
+      activeSpell.end(this);
+      activeSpell.status = COOLDOWN;
+      activeSpell.cooldownLeft = activeSpell.cooldown;
+    }
+  }
+  for (var cooldownSpell in cooldownSpells) {
+    cooldownSpell.durationLeft -= time;
+    if (cooldownSpell.cooldownLeft <= 0) {
+      cooldownSpell.status = AVAILABLE;
+    }
+  }};
+
 // Update Functions
 Game.prototype.updateStats = function() {
   this.chimesPerClick = 1 + this.discoveryBase * this.discoveryBonus;
   this.chimesClickRate = this.swiftnessBase * this.swiftnessBonus;
-  this.chimesRate = this.chimesPerClick * this.chimesClickRate;
+  this.chimesRate = this.chimesPerClick * this.chimesClickRate * this.ghostBonus;
 
   this.damagePerClick = (this.meeps * this.meepDamage) + (this.powerBase * this.powerBonus);
   this.damageClickRate = this.agilityBase * this.agilityBonus;
-  this.damageRate = this.damagePerClick * this.damageClickRate;
+  this.damageRate = this.damagePerClick * this.damageClickRate * this.exhaustBonus + this.igniteDamageRate;
 
   this.goldRate = (this.meeps * this.meepGold) + (this.incomeBase * this.incomeBonus);
 };
@@ -264,41 +304,43 @@ Game.prototype.updateView = function() {
   this.scope.$applyAsync(function(scope) {updateButtons();});
 };
 
-Game.prototype.updateItems = function() {
-  for (var item in this.items) {
-    if (this.items.hasOwnProperty(item)) {
-      if (this.level == this.items[item].level) {
-        this.itemsAvailable.push(item);
-      }
+Game.prototype.unlockItems = function() {
+  var items = this.getObjectsByStatus(this.items, LOCKED);
+  for (var item in items) {
+    if (item.requirements(this)) {
+      item.status = AVAILABLE;
     }
   }
 };
 
-Game.prototype.updateUpgrades = function() {
-  for (var upgradeName in this.upgrades) {
-    if (this.upgrades.hasOwnProperty(upgradeName)) {
-      var upgrade = this.upgrades[upgradeName];
-      var item = this.items[upgrade.item];
-      if (this.level >= upgrade.level &&
-          item.upgradesAvailable.indexOf(upgradeName) == -1 &&
-          item.upgrades.indexOf(upgradeName) == -1) {
-        if (!upgrade.requirements.length || item.upgrades.indexOf(upgrade.requirements[0]) > -1)
-          item.upgradesAvailable.push(upgradeName);
-      }
+Game.prototype.unlockUpgrades = function() {
+  var upgrades = this.getObjectsByStatus(this.upgrades, LOCKED);
+  for (var upgrade in upgrades) {
+    if (upgrade.requirements(this)) {
+      upgrade.status = AVAILABLE;
+    }
+  }
+};
+
+Game.prototype.unlockSpells = function() {
+  var spells = this.getObjectsByStatus(this.spells, LOCKED);
+  for (var spell in spells) {
+    if (spell.requirements(this)) {
+      spell.status = AVAILABLE;
     }
   }
 };
 
 Game.prototype.updateMonsters = function() {
-  for (var monster in this.monsters) {
-    if (this.monsters.hasOwnProperty(monster)) {
-      if (this.level == this.monsters[monster].level) {
-          this.monstersAvailable.push(monster);
-        this.monster = monster;
-        this.monsterHealth = this.monsters[monster].health;
+  for (var monsterName in this.monsters) {
+    if (this.monsters.hasOwnProperty(monsterName)) {
+      var monster = this.monsters[monsterName];
+      if (this.level == monster.level) {
+        this.monstersAvailable.push(monsterName);
+        this.monster = monsterName;
       }
-      if (this.level - 1 == this.monsters[monster].level) {
-        this.monsters[monster].experience /= 5;
+      if (this.level - 1 == monster.level) {
+        monster.experience /= 5;
       }
     }
   }
@@ -311,7 +353,23 @@ Game.prototype.chimesClick = function() {
 };
 
 Game.prototype.damageClick = function() {
-  this.addDamage(this.damagePerClick);
+  if (this.spells[TRIBUTE].status == AVAILABLE)
+    this.activateSpell(TRIBUTE);
+
+  this.addDamage(this.damagePerClick, true);
+  this.updateView();
+};
+
+Game.prototype.activateSpell = function(name) {
+  var spell = this.spells[name];
+  if (!spell.status == AVAILABLE) {
+    return;
+  }
+  spell.start(game);
+  // TODO: check variable name
+  spell.durationLeft = spell.duration
+  spell.status = ACTIVE;
+
   this.updateView();
 };
 
@@ -350,9 +408,9 @@ Game.prototype.buyItem = function(name, count) {
 
 Game.prototype.buyUpgrade = function(name) {
   var upgrade = this.upgrades[name];
-  if (this.gold >= upgrade.cost) {
+  if (upgrade.status == AVAILABLE && this.gold >= upgrade.cost) {
     this.gold -= upgrade.cost;
-    upgrade.purchased = true;
+    upgrade.status = PURCHASED;
 
     if (upgrade.type == ITEM_UPGRADE) {
 
@@ -373,10 +431,8 @@ Game.prototype.buyUpgrade = function(name) {
       this.agilityBase += count * upgrade.agility;
       this.incomeBase += count * upgrade.income;
 
-      item.upgradesAvailable.splice(item.upgradesAvailable.indexOf(name), 1);
-      this.upgradesPurchased.push(name);
-      this.updateUpgrades();
-      }
+      this.unlockUpgrades();
+    }
 
     this.updateStats();
     this.updateView();
@@ -392,16 +448,20 @@ Game.prototype.selectMonster = function(direction) {
     return;
 
   this.monster = this.monstersAvailable[index];
-  this.monsterHealth = this.monsters[this.monster].health;
 };
 
 // Threshold functions
 Game.prototype.killMonster = function() {
   var monster = this.monsters[this.monster];
   var exp = monster.experience;
-  var gold = monster.gold;
 
-  monster.health += monster.startHealth * SCALE_MONSTER_HEALTH;
+  // use smite and/or spoils of war bonus if either/both dealt killing blow
+  // otherwise grant favor bonus
+  var bonus = this.smiteBonus + this.spoilsOfWarBonus || this.favorBonus;
+  var gold = monster.gold * (1 + bonus);
+
+  monster.maxHealth += monster.startHealth * SCALE_MONSTER_HEALTH;
+  monster.currentHealth = monster.maxHealth;
   monster.experience += monster.startExperience * SCALE_MONSTER_REWARD;
   monster.gold += monster.startGold * SCALE_MONSTER_REWARD;
 
@@ -429,8 +489,9 @@ Game.prototype.levelUp = function(levels) {
     this.meepDamage *= SCALE_MEEP_STRENGTH;
 
     this.updateStats();
-    this.updateItems();
-    this.updateUpgrades();
+    this.unlockItems();
+    this.unlockUpgrades();
+    this.unlockSpells
     this.updateMonsters();
 
     levels--;
@@ -444,21 +505,6 @@ Game.prototype.win = function() {
 // Utility Functions
 Game.prototype.getTime = function() {
   return Math.floor(this.steps / this.fps);
-};
-
-Game.prototype.prettyTime = function(seconds) {
-  var s = seconds % 60;
-  var m = Math.floor(seconds / 60) % 60;
-  var h = Math.floor(seconds / 3600);
-
-  var str = "";
-  if (h)
-    str = h + "h " + m + "m " + s + "s";
-  else if (m)
-    str = m + "m " + s + "s";
-  else
-    str = s + "s";
-  return str;
 };
 
 Game.prototype.getImageUrl = function(name, folder) {
@@ -491,7 +537,11 @@ Game.prototype.prettyIntCompact = function(num, fixed) {
 
 Game.prototype.prettyIntVariable = function(num, fixed, width) {
   return window.innerWidth > width ? prettyIntBig(num, fixed) : prettyIntBigCompact(num, fixed);
-}
+};
+
+Game.prototype.prettyTime = function(seconds) {
+  return prettyTime(seconds);
+};
 
 Game.prototype.isPlural = function(num, name) {
   return (num == 1 || $.inArray(name, IGNORE_PLURALS) > -1) ? '' : ($.inArray(name, SPECIAL_PLURALS) > -1 ? 'es': 's');
@@ -502,8 +552,13 @@ Game.prototype.getMeepProgressPercent = function() {
 };
 
 Game.prototype.getMonsterHealthPercent = function() {
-  return 100 * this.monsterHealth / this.monsters[this.monster].health;
+  var monster = this.monsters[this.monster];
+  return 100 * monster.currentHealth / monster.maxHealth;
 };
+
+Game.prototype.getExperiencePercent = function() {
+  return 100 * this.experience / this.experienceNeeded;
+}
 
 Game.prototype.isFirstMonster = function() {
   var index = this.monstersAvailable.indexOf(this.monster);
@@ -514,3 +569,16 @@ Game.prototype.isLastMonster = function() {
   var index = this.monstersAvailable.indexOf(this.monster);
   return index == this.monstersAvailable.length - 1 ? 'last' : '';
 };
+
+Game.prototype.getObjectsByStatus = function(objectMap, status) {
+  var objects = [];
+  for (var objectName in objectMap) {
+    if (objectMap.hasOwnProperty(objectName)) {
+      var object = objectMap[objectName];
+      if (!status || object.status == status) {
+        objects.push(object);
+      }
+    }
+  }
+  return objects;
+}

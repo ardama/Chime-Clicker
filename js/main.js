@@ -1,5 +1,5 @@
-///// Constants /////
-
+///// CONSTANTS ////////////////////
+// TODO: Update items & images for new season
 // Items
 var BOOTS_OF_SPEED = "Boots of Speed";
 var ANCIENT_COIN = "Ancient Coin";
@@ -31,6 +31,7 @@ var LUDENS_ECHO = "Luden's Echo";
 var ZHONYAS_HOURGLASS = "Zhonya's Hourglass";
 var FIENDISH_CODEX = "Fiendish Codex";
 var MORELLONOMICON = "Morellonomicon";
+// TODO: Swap for Aether Wisp
 var TWIN_SHADOWS = "Twin Shadows";
 var KINDLEGEM = "Kindlegem";
 var LOCKET_OF_THE_IRON_SOLARI = "Locket of the Iron Solari";
@@ -70,6 +71,7 @@ var GROMP = "Gromp";
 var BLUE_SENTINEL = "Blue Sentinel";
 var RED_BRAMBLEBACK = "Red Brambleback";
 var SUPER_MINION = "Super Minion";
+// TODO: replace with Rift Herald
 var TIBBERS = "Tibbers";
 var DRAGON = "Dragon";
 var VILEMAW = "Vilemaw";
@@ -87,9 +89,17 @@ var IGNORE_PLURALS = [BOOTS_OF_SPEED, BOOTS_OF_SWIFTNESS, BOOTS_OF_MOBILITY, ION
                       SORCERERS_SHOES, MERCURYS_TREADS, TWIN_SHADOWS, TIBBERS, FLASH];
 var SPECIAL_PLURALS = [ZHONYAS_HOURGLASS, LUDENS_ECHO, FIENDISH_CODEX];
 
+// Status Values
+var LOCKED = 0;
+var AVAILABLE = 1;
+var PURCHASED = 2;
+var ACTIVE = 3;
+var COOLDOWN = 4;
+
 // Default Values
 var STARTING_GOLD = 375;
 var CHIMES_PER_MEEP = 5;
+var MEEPS_DAMAGE = {'easy' : 5, 'medium' : 5, 'hard' : 4, 'expert' : 4, 'impossible' : 3};
 var EXPERIENCE_NEEDED = 200;
 var MONSTER_HEALTH = 450;
 var MONSTER_EXPERIENCE = 60;
@@ -106,14 +116,14 @@ var SCALE_EXPERIENCE_NEEDED = 5;
 var SCALE_MEEP_STRENGTH = 1;
 
 
-///// Styling /////
+///// STYLING ////////////////////
 // update this if style changes
 var buttonYMargin = 35;
 var buttonXMargin = 45;
 var buttonMaxSize = 260;
 var buttonOffset = 1; // for press animation
 
-var updateButtons = function(force) {
+function updateButtons(force) {
   $('.click-button').each(function() {
     if ( $(this).css('display') != 'none' && !force)
       return;
@@ -162,8 +172,8 @@ var updateButtons = function(force) {
   });
 };
 
-///// Utility /////
-var prettyIntBig = function(num, fixed) {
+///// UTILITY ////////////////////
+function prettyIntBig(num, fixed) {
   if (!fixed)
     fixed = 3;
   if(num >= 1000000000000000000000)
@@ -181,7 +191,7 @@ var prettyIntBig = function(num, fixed) {
   return prettyInt(num);
 }
 
-var prettyIntBigCompact = function(num, fixed) {
+function prettyIntBigCompact(num, fixed) {
   if (!fixed)
     fixed = 3;
   if(num >= 1000000000000000000000)
@@ -199,56 +209,53 @@ var prettyIntBigCompact = function(num, fixed) {
   return prettyInt(num);
 }
 
-var prettyInt = function(num) {
+function prettyInt(num) {
   num = Math.floor(num);
   var str = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return str;
 }
 
-///// Initialize Game /////
+function prettyTime(seconds) {
+  var s = seconds % 60;
+  var m = Math.floor(seconds / 60) % 60;
+  var h = Math.floor(seconds / 3600);
+
+  var str = "";
+  if (h)
+    str = h + "h " + m + "m " + s + "s";
+  else if (m)
+    str = m + "m " + s + "s";
+  else
+    str = s + "s";
+  return str;
+};
+///// INITIALIZE ////////////////////
 var GameApp = angular.module('GameApp', []);
 GameApp.controller('GameController', function($scope) {
     window.SCOPE = $scope;
     $scope.game = new Game($scope, 'medium');
     $scope.game.start();
 
-    $('#chimes-button').on({
-      click: function(e) {
-        $scope.game.chimesClick();
+    $('#chimes-button').click(function(e) {
+      $scope.game.chimesClick();
 
+      // TODO: Move to utility function
+      var posX = e.pageX - $(this).offset().left - 10;
+      var posY = e.pageY - $(this).offset().top - 30;
+      var $obj = $("<div>", {class:'counter'});
+      $obj.html("+" + $scope.game.prettyIntCompact($scope.game.chimesPerClick));
+      $obj.css({left: posX + 'px', top: posY + 'px'});
 
-        var posX = e.pageX - $(this).offset().left - 10;
-        var posY = e.pageY - $(this).offset().top - 30;
-        var $obj = $("<div>", {class:'counter'});
-        $obj.html("+" + $scope.game.prettyIntCompact($scope.game.chimesPerClick));
-        $obj.css({left: posX + 'px', top: posY + 'px'});
-
-        $(this).append($obj);
-        $obj.animate({top: '-=100', left:'+=' + (60 * Math.random() - 30), opacity: 0}, 1000, function() {
-          $(this).remove();
-        });
-      },
-      mouseenter: function() {
-        // $(this).stop();
-        // $(this).animate({height: "+=10px", width: "+=10px", top: "-=5px", left: "-=5px"}, 200);
-      },
-      mouseleave: function() {
-        // $(this).stop();
-        // $(this).animate({height: "-=10px", width: "-=10px", top: "+=5px", left: "+=5px"}, 200);
-      },
-      mouseup: function() {
-        // $(this).stop();
-        // $(this).animate({height: "225px", width: "225px", top: "65px"}, 200);
-      },
-      mousedown: function() {
-        // $(this).stop();
-        // $(this).animate({height: "215px", width: "215px", top: "65px"}, 200);
-      },
+      $(this).append($obj);
+      $obj.animate({top: '-=100', left:'+=' + (60 * Math.random() - 30), opacity: 0}, 1000, function() {
+        $(this).remove();
+      });
     });
 
     $('#monster-button').click(function(e) {
       $scope.game.damageClick();
 
+      // TODO: Move to utility function
       var posX = e.pageX - $(this).offset().left - 10;
       var posY = e.pageY - $(this).offset().top - 30;
       var $obj = $("<div>", {class:'counter'});
@@ -261,7 +268,7 @@ GameApp.controller('GameController', function($scope) {
       });
     });
 
-    $(".dropdown-button").click(function(){
+    $('.dropdown-button').click(function(){
       $(this).find('.rotate').toggleClass('down');
 
       var dropdown = $(this).parent();
@@ -288,7 +295,7 @@ GameApp.controller('GameController', function($scope) {
     });
 })
 
-///// Other /////
+///// OTHER ////////////////////
 $(window).resize(function() {
   updateButtons(true);
 });
