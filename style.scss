@@ -72,7 +72,7 @@ body {
 	float: left;
 
 	width: 100%;
-	min-width: 900px;
+	min-width: 950px;
 
 	// TODO mixin
 	cursor: default;
@@ -500,8 +500,8 @@ body {
 }
 .click-button {
 	position: absolute;
-	top: 14px;
-	left: 15px;
+	top: 10px;
+	left: 10px;
 	display:none;
 
 	z-index: 1;
@@ -519,6 +519,8 @@ body {
 											0 -20px 30px -18px $black inset,
 											0 4px 10px -2px $boxShadow);
 
+
+
 	border-top: 1px solid $lightTextSecondary;
 	border-bottom: 1px solid $black;
 
@@ -533,14 +535,14 @@ body {
 }
 
 .click-button:hover {
-	top: 12px;
+	top: 8px;
 	@include box-shadow(0 20px 30px -18px $lightTextPrimary inset,
 											0 -20px 36px -18px $black inset,
 											0 6px 14px 0px $darkTextSecondary);
 }
 
 .click-button:active {
-	top: 15px;
+	top: 11px;
 
 	@include box-shadow(0 20px 30px -20px $lightTextPrimary inset,
 											0 -20px 36px -18px $black inset,
@@ -552,7 +554,7 @@ body {
 
 .click-button-holder {
 	position: absolute;
-	display:none;
+	display: none;
 
 	z-index: 0;
 
@@ -564,6 +566,7 @@ body {
 
 #chimes-button {
 	background-image: url(images/Chimes_2x.png);
+
 }
 
 #chimes-button:hover {
@@ -652,6 +655,7 @@ body {
 	font-size: 16px;
 	line-height: $itemBuyButtonSize;
 	text-align: center;
+	border-radius: 1px;
 
 	background-color: $primary900;
 	@include box-shadow(0 0 2px 0px $boxShadow);
@@ -682,6 +686,7 @@ body {
 
 	margin: 5px;
 
+	border-radius: 1px;
 	background-color: $primary900;
 	@include transition(background-color 100ms);
 
@@ -704,6 +709,7 @@ body {
 	width: 100%;
 	height: 100%;
 
+	border-radius: 1px;
 	@include box-shadow(0 0 2px 0px $boxShadow);
 }
 
@@ -732,6 +738,7 @@ body {
 	width: 100px;
 	height: 100px;
 
+	border-radius: 1px;
 	background-repeat: no-repeat;
 	background-size: cover;
 }
@@ -968,7 +975,7 @@ body {
 	height: 70px;
 }
 
-.spell-image {
+.spell-wrapper {
 	position: relative;
 
 	width: 60px;
@@ -976,33 +983,49 @@ body {
 
 	margin: 10px auto 0 auto;
 
-	background-repeat: no-repeat;
-	background-size: cover;
+	border-radius: 1px;
 }
 
 // AVAILABLE
-.spell[data-type='active'][data-status='1'] .spell-image {
+.spell[data-type='active'][data-status='1'] .spell-wrapper {
 	cursor: pointer;
 }
 
-// AVAILABLE
-.spell[data-type='active'][data-status='1'] .spell-image:hover {
+// AVAILABLE:hover
+.spell[data-type='active'][data-status='1'] .spell-wrapper:hover {
 	width: 64px;
 	height: 64px;
 	margin-top: 8px;
+
+}
+
+// AVAILABLE:active
+.spell[data-type='active'][data-status='1'] .spell-wrapper:active {
+	width: 60px;
+	height: 60px;
+	margin-top: 10px;
 
 }
 
 // ACTIVE
-.spell[data-status='4'] .spell-image {
+.spell[data-status='4'] .spell-wrapper {
 	width: 64px;
 	height: 64px;
 	margin-top: 8px;
 }
 
-// LOCKED
-.spell[data-status='0'] .spell-image {
-	display: none;
+.spell-image {
+	position: absolute;
+
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+
+	background-repeat: no-repeat;
+	background-size: cover;
+
+	border-radius: 1px;
 }
 
 .spell-image-overlay {
@@ -1014,8 +1037,63 @@ body {
 	width: 100%;
 
 	background-color: $darkTextPrimary;
-
+	border-radius: 1px;
 	@include transition(background-color 250ms);
+}
+
+.spell-locked-image {
+	display: none;
+	position: absolute;
+
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+
+	color: $lightTextDisabled;
+	line-height: 80px;
+	background-color: $gray1000;
+
+	border-radius: 1px;
+	@include transition(color 150ms);
+}
+
+.spell-cooldown {
+	display: none;
+	position: absolute;
+
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+
+	font-size: 24px;
+  color: $lightTextSecondary;
+	line-height: 60px;
+	border-radius: 1px;
+	background-color: $darkTextDisabled;
+}
+
+// LOCKED
+.spell[data-status='0'] .spell-image {
+	display: none;
+}
+
+// LOCKED
+.spell[data-status='0'] .spell-locked-image {
+	display: block;
+}
+
+// UNAVAILABLE
+.spell[data-status='2'] .spell-locked-image {
+	display: block;
+
+	background-color: $boxShadow;
+}
+
+// UNAVAILABLE:hover
+.spell[data-status='2'] .spell-locked-image:hover {
+	color: $lightTextDisabled;
 }
 
 // ACTIVE
@@ -1023,26 +1101,13 @@ body {
 	background-color: $lightTextDisabled;
 }
 
-.spell-locked-image {
-	display: none;
-}
-
-// LOCKED
-.spell[data-status='0'] .spell-locked-image {
+// COOLDOWN
+.spell[data-status='5'] .spell-cooldown {
 	display: block;
-
-	position: absolute;
-
-	width: 60px;
-	height: 60px;
-
-
-	margin: 10px auto 0 auto;
-
-	color: $darkTextPrimary;
-	line-height: 80px;
-	background-color: $gray1100;
 }
+
+
+
 
 
 
@@ -1089,4 +1154,21 @@ body {
 
 .button {
 	cursor: pointer;
+}
+
+
+
+.tooltipster-custom {
+	border-radius: 3px;
+	background: $darkTextPrimary;
+	color: $lightTextSecondary;
+}
+.tooltipster-custom .tooltipster-content {
+	font-size: 12px;
+	line-height: 14px;
+	padding: 6px 8px;
+}
+
+.tooltipster-custom .tooltipster-content b {
+	color: $secondary500;
 }
