@@ -31,8 +31,7 @@ var LUDENS_ECHO = "Luden's Echo";
 var ZHONYAS_HOURGLASS = "Zhonya's Hourglass";
 var FIENDISH_CODEX = "Fiendish Codex";
 var MORELLONOMICON = "Morellonomicon";
-// TODO: Swap for Aether Wisp
-var TWIN_SHADOWS = "Twin Shadows";
+var AETHER_WISP = "Aether Wisp";
 var KINDLEGEM = "Kindlegem";
 var LOCKET_OF_THE_IRON_SOLARI = "Locket of the Iron Solari";
 var GIANTS_BELT = "Giant's Belt";
@@ -79,8 +78,7 @@ var GROMP = "Gromp";
 var BLUE_SENTINEL = "Blue Sentinel";
 var RED_BRAMBLEBACK = "Red Brambleback";
 var SUPER_MINION = "Super Minion";
-// TODO: replace with Rift Herald
-var TIBBERS = "Tibbers";
+var RIFT_HERALD = "Rift Herald";
 var DRAGON = "Dragon";
 var VILEMAW = "Vilemaw";
 var BARON_NASHOR = "Baron Nashor";
@@ -97,11 +95,11 @@ var MONSTER_ALL = "all";
 // Constant Arrays
 var MONSTERS = [CASTER_MINION, RIFT_SCUTTLER, MELEE_MINION, CANNON_MINION, RAZORBEAK,
                 MURK_WOLF, KRUG, GROMP, BLUE_SENTINEL, RED_BRAMBLEBACK,
-                SUPER_MINION, TIBBERS, DRAGON, VILEMAW, BARON_NASHOR,
+                SUPER_MINION, RIFT_HERALD, DRAGON, VILEMAW, BARON_NASHOR,
                 CHO_GATH, DR_MUNDO, SION, TEEMO];
 var CHAMPIONS = [CHO_GATH, DR_MUNDO, SION, TEEMO];
 var IGNORE_PLURALS = [BOOTS_OF_SPEED, BOOTS_OF_SWIFTNESS, BOOTS_OF_MOBILITY, IONIAN_BOOTS_OF_LUCIDITY,
-                      SORCERERS_SHOES, MERCURYS_TREADS, TWIN_SHADOWS, TIBBERS, FLASH];
+                      SORCERERS_SHOES, MERCURYS_TREADS, FLASH];
 var SPECIAL_PLURALS = [ZHONYAS_HOURGLASS, LUDENS_ECHO, FIENDISH_CODEX];
 
 // Default Values
@@ -179,14 +177,27 @@ function updateButtons(force) {
 
     var size = Math.min(height, width, buttonMaxSize);
 
-    $(this).height(size + 30);
-    $(this).width(size + 30);
+    $(this).height(size + 22);
+    $(this).width(size + 20);
 
-    $wrapper.css('left', (w - size - 30) / 2);
-    $wrapper.css('top', 25 + (h - size - 30) / 2);
+    $wrapper.css('left', (w - size - 20) / 2);
+    $wrapper.css('top', 25 + (h - size - 22) / 2);
 
   });
 };
+
+function updateTooltips() {
+  $('[data-toggle="tooltip"]').each(function() {
+    var content = $(this).attr('data-title');
+    if (content.length > 0) {
+      $(this).tooltipster('enable');
+      $(this).tooltipster('content', content);
+    }
+    else {
+      $(this).tooltipster('disable');
+    }
+  })
+}
 
 ///// UTILITY ////////////////////
 function prettyIntBig(num, fixed) {
@@ -314,6 +325,9 @@ GameApp.controller('GameController', function($scope) {
       $scope.game.selectMonster('right');
       updateButtons();
     });
+
+
+
 })
 
 ///// OTHER ////////////////////
@@ -323,4 +337,11 @@ $(window).resize(function() {
 
 $(window).load(function() {
   updateButtons(true);
+  $('[data-toggle="tooltip"]').tooltipster({
+    theme: 'tooltipster-custom',
+    maxWidth: 200,
+    position: 'left',
+    contentAsHTML: true,
+    updateAnimation: false
+  });
 });
