@@ -73,7 +73,7 @@ Game.prototype.Init = function(scope, difficulty) {
 
   this.smiteBonus = 0;
   this.ghostBonus = 1.0;
-  this.flashBonus = 1.05;
+  this.flashBonus = .05;
   this.exhaustBonus = 1.0;
   this.igniteDamage = 0;
 
@@ -144,7 +144,7 @@ Game.prototype.createUpgrades = function() {
 
   // Amplifying Tome
   upgrades[FIENDISH_CODEX] = new Upgrade(this, AMPLIFYING_TOME,           200000, 6, 0, 0, 100, 1, 0, []);
-  upgrades[TWIN_SHADOWS] = new Upgrade(this, AMPLIFYING_TOME,             6000000, 8, 0, 2, 150, 1, 0, [FIENDISH_CODEX]);
+  upgrades[AETHER_WISP] = new Upgrade(this, AMPLIFYING_TOME,              6000000, 8, 0, 2, 150, 1, 0, []);
   upgrades[MORELLONOMICON] = new Upgrade(this, AMPLIFYING_TOME,           2500000000, 12, 0, 0, 200, 3, 0, [FIENDISH_CODEX]);
 
   upgrades[NEEDLESSLY_LARGE_ROD] = new Upgrade(this, AMPLIFYING_TOME,     100000000, 10, 0, 0, 300, 0, 0, []);
@@ -168,76 +168,85 @@ Game.prototype.createSpells = function() {
     var spells = {};
 
     // game, duration, cooldown, start, end, unlock, tooltip
-    spells[SPOILS_OF_WAR] = new Spell(this, .25, 30, SPELL_PASSIVE, MONSTER_JUNGLE,
-        function(game) {game.spoilsOfWarBonus = game.getSpoilsOfWarBonus() / 100; game.killMonster(); game.spoilsOfWarBonus = 0;},
+    spells[SMITE] = new Spell(this, .25, 60, SPELL_ACTIVE, MONSTER_JUNGLE,
+      function(game) {game.smiteBonus = .20;
+                      game.addDamage(game.getSmiteDamage(), true);
+                      game.smiteBonus = 0;},
+        function(game) {},
+        function(game) {return game.level >= 2},
+        function(game) {return game.spells[SMITE].status == game.LOCKED ? "":
+                        "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage to monsters.  Kills with smite grant 20% bonus gold.  Does not work against champions.  1 minute cooldown."}
+      );
+
+    spells[SPOILS_OF_WAR] = new Spell(this, .25, 40, SPELL_PASSIVE, MONSTER_JUNGLE,
+        function(game) {game.spoilsOfWarBonus = game.getSpoilsOfWarBonus() / 100;
+                        game.killMonster();
+                        game.spoilsOfWarBonus = 0;},
         function(game) {},
         function(game) {return game.upgrades[FACE_OF_THE_MOUNTAIN].status == game.PURCHASED;},
-        function(game) {return "Execute a monster below 20% max health on click, gaining " + game.getSpoilsOfWarBonus().toFixed(1) + "% bonus reward gold.  Gold scales with number of Relic Shields owned.  Does not work against champions. 30 second cooldown."}
+        function(game) {return game.spells[SPOILS_OF_WAR].status == game.LOCKED ? "":
+                        "Execute monsters below 20% max health on click, gaining <b>" + game.getSpoilsOfWarBonus().toFixed(1) + "%</b> bonus reward gold.  Gold scales with number of Relic Shields owned.  Does not work against champions. 40 second cooldown."}
     );
-    spells[FAVOR] = new Spell(this, .25, 0, SPELL_PASSIVE, MONSTER_JUNGLE,
+
+    spells[FAVOR] = new Spell(this, .25, 0, SPELL_PASSIVE, MONSTER_ALL,
         function(game) {},
         function(game) {},
         function(game) {return game.upgrades[TALISMAN_OF_ASCENSION].status == game.PURCHASED;},
-        function(game) {return "Passively gain " + game.getFavorBonus().toFixed(1) + "% bonus reward gold from monsters killed.  Gold scales with number of Ancient Coins owned.  Does not work against champions."}
+        function(game) {return game.spells[FAVOR].status == game.LOCKED ? "":
+                        "Passively gain <b>" + game.getFavorBonus().toFixed(1) + "%</b> bonus reward gold from monsters killed.  Gold scales with number of Ancient Coins owned."}
     );
-    spells[TRIBUTE] = new Spell(this, .25, 15, SPELL_PASSIVE, MONSTER_ALL,
+
+    spells[TRIBUTE] = new Spell(this, .25, 20, SPELL_PASSIVE, MONSTER_ALL,
         function(game) {game.gold += Math.ceil(game.monsters[game.monster].gold * game.getTributeBonus() / 100);},
         function(game) {},
         function(game) {return game.upgrades[FROST_QUEENS_CLAIM].status == game.PURCHASED;},
-        function(game) {return "Gain " + game.getTributeBonus().toFixed(1) + "% of reward gold on monster click.  Gold scales with number of Spellthief's Edges owned. 15 second cooldown."}
+        function(game) {return game.spells[TRIBUTE].status == game.LOCKED ? "":
+                        "Gain <b>" + game.getTributeBonus().toFixed(1) + "%</b> of reward gold on monster click.  Gold scales with number of Spellthief's Edges owned. 15 second cooldown."}
     );
 
-    // instant damage to jungle monsters
-    spells[SMITE] = new Spell(this, .25, 15, SPELL_ACTIVE, MONSTER_JUNGLE,
-        function(game) {game.smiteBonus = .20;
-                        game.addDamage(game.getSmiteDamage(), true);
-                        game.smiteBonus = 0;},
-        function(game) {},
-        function(game) {return game.level >= 2},
-        function(game) {return "Deal " + game.prettyIntCompact(game.getSmiteDamage()) + " damage to monsters.  Kills with smite grant 20% bonus gold.  Does not work against champions.  1 minute cooldown."}
-    );
-    // increased chime collection for duration
     spells[GHOST] = new Spell(this, 10, 90, SPELL_ACTIVE, MONSTER_ALL,
-        function(game) {game.ghostBonus = 1.5;},
-        function(game) {game.ghostBonus = 0;},
+        function(game) {game.ghostBonus = 2.0;},
+        function(game) {game.ghostBonus = 1.0;},
         function(game) {return game.level >= 4},
-        function(game) {return "Increase chime generation by 50% for the next 10 seconds.  90 second cooldown."}
+        function(game) {return game.spells[GHOST].status == game.LOCKED ? "":
+                        "Increase chime generation by 100% for the next 10 seconds.  90 second cooldown."}
     );
-    // instant increase meeps by %
+
     spells[FLASH] = new Spell(this, .25, 120, SPELL_ACTIVE, MONSTER_ALL,
         function(game) {game.addMeeps(Math.ceil(game.meeps * game.flashBonus));},
         function(game) {},
         function(game) {return game.level >= 6},
-        function(game) {return "Receive bonus meeps equal to 5% of your current total.  2 minute cooldown."}
+        function(game) {return game.spells[FLASH].status == game.LOCKED ? "":
+                        "Receive bonus meeps equal to 5% of your current total.  2 minute cooldown."}
     );
 
-    // reset cooldowns of all spells
     spells[TELEPORT] = new Spell(this, .25, 300, SPELL_ACTIVE, MONSTER_ALL,
-        function(game) {var spells = game.getObjectsByStatus(game.spells, COOLDOWN);
+        function(game) {var spells = game.getObjectsByStatus(game.spells, game.COOLDOWN);
                         for (var i = 0; i < spells.length; i++) {
-                          var spell = spells[i];
+                          var spell = game.spells[spells[i]];
                           spell.cooldownLeft = 0;
                           spell.status = AVAILABLE;
                         }},
         function(game) {},
         function(game) {return game.level >= 13},
-        function(game) {return "Reset cooldowns of all spells.  5 minute cooldown."}
+        function(game) {return game.spells[TELEPORT].status == game.LOCKED ? "":
+                        "Reset cooldowns of all spells.  5 minute cooldown."}
     );
 
-    // bonus damage to champions for short duration
     spells[IGNITE] = new Spell(this, 5, 120, SPELL_ACTIVE, MONSTER_CHAMPION,
         function(game) {game.igniteDamage = game.getIgniteDamage();},
         function(game) {game.igniteDamage = 0},
         function(game) {return game.level >= 16},
-        function(game) {return "Deal " + game.prettyIntCompact(game.getIgniteDamage()) + " damage over 5 seconds to champions.  Only works against champions.  2 minute cooldown."}
+        function(game) {return game.spells[IGNITE].status == game.LOCKED ? "":
+                        "Deal <b>" + game.prettyIntCompact(game.getIgniteDamage()) + "</b> damage over 5 seconds to champions.  Only works against champions.  2 minute cooldown."}
     );
 
-    // increased damage to champions for duration
     spells[EXHAUST] = new Spell(this, 10, 90, SPELL_ACTIVE, MONSTER_CHAMPION,
-        function(game) {game.exhaustBonus = 1.3;},
-        function(game) {game.exhaustBonus = 0},
+        function(game) {game.exhaustBonus = 2.0;},
+        function(game) {game.exhaustBonus = 1.0},
         function(game) {return game.level >= 17},
-        function(game) {return "Increase damage dealt by 30% for the next 10 seconds.  Only works against champions.  90 second cooldown."}
+        function(game) {return game.spells[EXHAUST].status == game.LOCKED ? "":
+                        "Increase damage dealt by 100% for the next 10 seconds.  Only works against champions.  90 second cooldown."}
     );
 
 
@@ -287,7 +296,7 @@ Game.prototype.start = function() {
 // Increment functions
 Game.prototype.step = function(step) {
   this.addChimes(this.chimesPerClick * this.chimesClickRate * this.ghostBonus * step);
-  this.addDamage((this.damagePerClick * this.damageClickRate * this.exhaustBonus + this.igniteDamage / 5) * step);
+  this.addDamage((this.damagePerClick * this.damageClickRate * this.exhaustBonus + (this.igniteDamage / 5)) * step);
   this.addGold(this.goldRate * step);
   this.addExperience(this.experienceRate * step);
   this.addSpellTime(step);
@@ -359,8 +368,10 @@ Game.prototype.addSpellTime = function(time) {
       activeSpell.end(this);
       activeSpell.status = this.COOLDOWN;
       activeSpell.cooldownLeft = activeSpell.cooldown;
+      this.updateStats();
     }
   }
+
   for (var i = 0; i < cooldownSpells.length; i++) {
     var cooldownSpell = this.spells[cooldownSpells[i]];
     cooldownSpell.cooldownLeft -= time;
@@ -382,6 +393,7 @@ Game.prototype.addSpellTime = function(time) {
       unavailableSpell.end(this);
       unavailableSpell.status = this.COOLDOWN;
       unavailableSpell.cooldownLeft = unavailableSpell.cooldown;
+      this.updateStats();
     }
   }
 };
@@ -404,8 +416,17 @@ Game.prototype.updateStats = function() {
 };
 
 Game.prototype.updateView = function() {
+  this.scope.$applyAsync(function(scope) {updateButtons();updateTooltips();});
+};
+
+Game.prototype.updateButtons = function() {
   this.scope.$applyAsync(function(scope) {updateButtons();});
 };
+
+Game.prototype.updateTooltips = function() {
+  this.scope.$applyAsync(function(scope) {updateTooltips();});
+};
+
 
 Game.prototype.unlockItems = function() {
   var items = this.getObjectsByStatus(this.items, this.LOCKED);
@@ -490,6 +511,13 @@ Game.prototype.damageClick = function() {
   this.updateView();
 };
 
+Game.prototype.spellClick = function(name) {
+  var spell = this.spells[name];
+  if (spell.type == SPELL_PASSIVE)
+    return;
+  this.activateSpell(name)
+};
+
 Game.prototype.activateSpell = function(name) {
   var spell = this.spells[name];
   if (spell.status != this.AVAILABLE) {
@@ -499,6 +527,7 @@ Game.prototype.activateSpell = function(name) {
   spell.durationLeft = spell.duration
   spell.status = this.ACTIVE;
 
+  this.updateStats();
   this.updateView();
 };
 
@@ -533,6 +562,7 @@ Game.prototype.buyItem = function(name, count) {
 
   this.updateStats();
   this.updateView();
+  this.updateTooltips();
 };
 
 Game.prototype.buyUpgrade = function(name) {
@@ -564,6 +594,8 @@ Game.prototype.buyUpgrade = function(name) {
     this.unlockSpells();
     this.updateStats();
     this.updateView();
+    this.updateTooltips();
+
   }
 };
 
@@ -577,6 +609,7 @@ Game.prototype.selectMonster = function(direction) {
 
   this.monster = this.monstersAvailable[index];
   this.unlockSpells();
+  this.updateButtons();
 };
 
 // Threshold functions
@@ -622,6 +655,9 @@ Game.prototype.levelUp = function(levels) {
     this.unlockUpgrades();
     this.updateMonsters();
     this.unlockSpells();
+
+    this.updateButtons();
+    this.updateTooltips();
 
     levels--;
   };
@@ -711,15 +747,15 @@ Game.prototype.getSpellTimePercent = function(spellName) {
 };
 
 Game.prototype.getFavorBonus = function() {
-  return 2 + getBaseLog(3, this.items[ANCIENT_COIN].count + 1);
+  return 2 + getBaseLog(4, this.items[ANCIENT_COIN].count + 1);
 };
 
 Game.prototype.getSpoilsOfWarBonus = function() {
-  return 10 + getBaseLog(1.2, this.items[RELIC_SHIELD].count + 1);
+  return 10 + getBaseLog(1.25, this.items[RELIC_SHIELD].count + 1);
 };
 
 Game.prototype.getTributeBonus = function() {
-  return 3 + getBaseLog(5, this.items[SPELLTHIEFS_EDGE].count + 1);
+  return 5 + getBaseLog(2.5, this.items[SPELLTHIEFS_EDGE].count + 1);
 };
 
 Game.prototype.getSmiteDamage = function() {
@@ -727,7 +763,7 @@ Game.prototype.getSmiteDamage = function() {
 };
 
 Game.prototype.getIgniteDamage = function() {
-  return MONSTER_HEALTH * Math.pow(this.scaleMonsterLevelHealth, this.level - 1) * .2;
+  return MONSTER_HEALTH * Math.pow(this.scaleMonsterLevelHealth, this.level - 1) * .3;
 };
 
 Game.prototype.isFirstMonster = function() {

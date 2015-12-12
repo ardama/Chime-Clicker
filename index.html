@@ -4,13 +4,15 @@
 <title>Chime Clicker</title>
 
 <script src="js/jquery.min.js"></script>
-<script src="js/angular.js"></script>
+<script src="js/jquery.tooltipster.js"></script>
+<script src="js/angular.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/game.js"></script>
 <script src="js/classes.js"></script>
 <link rel="shortcut icon" href="favicon.ico" type="image/icon">
 <link rel="icon" href="favicon.ico" type="image/icon">
 <link href="output.css" rel="stylesheet" type="text/css">
+<link href="tooltipster.css" rel="stylesheet" type="text/css">
 <link href='http://fonts.googleapis.com/css?family=Rajdhani:400,600' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
@@ -272,18 +274,21 @@
 					</div>
 				</div>
 				<div id="spells-container">
-					<div ng-repeat="spell in game.getObjectsByStatus(game.spells)" class="spell container" ng-click="game.activateSpell(spell)"
+					<div ng-repeat="spell in game.getObjectsByStatus(game.spells)" class="spell container" ng-click="game.spellClick(spell)"
 							 data-status="{{game.spells[spell].status}}" data-type="{{game.spells[spell].type}}">
-						<div class="spell-image" style="background-image:url({{game.getSpellImageUrl(spell)}})">
+						<div class="spell-wrapper" data-toggle="tooltip" data-title="{{game.spells[spell].tooltip(game)}}">
+							<div class="spell-image" style="background-image:url({{game.getSpellImageUrl(spell)}})"></div>
 							<div class="spell-image-overlay" style="height: {{game.getSpellTimePercent(spell)}}%"></div>
+							<div class="spell-locked-image"><i class="fa fa-2x fa-lock"></i></div>
+							<div class="spell-cooldown">{{game.spells[spell].cooldownLeft.toFixed(0)}}</div>
 						</div>
-						<div class="spell-locked-image"><i class="fa fa-2x fa-lock"></i></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<div id="temp"></div>
 
 <div style="display:none;">
 
@@ -303,11 +308,11 @@
 	</div>
 	<div id="chimes-stats-right" class="stats-right">
 		<div id="discovery-value" class="game-stat-value">
-			{{game.prettyIntCompact(game.chimesPerClick)}} <!-- Chime{{game.isPlural(game.chimesPerClick)}} -->
+			{{game.prettyIntCompact(game.chimesPerClick)}} <!-- Chime{{game.isPlural(game.chimesPerClick)}}
 		</div>
 		</br>
 		<div id="swiftness-value" class="game-stat-value">
-			{{game.prettyIntCompact(game.chimesClickRate)}} <!-- Click{{game.isPlural(game.chimesClickRate)}} -->
+			{{game.prettyIntCompact(game.chimesClickRate)}} <!-- Click{{game.isPlural(game.chimesClickRate)}}
 		</div>
 	</div>
 </div>
@@ -395,13 +400,14 @@
 
 
 
+
 <div class="upgrade upgrade-spell container">
 
 
 
 </div>
 
-</div>
+</div> -->
 
 </body>
 </html>
