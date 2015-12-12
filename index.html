@@ -271,6 +271,15 @@
 						{{game.getTime()}}
 					</div>
 				</div>
+				<div id="spells-container">
+					<div ng-repeat="spell in game.getObjectsByStatus(game.spells)" class="spell container" ng-click="game.activateSpell(spell)"
+							 data-status="{{game.spells[spell].status}}" data-type="{{game.spells[spell].type}}">
+						<div class="spell-image" style="background-image:url({{game.getSpellImageUrl(spell)}})">
+							<div class="spell-image-overlay" style="height: {{game.getSpellTimePercent(spell)}}%"></div>
+						</div>
+						<div class="spell-locked-image"><i class="fa fa-2x fa-lock"></i></div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -349,7 +358,7 @@
 			</div>
 		</div>
 		<div class="upgrade-left">
-			<div style="background-image:url({{game.getItemImageUrl(upgrade)}})"class="upgrade-image button"></div>
+			<div style="background-image:url({{game.getItemImageUrl(upgrade)}})" class="upgrade-image button"></div>
 		</div>
 		<div class="upgrade-middle">
 			<div class="upgrade-stat upgrade-discovery {{game.upgrades[upgrade].isZero('discovery')}}">

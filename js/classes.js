@@ -63,16 +63,18 @@ Upgrade.prototype.isZero = function(stat) {
   return this[stat] == 0 ? 'upgrade-zero' : '';
 };
 
-var Spell = function(game, duration, cooldown, start, end, unlock, tooltip) {
-  this.Init(game, duration, cooldown, start, end, unlock, tooltip);
+var Spell = function(game, duration, cooldown, type, target, start, end, unlock, tooltip) {
+  this.Init(game, duration, cooldown, type, target, start, end, unlock, tooltip);
 };
 
-Spell.prototype.Init = function(game, duration, cooldown, start, end, unlock, tooltip) {
+Spell.prototype.Init = function(game, duration, cooldown, type, target, start, end, unlock, tooltip) {
   this.game = game;
   this.duration = duration;
   this.durationLeft = 0;
   this.cooldown = cooldown;
   this.cooldownLeft = 0;
+  this.type = type;
+  this.target = target;
 
   // callbacks
   this.start = start;
@@ -83,8 +85,8 @@ Spell.prototype.Init = function(game, duration, cooldown, start, end, unlock, to
   this.status = LOCKED;
 };
 
-var Monster = function(game, level, health, experience, gold) {
-  this.Init(game, level, health, experience, gold);
+var Monster = function(game, level, health, experience, gold, type) {
+  this.Init(game, level, health, experience, gold, type);
 };
 
 Monster.prototype.Init = function(game, level, health, experience, gold, type) {

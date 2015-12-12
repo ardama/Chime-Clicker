@@ -59,10 +59,13 @@ var EXHAUST = "Exhaust";
 var CLEANSE = "Cleanse";
 var TELEPORT = "Teleport";
 
-// PASSIVES
 var FAVOR = "Favor";
 var SPOILS_OF_WAR = "Spoils of War"
 var TRIBUTE = "Tribute";
+
+// Spell Types
+var SPELL_PASSIVE = "passive";
+var SPELL_ACTIVE = "active";
 
 // Monsters
 var CASTER_MINION = "Caster Minion";
@@ -87,13 +90,15 @@ var SION = "Sion";
 var TEEMO = "Teemo";
 
 // Monster Types
-var MONSTER_JUNGLE = "Jungle";
-var MONSTER_CHAMPION = "Champion"
+var MONSTER_JUNGLE = "jungle";
+var MONSTER_CHAMPION = "champion"
+var MONSTER_ALL = "all";
 
 // Constant Arrays
 var MONSTERS = [CASTER_MINION, RIFT_SCUTTLER, MELEE_MINION, CANNON_MINION, RAZORBEAK,
-                MURK_WOLF, KRUG, GROMP, BLUE_SENTINEL, RED_BRAMBLEBACK, SUPER_MINION,
-                TIBBERS, DRAGON, VILEMAW, BARON_NASHOR, CHO_GATH, DR_MUNDO, SION, TEEMO];
+                MURK_WOLF, KRUG, GROMP, BLUE_SENTINEL, RED_BRAMBLEBACK,
+                SUPER_MINION, TIBBERS, DRAGON, VILEMAW, BARON_NASHOR,
+                CHO_GATH, DR_MUNDO, SION, TEEMO];
 var CHAMPIONS = [CHO_GATH, DR_MUNDO, SION, TEEMO];
 var IGNORE_PLURALS = [BOOTS_OF_SPEED, BOOTS_OF_SWIFTNESS, BOOTS_OF_MOBILITY, IONIAN_BOOTS_OF_LUCIDITY,
                       SORCERERS_SHOES, MERCURYS_TREADS, TWIN_SHADOWS, TIBBERS, FLASH];
@@ -121,9 +126,10 @@ var SCALE_MEEP_STRENGTH = 1;
 // Status Values
 var LOCKED = 0;
 var AVAILABLE = 1;
-var PURCHASED = 2;
-var ACTIVE = 3;
-var COOLDOWN = 4;
+var UNAVAILABLE = 2;
+var PURCHASED = 3;
+var ACTIVE = 4;
+var COOLDOWN = 5;
 
 
 ///// STYLING ////////////////////

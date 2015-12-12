@@ -54,7 +54,7 @@ body {
 	font-size: 20px;
 	line-height: 36px;
 
-	background-color: $gray900;
+	background-color: $gray1000;
 	@include box-shadow(0px 0px 12px 2px $boxShadow);
 
 	#header-icon {
@@ -137,7 +137,7 @@ body {
 #column-2 {
 	float: left;
 
-	width: calc(70% - 130px);
+	width: calc(70% - 120px);
 	height: calc(100vh - 116px); // header + status
 
 	margin-top: 80px;
@@ -151,12 +151,12 @@ body {
 #column-3 {
 	float: left;
 
-	width: calc(100px);
+	width: 90px;
 
 	color: #eee;
 	text-align: center;
 
-	background-color: black;
+	background-color: $black;
 
 	@include box-shadow(0px 2px 10px 1px $boxShadow inset);
 }
@@ -286,7 +286,7 @@ body {
 	top: 0;
 	left: calc(30% + 30px); /* width of #column-1 */
 
-	width: calc(70% - 130px); /* width of #column-2 */
+	width: calc(70% - 120px); /* width of #column-2 */
 	height: 80px;
 
 	color: #eee;
@@ -950,158 +950,103 @@ body {
 	background-color: $darkTextPrimary;
 }
 
+/* SPELLS ///////////////////////////////////// */
 
-// .upgrade-container {
-// 	float: left;
-//
-// 	width: calc(100% - 14px);
-// 	height: 70px;
-//
-// 	margin: 0 0 6px 6px;
-//
-// 	color: #eee;
-// 	font-size: 12px;
-//
-// 	background-color: rgba(30, 30, 30, 1);
-//
-// 	@include box-shadow(2px 2px 5px 0px $boxShadow);
-// }
-//
-// .upgrade-container-half {
-// 	width: calc(50% - 11px);
-// }
-//
-// .upgrade-container:hover {
-// 	// TODO color
-// 	background-color: rgba(40, 40, 40, 1);
-// }
-//
-// .upgrade-container:active {
-// 	@include box-shadow(1px 1px 5px 0px $boxShadow);
-// }
-//
-// .upgrade:first-of-type {
-// 	margin-top: 6px;
-// }
-//
-// .upgrade-header {
-// 	float: left;
-//
-// 	width: 100%;
-// 	height: 16px;
-//
-// 	padding: 3px 0 0 0;
-// 	overflow: hidden;
-// 	text-overflow: ellipsis;
-// }
-//
-// .upgrade-gold {
-// 	float: left;
-//
-// 	margin: 0 0 0 7px;
-// }
-//
-// .upgrade-gold .gold-icon {
-// 	display: inline-block;
-//
-// 	width: 8px;
-// 	height: 10px;
-// }
-//
-// .upgrade-cost {
-// 	display: inline-block;
-//
-// 	font-size: 14px;
-// }
-//
-// .upgrade-name {
-// 	float: right;
-//
-// 	margin: 2px 7px 0 0;
-//
-// 	color: $lightTextSecondary;
-// }
-//
-// .upgrade-left {
-// 	float: left;
-//
-// 	width: 55px;
-// 	height: 48px;
-// }
-//
-// .upgrade-image {
-// 	width: 42px;
-// 	height: 42px;
-//
-// 	margin: 4px auto;
-// 	border-radius: 20px;
-//
-// 	background-repeat: no-repeat;
-// 	background-size: cover;
-// }
-//
-// .upgrade-middle {
-// 	float: left;
-//
-// 	width: calc(100% - 65px);
-// 	height: 100%;
-// }
-//
-// .upgrade-description {
-// 	overflow: hidden;
-//
-// 	color: rgb(200, 200, 200);
-// 	text-align: center;
-// 	font-style: italic;
-//
-// 	display: -webkit-box;
-// 	display: -webkit-flex;
-// 	display: -moz-box;
-// 	display: -ms-flexbox;
-// 	display: flex;
-// 	-webkit-flex-align: center;
-// 	-ms-flex-align: center;
-// 	-webkit-align-items: center;
-// 	align-items: center;
-//
-// }
-//
-// .upgrade-footer {
-// 	float: left;
-//
-// 	width: 100%;
-//
-// 	line-height: 12px;
-// }
-//
-// .upgrade-stat {
-// 	padding: 2px 5px 0px 0;
-// }
-//
-// .upgrade-stat-value {
-// 	color: $lightTextPrimary;
-// }
-//
-// .upgrade-zero {
-// 	display: none;
-// }
-//
-// .upgrade-discovery,
-// .upgrade-swiftness {
-// 	// TODO color
-// 	color: rgba(79, 133, 100, 1);
-// }
-//
-// .upgrade-power,
-// .upgrade-agility {
-// 	// TODO color
-// 	color: rgba(17, 75, 95, 1);
-// }
-//
-// .upgrade-income {
-// 	// TODO color
-// 	color: rgba(179, 100, 45, 1);
-// }
+#spells-container {
+	float: left;
+
+	margin-top: -8px;
+
+	width: 100%;
+}
+
+.spell {
+	position: relative;
+	float: left;
+
+	width: 100%;
+	height: 70px;
+}
+
+.spell-image {
+	position: relative;
+
+	width: 60px;
+	height: 60px;
+
+	margin: 10px auto 0 auto;
+
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+// AVAILABLE
+.spell[data-type='active'][data-status='1'] .spell-image {
+	cursor: pointer;
+}
+
+// AVAILABLE
+.spell[data-type='active'][data-status='1'] .spell-image:hover {
+	width: 64px;
+	height: 64px;
+	margin-top: 8px;
+
+}
+
+// ACTIVE
+.spell[data-status='4'] .spell-image {
+	width: 64px;
+	height: 64px;
+	margin-top: 8px;
+}
+
+// LOCKED
+.spell[data-status='0'] .spell-image {
+	display: none;
+}
+
+.spell-image-overlay {
+	position: absolute;
+
+	top: 0;
+	left: 0;
+
+	width: 100%;
+
+	background-color: $darkTextPrimary;
+
+	@include transition(background-color 250ms);
+}
+
+// ACTIVE
+.spell[data-status='4'] .spell-image-overlay {
+	background-color: $lightTextDisabled;
+}
+
+.spell-locked-image {
+	display: none;
+}
+
+// LOCKED
+.spell[data-status='0'] .spell-locked-image {
+	display: block;
+
+	position: absolute;
+
+	width: 60px;
+	height: 60px;
+
+
+	margin: 10px auto 0 auto;
+
+	color: $darkTextPrimary;
+	line-height: 80px;
+	background-color: $gray1100;
+}
+
+
+
+
 
 
 /* OTHER ///////////////////////////////////// */
