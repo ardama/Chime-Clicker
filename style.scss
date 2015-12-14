@@ -243,6 +243,10 @@ body {
 	font-weight: bold;
 }
 
+#meeps-wrapper {
+	display: inline-block;
+}
+
 #damage-status {
 	position: relative;
 }
@@ -373,13 +377,17 @@ body {
 	height: 100%;
 }
 
+.game-stat-wrapper {
+	display: inline-block;
+}
+
 .game-stat {
 	float: left;
 
 	font-size: 16px;
 	font-weight: bold;
 
-	div {
+	.game-stat-name {
 		float: left;
 
 		color: $lightTextSecondary;
@@ -403,7 +411,7 @@ body {
 .game-stat-left {
 	width: 55%;
 
- 	div{
+ 	.game-stat-name {
 		width: 70px;
 	}
 }
@@ -411,7 +419,7 @@ body {
 .game-stat-right  {
 	width: 45%;
 
-	div{
+	.game-stat-name {
 		width: 45px;
 	}
 }
@@ -599,9 +607,6 @@ body {
 	background-color: $gray1000;
 }
 
-.item:last-child {
-	margin-bottom: 18px;
-}
 
 .item:hover {
 
@@ -742,6 +747,32 @@ body {
 	background-repeat: no-repeat;
 	background-size: cover;
 }
+.item-locked .item-left {
+	float: none;
+	margin: 5px auto;
+
+	width: 200px;
+
+	text-align: center;
+
+	cursor: default;
+}
+
+.item-locked-image {
+
+	width: 200px;
+	height: 100px;
+
+	color: $lightTextDisabled;
+	line-height: 100px;
+	font-size: 24px;
+	text-align: center;
+
+
+	background-color: $gray1000;
+	border-radius: 1px;
+	@include transition(color 150ms);
+}
 
 .item-middle {
 	float: left;
@@ -815,7 +846,7 @@ body {
 .item-upgrades-wrapper {
 	float: left;
 
-	width: calc(100% - 131px);
+	width: calc(100% - 137px);
 	height: 100%;
 
 	overflow-x: auto;
@@ -865,7 +896,7 @@ body {
 .upgrade-wrapper {
 	float: right;
 
-	width: 120px;
+	width: 126px;
 	height: calc(100% - 10px);
 
 	padding: 6px 4px 4px 4px;
@@ -877,7 +908,7 @@ body {
 .upgrade {
 	float: right;
 
-	width: 120px;
+	width: 126px;
 	height: 90px;
 
 	font-size: 14px;
@@ -905,13 +936,13 @@ body {
 .upgrade-stats {
 	float: left;
 
-	width: 24px;
+	width: 30px;
 
-	padding: 0 2px 0 4px;
+	padding: 0 4px 0 2px;
 
 	line-height: 18px;
 	font-weight: bold;
-	text-align: left;
+	text-align: right;
 }
 
 .upgrade-zero {
@@ -1036,13 +1067,12 @@ body {
 
 	width: 100%;
 
-	background-color: $darkTextPrimary;
+	background-color: $transparent;
 	border-radius: 1px;
-	@include transition(background-color 250ms);
+	@include transition(background-color 250ms, height 100ms);
 }
 
 .spell-locked-image {
-	display: none;
 	position: absolute;
 
 	top: 0;
@@ -1050,12 +1080,13 @@ body {
 	width: 100%;
 	height: 100%;
 
+	opacity: 0;
 	color: $lightTextDisabled;
 	line-height: 80px;
-	background-color: $gray1000;
+	background-color: $boxShadow;
 
 	border-radius: 1px;
-	@include transition(color 150ms);
+	@include transition(color 150ms, opacity 150ms);
 }
 
 .spell-cooldown {
@@ -1081,19 +1112,14 @@ body {
 
 // LOCKED
 .spell[data-status='0'] .spell-locked-image {
-	display: block;
+	opacity: 1;
+	background-color: $gray1000;
 }
 
 // UNAVAILABLE
 .spell[data-status='2'] .spell-locked-image {
-	display: block;
-
-	background-color: $boxShadow;
-}
-
-// UNAVAILABLE:hover
-.spell[data-status='2'] .spell-locked-image:hover {
-	color: $lightTextDisabled;
+	opacity: 1;
+	color: $lightTextTertiary;
 }
 
 // ACTIVE
@@ -1102,17 +1128,14 @@ body {
 }
 
 // COOLDOWN
+.spell[data-status='5'] .spell-image-overlay {
+	background-color: $darkTextPrimary;
+}
+
+// COOLDOWN
 .spell[data-status='5'] .spell-cooldown {
 	display: block;
 }
-
-
-
-
-
-
-
-
 
 /* OTHER ///////////////////////////////////// */
 #time-container {
@@ -1156,15 +1179,14 @@ body {
 	cursor: pointer;
 }
 
-
-
+/* TOOLTIPS ///////////////////////////////////// */
 .tooltipster-custom {
 	border-radius: 3px;
 	background: $darkTextPrimary;
 	color: $lightTextSecondary;
 }
 .tooltipster-custom .tooltipster-content {
-	font-size: 12px;
+	font-size: 13px;
 	line-height: 14px;
 	padding: 6px 8px;
 }

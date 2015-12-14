@@ -168,40 +168,40 @@ Game.prototype.createSpells = function() {
     var spells = {};
 
     // game, duration, cooldown, start, end, unlock, tooltip
-    spells[SMITE] = new Spell(this, .25, 60, SPELL_ACTIVE, MONSTER_JUNGLE,
+    spells[SMITE] = new Spell(this, 0, 60, SPELL_ACTIVE, MONSTER_JUNGLE,
       function(game) {game.smiteBonus = .20;
                       game.addDamage(game.getSmiteDamage(), true);
                       game.smiteBonus = 0;},
         function(game) {},
         function(game) {return game.level >= 2},
         function(game) {return game.spells[SMITE].status == game.LOCKED ? "":
-                        "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage to monsters.  Kills with smite grant 20% bonus gold.  Does not work against champions.  1 minute cooldown."}
+                        "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage instantly.  Damage scales with level.  Kills with smite grant +20% gold.  Does not work against champions.  </br></br>1 minute cooldown."}
       );
 
-    spells[SPOILS_OF_WAR] = new Spell(this, .25, 40, SPELL_PASSIVE, MONSTER_JUNGLE,
+    spells[SPOILS_OF_WAR] = new Spell(this, 0, 40, SPELL_PASSIVE, MONSTER_JUNGLE,
         function(game) {game.spoilsOfWarBonus = game.getSpoilsOfWarBonus() / 100;
                         game.killMonster();
                         game.spoilsOfWarBonus = 0;},
         function(game) {},
         function(game) {return game.upgrades[FACE_OF_THE_MOUNTAIN].status == game.PURCHASED;},
         function(game) {return game.spells[SPOILS_OF_WAR].status == game.LOCKED ? "":
-                        "Execute monsters below 20% max health on click, gaining <b>" + game.getSpoilsOfWarBonus().toFixed(1) + "%</b> bonus reward gold.  Gold scales with number of Relic Shields owned.  Does not work against champions. 40 second cooldown."}
+                        "Execute monsters below 30% max health on click, gaining <b>+" + game.getSpoilsOfWarBonus().toFixed(1) + "%</b> reward gold.  Gold scales with Relic Shields owned.  Does not work against champions. </br></br>40 second cooldown."}
     );
 
-    spells[FAVOR] = new Spell(this, .25, 0, SPELL_PASSIVE, MONSTER_ALL,
+    spells[FAVOR] = new Spell(this, 0, 0, SPELL_PASSIVE, MONSTER_ALL,
         function(game) {},
         function(game) {},
         function(game) {return game.upgrades[TALISMAN_OF_ASCENSION].status == game.PURCHASED;},
         function(game) {return game.spells[FAVOR].status == game.LOCKED ? "":
-                        "Passively gain <b>" + game.getFavorBonus().toFixed(1) + "%</b> bonus reward gold from monsters killed.  Gold scales with number of Ancient Coins owned."}
+                        "Passively gain <b>+" + game.getFavorBonus().toFixed(1) + "%</b> gold from monsters killed.  Gold scales with Ancient Coins owned."}
     );
 
-    spells[TRIBUTE] = new Spell(this, .25, 20, SPELL_PASSIVE, MONSTER_ALL,
+    spells[TRIBUTE] = new Spell(this, 0, 20, SPELL_PASSIVE, MONSTER_ALL,
         function(game) {game.gold += Math.ceil(game.monsters[game.monster].gold * game.getTributeBonus() / 100);},
         function(game) {},
         function(game) {return game.upgrades[FROST_QUEENS_CLAIM].status == game.PURCHASED;},
         function(game) {return game.spells[TRIBUTE].status == game.LOCKED ? "":
-                        "Gain <b>" + game.getTributeBonus().toFixed(1) + "%</b> of reward gold on monster click.  Gold scales with number of Spellthief's Edges owned. 15 second cooldown."}
+                        "Gain <b>" + game.getTributeBonus().toFixed(1) + "%</b> of reward gold on monster click.  Gold scales with Spellthief's Edges owned. </br></br>15 second cooldown."}
     );
 
     spells[GHOST] = new Spell(this, 10, 90, SPELL_ACTIVE, MONSTER_ALL,
@@ -209,18 +209,18 @@ Game.prototype.createSpells = function() {
         function(game) {game.ghostBonus = 1.0;},
         function(game) {return game.level >= 4},
         function(game) {return game.spells[GHOST].status == game.LOCKED ? "":
-                        "Increase chime generation by 100% for the next 10 seconds.  90 second cooldown."}
+                        "+100% chime generation for 10 seconds.  </br></br>90 second cooldown."}
     );
 
-    spells[FLASH] = new Spell(this, .25, 120, SPELL_ACTIVE, MONSTER_ALL,
+    spells[FLASH] = new Spell(this, 0, 120, SPELL_ACTIVE, MONSTER_ALL,
         function(game) {game.addMeeps(Math.ceil(game.meeps * game.flashBonus));},
         function(game) {},
         function(game) {return game.level >= 6},
         function(game) {return game.spells[FLASH].status == game.LOCKED ? "":
-                        "Receive bonus meeps equal to 5% of your current total.  2 minute cooldown."}
+                        "+5% total meeps.  </br></br>2 minute cooldown."}
     );
 
-    spells[TELEPORT] = new Spell(this, .25, 300, SPELL_ACTIVE, MONSTER_ALL,
+    spells[TELEPORT] = new Spell(this, 0, 300, SPELL_ACTIVE, MONSTER_ALL,
         function(game) {var spells = game.getObjectsByStatus(game.spells, game.COOLDOWN);
                         for (var i = 0; i < spells.length; i++) {
                           var spell = game.spells[spells[i]];
@@ -230,7 +230,7 @@ Game.prototype.createSpells = function() {
         function(game) {},
         function(game) {return game.level >= 13},
         function(game) {return game.spells[TELEPORT].status == game.LOCKED ? "":
-                        "Reset cooldowns of all spells.  5 minute cooldown."}
+                        "Reset cooldowns of all spells.  </br></br>5 minute cooldown."}
     );
 
     spells[IGNITE] = new Spell(this, 5, 120, SPELL_ACTIVE, MONSTER_CHAMPION,
@@ -238,7 +238,7 @@ Game.prototype.createSpells = function() {
         function(game) {game.igniteDamage = 0},
         function(game) {return game.level >= 16},
         function(game) {return game.spells[IGNITE].status == game.LOCKED ? "":
-                        "Deal <b>" + game.prettyIntCompact(game.getIgniteDamage()) + "</b> damage over 5 seconds to champions.  Only works against champions.  2 minute cooldown."}
+                        "Deal <b>" + game.prettyIntCompact(game.getIgniteDamage()) + "</b> damage over 5 seconds.  Damage scales with level.  Only works against champions.  </br></br>2 minute cooldown."}
     );
 
     spells[EXHAUST] = new Spell(this, 10, 90, SPELL_ACTIVE, MONSTER_CHAMPION,
@@ -246,7 +246,7 @@ Game.prototype.createSpells = function() {
         function(game) {game.exhaustBonus = 1.0},
         function(game) {return game.level >= 17},
         function(game) {return game.spells[EXHAUST].status == game.LOCKED ? "":
-                        "Increase damage dealt by 100% for the next 10 seconds.  Only works against champions.  90 second cooldown."}
+                        "+100% damage dealt for 10 seconds.  Only works against champions.  </br></br>90 second cooldown."}
     );
 
 
@@ -320,7 +320,7 @@ Game.prototype.addDamage = function(damage, user) {
   this.userDamage += damage;
 
   var monster = this.monsters[this.monster];
-  var executeThreshold = .20 * monster.maxHealth;
+  var executeThreshold = .30 * monster.maxHealth;
   var excessDamage = executeThreshold - (monster.currentHealth - damage);
   if (user && this.spells[SPOILS_OF_WAR].status == this.AVAILABLE && excessDamage >= 0) {
     this.activateSpell(SPOILS_OF_WAR);
@@ -364,7 +364,7 @@ Game.prototype.addSpellTime = function(time) {
   for (var i = 0; i < activeSpells.length; i++) {
     var activeSpell = this.spells[activeSpells[i]];
     activeSpell.durationLeft -= time;
-    if (activeSpell.durationLeft <= 0) {
+    if (activeSpell.durationLeft <= -.2) {
       activeSpell.end(this);
       activeSpell.status = this.COOLDOWN;
       activeSpell.cooldownLeft = activeSpell.cooldown;
@@ -738,7 +738,7 @@ Game.prototype.getExperiencePercent = function() {
 Game.prototype.getSpellTimePercent = function(spellName) {
   var spell = this.spells[spellName];
   if (spell.status == ACTIVE) {
-    return 100 - 100 * spell.durationLeft / spell.duration;
+    return 100 - 100 * Math.max(0, spell.durationLeft) / (spell.duration + .2);
   }
   else if (spell.status == COOLDOWN) {
     return 100 * spell.cooldownLeft / spell.cooldown;

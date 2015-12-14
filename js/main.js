@@ -187,16 +187,21 @@ function updateButtons(force) {
 };
 
 function updateTooltips() {
-  $('[data-toggle="tooltip"]').each(function() {
-    var content = $(this).attr('data-title');
-    if (content.length > 0) {
-      $(this).tooltipster('enable');
-      $(this).tooltipster('content', content);
+  $('.spell-wrapper').each(function() {
+    var newContent = $(this).attr('data-title');
+    var oldContent = $(this).tooltipster('content');
+    if (newContent != oldContent) {
+      if (newContent.length > 0) {
+        $(this).tooltipster('enable');
+        $(this).tooltipster('content', newContent);
+      }
+      else {
+        $(this).tooltipster('disable');
+      }
     }
-    else {
-      $(this).tooltipster('disable');
-    }
-  })
+  });
+
+
 }
 
 ///// UTILITY ////////////////////
@@ -337,11 +342,20 @@ $(window).resize(function() {
 
 $(window).load(function() {
   updateButtons(true);
-  $('[data-toggle="tooltip"]').tooltipster({
-    theme: 'tooltipster-custom',
-    maxWidth: 200,
-    position: 'left',
-    contentAsHTML: true,
-    updateAnimation: false
+  $('[data-toggle="tooltip"]').each(function() {
+    var content = $(this).attr('data-title');
+    var position = $(this).attr('data-position') || 'left';
+    $(this).tooltipster({
+      'theme': 'tooltipster-custom',
+      'maxWidth': 200,
+      'position': position,
+      'content' : content,
+      'contentAsHTML': true,
+      'updateAnimation': false
+    });
+
+    if (content.length == 0) {
+      $(this).tooltipster('disable');
+    }
   });
 });
