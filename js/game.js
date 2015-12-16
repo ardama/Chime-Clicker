@@ -176,7 +176,7 @@ Game.prototype.createSpells = function() {
         function(game) {},
         function(game) {return game.level >= 2},
         function(game) {return game.spells[SMITE].status == game.LOCKED ? "":
-                        "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage instantly.  Damage scales with level.  Kills with smite grant +20% gold.  Does not work against champions.  </br></br>1 minute cooldown."}
+                        "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage instantly.  Damage scales with level.  Kills with smite grant +20% gold.  Does not work against champions.  </br></br>1 minute cooldown. <b>(Q)</b>"}
       );
 
     spells[SPOILS_OF_WAR] = new Spell(this, 0, 40, SPELL_PASSIVE, MONSTER_JUNGLE,
@@ -210,7 +210,7 @@ Game.prototype.createSpells = function() {
         function(game) {game.ghostBonus = 1.0;},
         function(game) {return game.level >= 4},
         function(game) {return game.spells[GHOST].status == game.LOCKED ? "":
-                        "+100% chime generation for 10 seconds.  </br></br>90 second cooldown."}
+                        "+100% chime generation for 10 seconds.  </br></br>90 second cooldown. <b>(W)</b>"}
     );
 
     spells[FLASH] = new Spell(this, 0, 120, SPELL_ACTIVE, MONSTER_ALL,
@@ -218,7 +218,7 @@ Game.prototype.createSpells = function() {
         function(game) {},
         function(game) {return game.level >= 6},
         function(game) {return game.spells[FLASH].status == game.LOCKED ? "":
-                        "+5% total meeps.  </br></br>2 minute cooldown."}
+                        "+5% total meeps.  </br></br>2 minute cooldown. <b>(E)</b>"}
     );
 
     spells[TELEPORT] = new Spell(this, 0, 300, SPELL_ACTIVE, MONSTER_ALL,
@@ -231,7 +231,7 @@ Game.prototype.createSpells = function() {
         function(game) {},
         function(game) {return game.level >= 13},
         function(game) {return game.spells[TELEPORT].status == game.LOCKED ? "":
-                        "Reset cooldowns of all spells.  </br></br>5 minute cooldown."}
+                        "Reset cooldowns of all spells.  </br></br>5 minute cooldown. <b>(R)</b>"}
     );
 
     spells[IGNITE] = new Spell(this, 5, 120, SPELL_ACTIVE, MONSTER_CHAMPION,
@@ -239,7 +239,7 @@ Game.prototype.createSpells = function() {
         function(game) {game.igniteDamage = 0},
         function(game) {return game.level >= 16},
         function(game) {return game.spells[IGNITE].status == game.LOCKED ? "":
-                        "Deal <b>" + game.prettyIntCompact(game.getIgniteDamage()) + "</b> damage over 5 seconds.  Damage scales with level.  Only works against champions.  </br></br>2 minute cooldown."}
+                        "Deal <b>" + game.prettyIntCompact(game.getIgniteDamage()) + "</b> damage over 5 seconds.  Damage scales with level.  Only works against champions.  </br></br>2 minute cooldown. <b>(T)</b>"}
     );
 
     spells[EXHAUST] = new Spell(this, 10, 90, SPELL_ACTIVE, MONSTER_CHAMPION,
@@ -247,7 +247,7 @@ Game.prototype.createSpells = function() {
         function(game) {game.exhaustBonus = 1.0},
         function(game) {return game.level >= 17},
         function(game) {return game.spells[EXHAUST].status == game.LOCKED ? "":
-                        "+100% damage dealt for 10 seconds.  Only works against champions.  </br></br>90 second cooldown."}
+                        "+100% damage dealt for 10 seconds.  Only works against champions.  </br></br>90 second cooldown. <b>(Y)</b>"}
     );
 
 
@@ -284,7 +284,8 @@ Game.prototype.createMonsters = function() {
 };
 
 Game.prototype.start = function() {
-  this.levelUp();
+  if (!this.level)
+    this.levelUp();
 
 
   var thisRef = this;
@@ -803,7 +804,7 @@ Game.prototype.save = function() {
   obj['spells'] = this.saveSpells();
   obj['monsters'] = this.saveMonsters();
 
-  Cookies.set('save', obj, {expires: 30});
+  localStorage.setItem('save', JSON.stringify(obj));
 };
 
 Game.prototype.saveStats = function() {
@@ -964,6 +965,83 @@ Game.prototype.saveMonsters = function() {
 };
 
 Game.prototype.load = function() {
-  var obj = Cookies.getJSON('save');
-  return obj;
+  var obj = localStorage.getItem('save', obj);
+  if (obj) {
+    obj = JSON.parse(obj);
+    this.loadStats(obj);
+    this.loadItems(obj);
+    this.loadUpgrades(obj);
+    this.loadSpells(obj);
+    this.loadMonsters(obj);
+  }
 };
+
+Game.prototype.loadStats = function(obj) {
+  var stats = obj['stats'];
+  for (var key in stats) {
+    if (stats.hasOwnProperty(key)) {
+      this[key] = stats[key];
+    }
+  }
+};
+
+Game.prototype.loadItems = function(obj) {
+  var items = obj['items'];
+  for (var itemName in items) {
+    if (items.hasOwnProperty(itemName)) {
+      var item = items[itemName];
+      for (var key in item) {
+        if (item.hasOwnProperty(key)) {
+          this.items[itemName][key] = item[key];
+        }
+      }
+    }
+  }
+};
+
+Game.prototype.loadUpgrades = function(obj) {
+  var upgrades = obj['upgrades'];
+  for (var upgradeName in upgrades) {
+    if (upgrades.hasOwnProperty(upgradeName)) {
+      var upgrade = upgrades[upgradeName];
+      for (var key in upgrade) {
+        if (upgrade.hasOwnProperty(key)) {
+          this.upgrades[upgradeName][key] = upgrade[key];
+        }
+      }
+    }
+  }
+};
+
+Game.prototype.loadSpells = function(obj) {
+  var spells = obj['spells'];
+  for (var spellName in spells) {
+    if (spells.hasOwnProperty(spellName)) {
+      var spell = spells[spellName];
+      for (var key in spell) {
+        if (spell.hasOwnProperty(key)) {
+          this.spells[spellName][key] = spell[key];
+        }
+      }
+    }
+  }
+};
+
+Game.prototype.loadMonsters = function(obj) {
+  var monsters = obj['monsters'];
+  for (var monsterName in monsters) {
+    if (monsters.hasOwnProperty(monsterName)) {
+      var monster = monsters[monsterName];
+      for (var key in monster) {
+        if (monster.hasOwnProperty(key)) {
+          this.monsters[monsterName][key] = monster[key];
+        }
+      }
+    }
+  }
+};
+
+Game.prototype.reset = function() {
+  localStorage.removeItem('save');
+  location.reload(true);
+}

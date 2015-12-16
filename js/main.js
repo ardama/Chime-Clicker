@@ -1,5 +1,4 @@
 ///// CONSTANTS ////////////////////
-// TODO: Update items & images for new season
 // Items
 var BOOTS_OF_SPEED = "Boots of Speed";
 var ANCIENT_COIN = "Ancient Coin";
@@ -182,7 +181,6 @@ function updateButtons(force) {
 
     $wrapper.css('left', (w - size - 20) / 2);
     $wrapper.css('top', 25 + (h - size - 22) / 2);
-
   });
 };
 
@@ -200,9 +198,7 @@ function updateTooltips() {
       }
     }
   });
-
-
-}
+};
 
 ///// UTILITY ////////////////////
 function prettyIntBig(num, fixed) {
@@ -221,7 +217,7 @@ function prettyIntBig(num, fixed) {
   if(num >= 1000000)
     return (num / 1000000).toFixed(fixed) + ' million';
   return prettyInt(num);
-}
+};
 
 function prettyIntBigCompact(num, fixed) {
   if (!fixed)
@@ -266,6 +262,19 @@ function getBaseLog(x, y) {
   return Math.log(y) / Math.log(x);
 };
 
+function createFloatingText(parent, text, event) {
+  var posX = event.pageX - parent.offset().left - 10;
+  var posY = event.pageY - parent.offset().top - 30;
+  var $obj = $("<div>", {class:'counter'});
+  $obj.html();
+  $obj.css({left: posX + 'px', top: posY + 'px'});
+
+  parent.append($obj);
+  $obj.animate({top: '-=100', left:'+=' + (60 * Math.random() - 30), opacity: 0}, 1000, function() {
+    parent.remove();
+  });
+};
+
 ///// INITIALIZE ////////////////////
 var GameApp = angular.module('GameApp', []);
 GameApp.controller('GameController', function($scope) {
@@ -273,67 +282,144 @@ GameApp.controller('GameController', function($scope) {
     $scope.game = new Game($scope, 'medium');
     $scope.game.start();
 
-    $('#chimes-button').click(function(e) {
-      $scope.game.chimesClick();
+    initializeHotkeys($scope.game);
+    initializeButtons($scope.game);
+});
 
-      // TODO: Move to utility function
-      var posX = e.pageX - $(this).offset().left - 10;
-      var posY = e.pageY - $(this).offset().top - 30;
-      var $obj = $("<div>", {class:'counter'});
-      $obj.html("+" + $scope.game.prettyIntCompact($scope.game.chimesPerClick));
-      $obj.css({left: posX + 'px', top: posY + 'px'});
+function initializeButtons(game) {
+  $('#chimes-button').click(function(e) {
+    game.chimesClick();
+    var text = "+" + game.prettyIntCompact(game.chimesPerClick);
+    createFloatingText($(this), text, e);
+  });
 
-      $(this).append($obj);
-      $obj.animate({top: '-=100', left:'+=' + (60 * Math.random() - 30), opacity: 0}, 1000, function() {
-        $(this).remove();
-      });
-    });
+  $('#monster-button').click(function(e) {
+    game.damageClick();
+    var text = "-" + game.prettyIntCompact(game.damagePerClick);
+    createFloatingText($(this), text, e);
+  });
 
-    $('#monster-button').click(function(e) {
-      $scope.game.damageClick();
+  $('.dropdown-button').click(function(){
+    $(this).find('.rotate').toggleClass('down');
 
-      // TODO: Move to utility function
-      var posX = e.pageX - $(this).offset().left - 10;
-      var posY = e.pageY - $(this).offset().top - 30;
-      var $obj = $("<div>", {class:'counter'});
-      $obj.html("-" + $scope.game.prettyIntCompact($scope.game.damagePerClick));
-      $obj.css({left: posX + 'px', top: posY + 'px'});
+    var dropdown = $(this).parent();
+    var value =  dropdown.attr('data-collapsed') == 'true' ? 'false' : 'true';
+    if (value == 'true') {
+      dropdown.children('.dropdown-content').height('0px');
+    }
+    else {
+      // update if $dropdownButtonSize changes
+      dropdown.children('.dropdown-content').height('25px');
+    }
 
-      $(this).append($obj);
-      $obj.animate({top: '-=100', left:'+=' + (60 * Math.random() - 30), opacity: 0}, 1000, function() {
-        $(this).remove();
-      });
-    });
+    dropdown.attr('data-collapsed', value);
+  });
 
-    $('.dropdown-button').click(function(){
-      $(this).find('.rotate').toggleClass('down');
+  $('#monster-selector .selector-left').click(function() {
+    game.selectMonster('left');
+    updateButtons();
+  });
 
-      var dropdown = $(this).parent();
-      var value =  dropdown.attr('data-collapsed') == 'true' ? 'false' : 'true';
-      if (value == 'true') {
-        dropdown.children('.dropdown-content').height('0px');
-      }
-      else {
-        // update if $dropdownButtonSize changes
-        dropdown.children('.dropdown-content').height('25px');
-      }
+  $('#monster-selector .selector-right').click(function() {
+    game.selectMonster('right');
+    updateButtons();
+  });
+};
 
-      dropdown.attr('data-collapsed', value);
-    });
+function initializeHotkeys(game) {
+  // Spell hotkeys
+  $(document).bind('keydown', 'q', function() {game.spellClick(SMITE)});
+  $(document).bind('keydown', 'w', function() {game.spellClick(GHOST)});
+  $(document).bind('keydown', 'e', function() {game.spellClick(FLASH)});
+  $(document).bind('keydown', 'r', function() {game.spellClick(TELEPORT)});
+  $(document).bind('keydown', 't', function() {game.spellClick(IGNITE)});
+  $(document).bind('keydown', 'y', function() {game.spellClick(EXHAUST)});
 
-    $('#monster-selector .selector-left').click(function() {
-      $scope.game.selectMonster('left');
-      updateButtons();
-    });
+  // Monster hotkeys
+  $(document).bind('keydown', 'a', function() {game.selectMonster('left')});
+  $(document).bind('keydown', 's', function() {game.selectMonster('right')});
 
-    $('#monster-selector .selector-right').click(function() {
-      $scope.game.selectMonster('right');
-      updateButtons();
-    });
+  // Dropdown hotkeys
+  $(document).bind('keydown', 'd', function() {$('#chimes-bar-dropdown .dropdown-button').click()});
+  $(document).bind('keydown', 'f', function() {$('#damage-bar-dropdown .dropdown-button').click()});
 
+  // Item hotkeys
+  $(document).bind('keydown', '1', function() {game.buyItem(RELIC_SHIELD)});
+  $(document).bind('keydown', '2', function() {game.buyItem(ANCIENT_COIN)});
+  $(document).bind('keydown', '3', function() {game.buyItem(SPELLTHIEFS_EDGE)});
+  $(document).bind('keydown', '4', function() {game.buyItem(BOOTS_OF_SPEED)});
+  $(document).bind('keydown', '5', function() {game.buyItem(RUBY_CRYSTAL)});
+  $(document).bind('keydown', '6', function() {game.buyItem(AMPLIFYING_TOME)});
+  $(document).bind('keydown', '7', function() {game.buyItem(DAGGER)});
 
+  $(document).bind('keydown', 'ctrl+1', function() {game.buyItem(RELIC_SHIELD, 10); return false;});
+  $(document).bind('keydown', 'ctrl+2', function() {game.buyItem(ANCIENT_COIN, 10); return false;});
+  $(document).bind('keydown', 'ctrl+3', function() {game.buyItem(SPELLTHIEFS_EDGE, 10); return false;});
+  $(document).bind('keydown', 'ctrl+4', function() {game.buyItem(BOOTS_OF_SPEED, 10); return false;});
+  $(document).bind('keydown', 'ctrl+5', function() {game.buyItem(RUBY_CRYSTAL, 10); return false;});
+  $(document).bind('keydown', 'ctrl+6', function() {game.buyItem(AMPLIFYING_TOME, 10); return false;});
+  $(document).bind('keydown', 'ctrl+7', function() {game.buyItem(DAGGER, 10); return false;});
 
-})
+  $(document).bind('keydown', 'shift+1', function() {game.buyItem(RELIC_SHIELD, 100)});
+  $(document).bind('keydown', 'shift+2', function() {game.buyItem(ANCIENT_COIN, 100)});
+  $(document).bind('keydown', 'shift+3', function() {game.buyItem(SPELLTHIEFS_EDGE, 100)});
+  $(document).bind('keydown', 'shift+4', function() {game.buyItem(BOOTS_OF_SPEED, 100)});
+  $(document).bind('keydown', 'shift+5', function() {game.buyItem(RUBY_CRYSTAL, 100)});
+  $(document).bind('keydown', 'shift+6', function() {game.buyItem(AMPLIFYING_TOME, 100)});
+  $(document).bind('keydown', 'shift+7', function() {game.buyItem(DAGGER, 100)});
+
+  $(document).bind('keydown', 'ctrl+shift+1', function() {game.buyItem(RELIC_SHIELD, 1000)});
+  $(document).bind('keydown', 'ctrl+shift+2', function() {game.buyItem(ANCIENT_COIN, 1000)});
+  $(document).bind('keydown', 'ctrl+shift+3', function() {game.buyItem(SPELLTHIEFS_EDGE, 1000)});
+  $(document).bind('keydown', 'ctrl+shift+4', function() {game.buyItem(BOOTS_OF_SPEED, 1000)});
+  $(document).bind('keydown', 'ctrl+shift+5', function() {game.buyItem(RUBY_CRYSTAL, 1000)});
+  $(document).bind('keydown', 'ctrl+shift+6', function() {game.buyItem(AMPLIFYING_TOME, 1000)});
+  $(document).bind('keydown', 'ctrl+shift+7', function() {game.buyItem(DAGGER, 1000)});
+
+  $(document).bind('keydown', 'alt+1',
+    function() {
+      var upgrade = game.items[RELIC_SHIELD].upgradesAvailable[0];
+      if (upgrade) {game.buyUpgrade(upgrade);}
+    }
+  );
+  $(document).bind('keydown', 'alt+2',
+    function() {
+      var upgrade = game.items[ANCIENT_COIN].upgradesAvailable[0];
+      if (upgrade) {game.buyUpgrade(upgrade);}
+    }
+  );
+  $(document).bind('keydown', 'alt+3',
+    function() {
+      var upgrade = game.items[SPELLTHIEFS_EDGE].upgradesAvailable[0];
+      if (upgrade) {game.buyUpgrade(upgrade);}
+    }
+  );
+  $(document).bind('keydown', 'alt+4',
+    function() {
+      var upgrade = game.items[BOOTS_OF_SPEED].upgradesAvailable[0];
+      if (upgrade) {game.buyUpgrade(upgrade);}
+    }
+  );
+  $(document).bind('keydown', 'alt+5',
+    function() {
+      var upgrade = game.items[RUBY_CRYSTAL].upgradesAvailable[0];
+      if (upgrade) {game.buyUpgrade(upgrade);}
+    }
+  );
+  $(document).bind('keydown', 'alt+6',
+    function() {
+      var upgrade = game.items[AMPLIFYING_TOME].upgradesAvailable[0];
+      if (upgrade) {game.buyUpgrade(upgrade);}
+    }
+  );
+  $(document).bind('keydown', 'alt+7',
+    function() {
+      var upgrade = game.items[DAGGER].upgradesAvailable[0];
+      if (upgrade) {game.buyUpgrade(upgrade);}
+    }
+  );
+};
+
 
 ///// OTHER ////////////////////
 $(window).resize(function() {

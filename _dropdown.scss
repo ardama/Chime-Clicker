@@ -48,7 +48,7 @@
 }
 
 .rotate{
-  @include transition(all, .4s, linear);
+  @include transition(all 333ms);
 }
 
 .rotate.down{

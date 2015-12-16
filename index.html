@@ -5,7 +5,7 @@
 
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery.tooltipster.js"></script>
-<script src="js/js.cookie.js"></script>
+<script src="js/jquery.hotkeys.js"></script>
 <script src="js/angular.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/game.js"></script>
@@ -277,12 +277,16 @@
 			</div>
 			<!-- timer and spells -->
 			<div id="column-3" class="column">
-				<div id="time-container">
-					<div id="time">
-						Time
-					</div>
-					<div id="time-value">
-						{{game.getRoundedTime()}}
+				<div id="reset-container">
+					<div id="reset-button" class="button" ng-click="game.reset()">Reset</div>
+					<div id="time-container">
+						<div id="time">
+							Time
+						</div>
+						<br/>
+						<div id="time-value">
+							{{game.getRoundedTime()}}
+						</div>
 					</div>
 				</div>
 				<div id="spells-container">

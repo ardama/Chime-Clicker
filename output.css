@@ -111,10 +111,10 @@
   padding-bottom: 3px; }
 
 .rotate {
-  -webkit-transition: all, 0.4s, linear;
-  -moz-transition: all, 0.4s, linear;
-  -o-transition: all, 0.4s, linear;
-  transition: all, 0.4s, linear; }
+  -webkit-transition: all 333ms;
+  -moz-transition: all 333ms;
+  -o-transition: all 333ms;
+  transition: all 333ms; }
 
 .rotate.down {
   -moz-transform: scaleY(-1);
@@ -581,6 +581,7 @@ body {
   width: 50px;
   height: 25px;
   margin: 5px 5px 0 0;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 16px;
   line-height: 25px;
   text-align: center;
@@ -597,6 +598,7 @@ body {
 
 .item-buy:hover {
   margin-top: 4px;
+  color: white;
   background-color: #455a64;
   -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
@@ -844,7 +846,6 @@ body {
 /* SPELLS ///////////////////////////////////// */
 #spells-container {
   float: left;
-  margin-top: -8px;
   width: 100%; }
 
 .spell {
@@ -950,18 +951,54 @@ body {
   display: block; }
 
 /* OTHER ///////////////////////////////////// */
+#reset-container {
+  float: left;
+  width: 100%;
+  height: 80px;
+  background-color: black; }
+
+#reset-button {
+  float: left;
+  width: calc(100% - 16px);
+  height: 25px;
+  margin: 8px 8px 0;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 25px;
+  text-align: center;
+  border-radius: 1px;
+  color: rgba(255, 255, 255, 0.7);
+  background-color: #263238;
+  -webkit-transition: background-color 100ms, margin 100ms, color 100ms;
+  -moz-transition: background-color 100ms, margin 100ms, color 100ms;
+  -o-transition: background-color 100ms, margin 100ms, color 100ms;
+  transition: background-color 100ms, margin 100ms, color 100ms; }
+
+#reset-button:hover {
+  background-color: #455a64;
+  color: white; }
+
+#reset-button:active {
+  background-color: #455a64;
+  -webkit-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset;
+  -moz-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset;
+  box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset; }
+
 #time-container {
   float: left;
   width: 100%;
   padding: 5px 0;
-  text-align: left; }
+  line-height: 20px;
+  font-size: 16px; }
   #time-container #time {
     float: left;
-    padding-left: 8px;
+    width: calc(100% - 16px);
+    padding: 0 8px;
     color: rgba(255, 255, 255, 0.7); }
   #time-container #time-value {
     float: left;
-    padding-left: 5px;
+    width: calc(100% - 16px);
+    padding: 0 8px;
     font-weight: bold; }
 
 .gold-icon {
