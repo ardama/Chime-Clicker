@@ -5,6 +5,7 @@
 
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery.tooltipster.js"></script>
+<script src="js/js.cookie.js"></script>
 <script src="js/angular.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/game.js"></script>
@@ -281,7 +282,7 @@
 						Time
 					</div>
 					<div id="time-value">
-						{{game.getTime()}}
+						{{game.getRoundedTime()}}
 					</div>
 				</div>
 				<div id="spells-container">

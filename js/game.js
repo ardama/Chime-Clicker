@@ -1,9 +1,11 @@
 var Game = function (scope, difficulty) {
   this.Init(scope, difficulty);
+  this.load();
 };
 
 Game.prototype.Init = function(scope, difficulty) {
   this.scope = scope;
+  this.difficulty = difficulty;
 
   this.fps = 30;
   this.stepSize = 1 / this.fps;
@@ -12,12 +14,10 @@ Game.prototype.Init = function(scope, difficulty) {
   this.scaleMonsterLevelHealth = SCALE_MONSTER_LEVEL_HEALTH[difficulty];
 
   this.items = this.createItems();
-  this.itemsAvailable = [];
   this.spells = this.createSpells();
   this.spellsUnlocked = [];
   this.upgrades = this.createUpgrades();
   this.upgradesAvailable = [];
-  this.upgradesPurchased = [];
   this.monsters = this.createMonsters();
   this.monstersAvailable = [];
 
@@ -59,6 +59,7 @@ Game.prototype.Init = function(scope, difficulty) {
   this.damageRate = 0;
   this.damagePerClick = 0;
   this.damageClickRate = 0;
+  this.userDamage = 0;
   this.monster = null;
 
   this.level = 0;
@@ -302,6 +303,11 @@ Game.prototype.step = function(step) {
   this.addSpellTime(step);
 
   this.steps++;
+
+  // autosave every 10th second
+  if (this.getTime() % 10 == 0) {
+    this.save();
+  }
 
   this.updateView();
 };
@@ -646,10 +652,6 @@ Game.prototype.levelUp = function(levels) {
     if (this.level == 19)
       this.experienceNeeded = 999999000000000000;
 
-    // Increase meep damage and gold generation
-    this.meepGold *= SCALE_MEEP_STRENGTH;
-    this.meepDamage *= SCALE_MEEP_STRENGTH;
-
     this.updateStats();
     this.unlockItems();
     this.unlockUpgrades();
@@ -669,6 +671,10 @@ Game.prototype.win = function() {
 
 // Utility Functions
 Game.prototype.getTime = function() {
+  return this.steps / this.fps;
+};
+
+Game.prototype.getRoundedTime = function() {
   return Math.floor(this.steps / this.fps);
 };
 
@@ -787,4 +793,177 @@ Game.prototype.getObjectsByStatus = function(objectMap, status) {
     }
   }
   return objects;
-}
+};
+
+Game.prototype.save = function() {
+  var obj = {};
+  obj['stats'] = this.saveStats();
+  obj['items'] = this.saveItems();
+  obj['upgrades'] = this.saveUpgrades();
+  obj['spells'] = this.saveSpells();
+  obj['monsters'] = this.saveMonsters();
+
+  Cookies.set('save', obj, {expires: 30});
+};
+
+Game.prototype.saveStats = function() {
+  var obj = {};
+  obj['difficulty'] = this.difficulty;
+  obj['fps'] = this.fps;
+  obj['stepSize'] = this.stepSize;
+  obj['steps'] = this.steps;
+
+  obj['scaleMonsterLevelHealth'] = this.scaleMonsterLevelHealth;
+
+  obj['spellsUnlocked'] = this.spellsUnlocked;
+  obj['upgradesAvailable'] = this.upgradesAvailable;
+  obj['monstersAvailable'] = this.monstersAvailable;
+
+  obj['chimes'] = this.chimes;
+  obj['chimesPerClick'] = this.chimesPerClick;
+  obj['chimesPerMeep'] = this.chimesPerMeep;
+  obj['chimesPerMeepFloor'] = this.chimesPerMeepFloor;
+  obj['chimesClickRate'] = this.chimesClickRate;
+  obj['chimesRate'] = this.chimesRate;
+
+  obj['meeps'] = this.meeps;
+  obj['meepGold'] = this.meepGold;
+  obj['meepDamage'] = this.meepDamage;
+
+  obj['gold'] = this.gold;
+  obj['goldRate'] = this.goldRate;
+
+  obj['discovery'] = this.discovery;
+  obj['discoveryBase'] = this.discoveryBase;
+  obj['discoveryBonus'] = this.discoveryBonus;
+
+  obj['swiftness'] = this.swiftness;
+  obj['swiftnessBase'] = this.swiftnessBase;
+  obj['swiftnessBonus'] = this.swiftnessBonus;
+
+  obj['power'] = this.power;
+  obj['powerBase'] = this.powerBase;
+  obj['powerBonus'] = this.powerBonus;
+
+  obj['agility'] = this.agility;
+  obj['agilityBase'] = this.agilityBase;
+  obj['agilityBonus'] = this.agilityBonus;
+
+  obj['income'] = this.income;
+  obj['incomeBase'] = this.incomeBase;
+  obj['incomeBonus'] = this.incomeBonus;
+
+  obj['damage'] = this.damage;
+  obj['damageRate'] = this.damageRate;
+  obj['damagePerClick'] = this.damagePerClick;
+  obj['damageClickRate'] = this.damageClickRate;
+  obj['userDamage'] = this.userDamage;
+  obj['monster'] = this.monster;
+
+  obj['level'] = this.level;
+  obj['experience'] = this.experience;
+  obj['experienceRate'] = this.experienceRate;
+  obj['experienceNeeded'] = this.experienceNeeded;
+
+  // spell variables
+  obj['favorBonus'] = this.favorBonus;
+  obj['spoilsOfWarBonus'] = this.spoilsOfWarBonus;
+  obj['tributeBonus'] = this.tributeBonus;
+
+  obj['smiteBonus'] = this.smiteBonus;
+  obj['ghostBonus'] = this.ghostBonus;
+  obj['flashBonus'] = this.flashBonus;
+  obj['exhaustBonus'] = this.exhaustBonus;
+  obj['igniteDamage'] = this.igniteDamage;
+
+  return obj;
+};
+
+Game.prototype.saveItems = function() {
+  var items = this.items;
+  var obj = {};
+  for (var itemName in items) {
+    if (items.hasOwnProperty(itemName)) {
+      var item = items[itemName];
+      var itemData = {};
+      itemData['cost'] = item.cost;
+      itemData['discovery'] = item.discovery;
+      itemData['swiftness'] = item.swiftness;
+      itemData['power'] = item.power;
+      itemData['agility'] = item.agility;
+      itemData['income'] = item.income;
+
+      itemData['status'] = item.status;
+      itemData['count'] = item.count;
+
+      itemData['upgrades'] = item.upgrades;
+      itemData['upgradesAvailable'] = item.upgradesAvailable;
+
+      obj[itemName] = itemData;
+    }
+  }
+  return obj;
+};
+
+Game.prototype.saveUpgrades = function() {
+  var upgrades = this.upgrades;
+  var obj = {};
+  for (var upgradeName in upgrades) {
+    if (upgrades.hasOwnProperty(upgradeName)) {
+      var upgrade = upgrades[upgradeName];
+
+      var upgradeData = {};
+      upgradeData['count'] = upgrade.count;
+
+      obj[upgradeName] = upgradeData;
+    }
+  }
+  return obj;
+};
+
+Game.prototype.saveSpells = function() {
+  var spells = this.spells;
+  var obj = {};
+  for (var spellName in spells) {
+    if (spells.hasOwnProperty(spellName)) {
+      var spell = spells[spellName];
+      var spellData = {};
+
+      spellData['durationLeft'] = spell.durationLeft
+      spellData['cooldownLeft'] = spell.cooldownLeft
+      spellData['status'] = spell.status;
+
+      obj[spellName] = spellData;
+    }
+  }
+  return obj;
+};
+
+Game.prototype.saveMonsters = function() {
+  var monsters = this.monsters;
+  var obj = {};
+  for (var monsterName in monsters) {
+    if (monsters.hasOwnProperty(monsterName)) {
+      var monster = monsters[monsterName];
+      var monsterData = {};
+      monsterData['maxHealth'] = monster.maxHealth;
+      monsterData['currentHealth'] = monster.currentHealth;
+      monsterData['experience'] = monster.experience;
+      monsterData['gold'] = monster.gold;
+
+      monsterData['startHealth'] = monster.startHealth;
+      monsterData['startExperience'] = monster.startExperience;
+      monsterData['startGold'] = monster.startGold;
+
+      monsterData['count'] = monster.count;
+
+      obj[monsterName] = monsterData;
+    }
+  }
+  return obj;
+};
+
+Game.prototype.load = function() {
+  var obj = Cookies.getJSON('save');
+  return obj;
+};
