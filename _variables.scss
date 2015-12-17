@@ -2,10 +2,15 @@
 $primary500: #607D8B;
 $primary700: #455A64;
 $primary900: #263238;
+$primary1000: #1E272C;
+$primary1100: #171C1E;
 
 $secondary500: #FFC107;
 $secondary700: #FFA000;
 $secondary900: #FF6F00;
+
+$flash: #E0D987;
+$smite: #F3CC5F;
 
 // $secondary500: #FF9800;
 // $secondary700: #F57C00;
@@ -37,6 +42,8 @@ $lightTextDisabled: rgba(255,255,255,.20);
 $lightDivider: rgba(255,255,255,.12);
 
 $boxShadow: rgba(0,0,0,.75);
+$dividerLight: $primary1000;
+$dividerDark: $black;
 
 // Alternate Colors
 	// blue: rgb(14, 91, 207)

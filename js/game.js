@@ -19,7 +19,8 @@ Game.prototype.Init = function(scope, difficulty) {
   this.upgrades = this.createUpgrades();
   this.upgradesAvailable = [];
   this.monsters = this.createMonsters();
-  this.monstersAvailable = [];
+  this.monstersAvailable = [MONSTERS[0]];
+  this.monster = MONSTERS[0];
 
   this.chimes = 0;
   this.chimesPerClick = 1;
@@ -60,7 +61,6 @@ Game.prototype.Init = function(scope, difficulty) {
   this.damagePerClick = 0;
   this.damageClickRate = 0;
   this.userDamage = 0;
-  this.monster = null;
 
   this.level = 0;
   this.experience = 0;
@@ -169,6 +169,22 @@ Game.prototype.createSpells = function() {
     var spells = {};
 
     // game, duration, cooldown, start, end, unlock, tooltip
+    spells[GHOST] = new Spell(this, 10, 90, SPELL_ACTIVE, MONSTER_ALL,
+      function(game) {game.ghostBonus = 2.0;},
+      function(game) {game.ghostBonus = 1.0;},
+      function(game) {return game.level >= 4},
+      function(game) {return game.spells[GHOST].status == game.LOCKED ? "":
+      "+100% chime generation for 10 seconds.  </br></br>90 second cooldown. <b>(Q)</b>"}
+    );
+
+    spells[FLASH] = new Spell(this, 0, 120, SPELL_ACTIVE, MONSTER_ALL,
+      function(game) {game.addMeeps(Math.ceil(game.meeps * game.flashBonus));},
+      function(game) {},
+      function(game) {return game.level >= 6},
+      function(game) {return game.spells[FLASH].status == game.LOCKED ? "":
+      "+5% total meeps.  </br></br>2 minute cooldown. <b>(W)</b>"}
+    );
+
     spells[SMITE] = new Spell(this, 0, 60, SPELL_ACTIVE, MONSTER_JUNGLE,
       function(game) {game.smiteBonus = .20;
                       game.addDamage(game.getSmiteDamage(), true);
@@ -176,8 +192,44 @@ Game.prototype.createSpells = function() {
         function(game) {},
         function(game) {return game.level >= 2},
         function(game) {return game.spells[SMITE].status == game.LOCKED ? "":
-                        "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage instantly.  Damage scales with level.  Kills with smite grant +20% gold.  Does not work against champions.  </br></br>1 minute cooldown. <b>(Q)</b>"}
+                        "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage instantly.  Damage scales with level.  Kills with smite grant +20% gold.  Does not work against champions.  </br></br>1 minute cooldown. <b>(E)</b>"}
       );
+
+
+    spells[IGNITE] = new Spell(this, 5, 120, SPELL_ACTIVE, MONSTER_CHAMPION,
+        function(game) {game.igniteDamage = game.getIgniteDamage();},
+        function(game) {game.igniteDamage = 0},
+        function(game) {return game.level >= 16},
+        function(game) {return game.spells[IGNITE].status == game.LOCKED ? "":
+                        "Deal <b>" + game.prettyIntCompact(game.getIgniteDamage()) + "</b> damage over 5 seconds.  Damage scales with level.  Only works against champions.  </br></br>2 minute cooldown. <b>(R)</b>"}
+    );
+
+    spells[EXHAUST] = new Spell(this, 10, 90, SPELL_ACTIVE, MONSTER_CHAMPION,
+        function(game) {game.exhaustBonus = 2.0;},
+        function(game) {game.exhaustBonus = 1.0},
+        function(game) {return game.level >= 17},
+        function(game) {return game.spells[EXHAUST].status == game.LOCKED ? "":
+                        "+100% damage dealt for 10 seconds.  Only works against champions.  </br></br>90 second cooldown. <b>(T)</b>"}
+    );
+
+    spells[TELEPORT] = new Spell(this, 0, 300, SPELL_ACTIVE, MONSTER_ALL,
+        function(game) {},
+        function(game) {var cooldownSpells = game.getObjectsByStatus(game.spells, game.COOLDOWN);
+                        for (var i = 0; i < cooldownSpells.length; i++) {
+                          var spell = game.spells[cooldownSpells[i]];
+                          spell.cooldownLeft = 0;
+                          spell.status = AVAILABLE;
+                        }
+                        var activeSpells = game.getObjectsByStatus(game.spells, game.ACTIVE);
+                        for (var i = 0; i < activeSpells.length; i++) {
+                          var spell = game.spells[activeSpells[i]];
+                          spell.durationLeft = spell.duration;
+                        }
+                       },
+        function(game) {return game.level >= 13},
+        function(game) {return game.spells[TELEPORT].status == game.LOCKED ? "":
+                        "Reset cooldowns of all spells.  </br></br>5 minute cooldown. <b>(Y)</b>"}
+    );
 
     spells[SPOILS_OF_WAR] = new Spell(this, 0, 40, SPELL_PASSIVE, MONSTER_JUNGLE,
         function(game) {game.spoilsOfWarBonus = game.getSpoilsOfWarBonus() / 100;
@@ -204,52 +256,6 @@ Game.prototype.createSpells = function() {
         function(game) {return game.spells[TRIBUTE].status == game.LOCKED ? "":
                         "Gain <b>" + game.getTributeBonus().toFixed(1) + "%</b> of reward gold on monster click.  Gold scales with Spellthief's Edges owned. </br></br>15 second cooldown."}
     );
-
-    spells[GHOST] = new Spell(this, 10, 90, SPELL_ACTIVE, MONSTER_ALL,
-        function(game) {game.ghostBonus = 2.0;},
-        function(game) {game.ghostBonus = 1.0;},
-        function(game) {return game.level >= 4},
-        function(game) {return game.spells[GHOST].status == game.LOCKED ? "":
-                        "+100% chime generation for 10 seconds.  </br></br>90 second cooldown. <b>(W)</b>"}
-    );
-
-    spells[FLASH] = new Spell(this, 0, 120, SPELL_ACTIVE, MONSTER_ALL,
-        function(game) {game.addMeeps(Math.ceil(game.meeps * game.flashBonus));},
-        function(game) {},
-        function(game) {return game.level >= 6},
-        function(game) {return game.spells[FLASH].status == game.LOCKED ? "":
-                        "+5% total meeps.  </br></br>2 minute cooldown. <b>(E)</b>"}
-    );
-
-    spells[TELEPORT] = new Spell(this, 0, 300, SPELL_ACTIVE, MONSTER_ALL,
-        function(game) {var spells = game.getObjectsByStatus(game.spells, game.COOLDOWN);
-                        for (var i = 0; i < spells.length; i++) {
-                          var spell = game.spells[spells[i]];
-                          spell.cooldownLeft = 0;
-                          spell.status = AVAILABLE;
-                        }},
-        function(game) {},
-        function(game) {return game.level >= 13},
-        function(game) {return game.spells[TELEPORT].status == game.LOCKED ? "":
-                        "Reset cooldowns of all spells.  </br></br>5 minute cooldown. <b>(R)</b>"}
-    );
-
-    spells[IGNITE] = new Spell(this, 5, 120, SPELL_ACTIVE, MONSTER_CHAMPION,
-        function(game) {game.igniteDamage = game.getIgniteDamage();},
-        function(game) {game.igniteDamage = 0},
-        function(game) {return game.level >= 16},
-        function(game) {return game.spells[IGNITE].status == game.LOCKED ? "":
-                        "Deal <b>" + game.prettyIntCompact(game.getIgniteDamage()) + "</b> damage over 5 seconds.  Damage scales with level.  Only works against champions.  </br></br>2 minute cooldown. <b>(T)</b>"}
-    );
-
-    spells[EXHAUST] = new Spell(this, 10, 90, SPELL_ACTIVE, MONSTER_CHAMPION,
-        function(game) {game.exhaustBonus = 2.0;},
-        function(game) {game.exhaustBonus = 1.0},
-        function(game) {return game.level >= 17},
-        function(game) {return game.spells[EXHAUST].status == game.LOCKED ? "":
-                        "+100% damage dealt for 10 seconds.  Only works against champions.  </br></br>90 second cooldown. <b>(Y)</b>"}
-    );
-
 
     return spells;
 }
@@ -306,7 +312,7 @@ Game.prototype.step = function(step) {
   this.steps++;
 
   // autosave every 10th second
-  if (this.getTime() % 10 == 0) {
+  if (this.getTime() % 20 == 0) {
     this.save();
   }
 
@@ -745,7 +751,7 @@ Game.prototype.getExperiencePercent = function() {
 Game.prototype.getSpellTimePercent = function(spellName) {
   var spell = this.spells[spellName];
   if (spell.status == ACTIVE) {
-    return 100 - 100 * Math.max(0, spell.durationLeft) / (spell.duration + .2);
+    return 100 - 100 * Math.max(0, spell.durationLeft) / (spell.duration + .15);
   }
   else if (spell.status == COOLDOWN) {
     return 100 * spell.cooldownLeft / spell.cooldown;
@@ -794,6 +800,11 @@ Game.prototype.getObjectsByStatus = function(objectMap, status) {
     }
   }
   return objects;
+};
+
+Game.prototype.getClassName = function(name) {
+  var name = name.toLowerCase();
+  return name.split(' ')[0];
 };
 
 Game.prototype.save = function() {

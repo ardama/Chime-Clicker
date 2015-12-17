@@ -266,12 +266,12 @@ function createFloatingText(parent, text, event) {
   var posX = event.pageX - parent.offset().left - 10;
   var posY = event.pageY - parent.offset().top - 30;
   var $obj = $("<div>", {class:'counter'});
-  $obj.html();
+  $obj.html(text);
   $obj.css({left: posX + 'px', top: posY + 'px'});
 
   parent.append($obj);
   $obj.animate({top: '-=100', left:'+=' + (60 * Math.random() - 30), opacity: 0}, 1000, function() {
-    parent.remove();
+    $obj.remove();
   });
 };
 
@@ -280,11 +280,11 @@ var GameApp = angular.module('GameApp', []);
 GameApp.controller('GameController', function($scope) {
     window.SCOPE = $scope;
     $scope.game = new Game($scope, 'medium');
-    $scope.game.start();
 
     initializeHotkeys($scope.game);
     initializeButtons($scope.game);
 });
+
 
 function initializeButtons(game) {
   $('#chimes-button').click(function(e) {
@@ -328,12 +328,12 @@ function initializeButtons(game) {
 
 function initializeHotkeys(game) {
   // Spell hotkeys
-  $(document).bind('keydown', 'q', function() {game.spellClick(SMITE)});
-  $(document).bind('keydown', 'w', function() {game.spellClick(GHOST)});
-  $(document).bind('keydown', 'e', function() {game.spellClick(FLASH)});
-  $(document).bind('keydown', 'r', function() {game.spellClick(TELEPORT)});
-  $(document).bind('keydown', 't', function() {game.spellClick(IGNITE)});
-  $(document).bind('keydown', 'y', function() {game.spellClick(EXHAUST)});
+  $(document).bind('keydown', 'q', function() {game.spellClick(GHOST)});
+  $(document).bind('keydown', 'w', function() {game.spellClick(FLASH)});
+  $(document).bind('keydown', 'e', function() {game.spellClick(SMITE)});
+  $(document).bind('keydown', 'r', function() {game.spellClick(IGNITE)});
+  $(document).bind('keydown', 't', function() {game.spellClick(EXHAUST)});
+  $(document).bind('keydown', 'y', function() {game.spellClick(TELEPORT)});
 
   // Monster hotkeys
   $(document).bind('keydown', 'a', function() {game.selectMonster('left')});
@@ -444,4 +444,6 @@ $(window).load(function() {
       $(this).tooltipster('disable');
     }
   });
+
+  SCOPE.game.start();
 });
