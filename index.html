@@ -39,9 +39,9 @@
 								</text>
 							</div>
 						</div>
-						<div id="chimes-bar-dropdown" class="dropdown" data-collapsed="false">
+						<div id="chimes-bar-dropdown" class="dropdown">
 							<div class="dropdown-content">
-								<div id="chimes-bar" class="bar">
+								<div id="chimes-bar" class="bar {{game.spells['Ghost'].status == game.ACTIVE ? 'ghost-active' : '';}}">
 									<div id="chimes-bar-fill" class="bar-fill" style="width:{{game.getMeepProgressPercent()}}%"></div>
 									<div id="chimes-rate" data-toggle="tooltip" data-title="Chimes collected per second." data-position="right">
 										CPS {{game.prettyInt(game.chimesRate)}}
@@ -88,9 +88,9 @@
 								</div>
 							</div>
 						</div>
-						<div id="damage-bar-dropdown" class="dropdown" data-collapsed="false">
+						<div id="damage-bar-dropdown" class="dropdown">
 							<div class="dropdown-content">
-								<div id="damage-bar" class="bar">
+								<div id="damage-bar" class="bar {{game.spells['Ignite'].status == game.ACTIVE ? 'ignite-active' : '';}}">
 									<div id="damage-bar-fill" class="bar-fill" style="width:{{game.getMonsterHealthPercent()}}%"></div>
 									<div id="damage-rate" data-toggle="tooltip" data-title="Damage dealt per second." data-position="right">
 										DPS {{game.prettyInt(game.damageRate)}}

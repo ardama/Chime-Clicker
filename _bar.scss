@@ -9,6 +9,7 @@
 
 	background-color: $primary700;
   @include box-shadow(0px 7px 8px -8px $boxShadow inset, 0px 0 4px 1px $boxShadow);
+	@include transition(color 250ms, background-color 333ms);
 }
 
 .bar-fill {
@@ -18,9 +19,9 @@
 
 	height: 100%;
 
-	background-color: $gray500;
+	background-color: $gray600;
   @include box-shadow(0px 6px 6px -6px $boxShadow inset, 0px 0 4px 0px $boxShadow);
-
+  @include transition(height 333ms, box-shadow 333ms, background-color 333ms);
 }
 
 #chimes-bar {
@@ -28,6 +29,15 @@
   height: 100%;
 
   line-height: $barHeight;
+}
+
+#chimes-bar.ghost-active {
+	color: $ghost3;
+	background-color: $ghost1;
+
+	#chimes-bar-fill {
+		background-color: $ghost2;
+	}
 }
 
 #chimes-bar-fill {
@@ -53,6 +63,15 @@
   height: 100%;
 
   line-height: $barHeight;
+}
+
+#damage-bar.ignite-active {
+	color: $ignite3;
+	background-color: $ignite1;
+
+	#damage-bar-fill {
+		background-color: $ignite2;
+	}
 }
 
 #damage-bar-fill {

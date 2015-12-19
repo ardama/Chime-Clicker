@@ -7,22 +7,36 @@
   background-color: #455A64;
   -webkit-box-shadow: 0px 7px 8px -8px rgba(0, 0, 0, 0.75) inset, 0px 0 4px 1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 7px 8px -8px rgba(0, 0, 0, 0.75) inset, 0px 0 4px 1px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 7px 8px -8px rgba(0, 0, 0, 0.75) inset, 0px 0 4px 1px rgba(0, 0, 0, 0.75); }
+  box-shadow: 0px 7px 8px -8px rgba(0, 0, 0, 0.75) inset, 0px 0 4px 1px rgba(0, 0, 0, 0.75);
+  -webkit-transition: color 250ms, background-color 333ms;
+  -moz-transition: color 250ms, background-color 333ms;
+  -o-transition: color 250ms, background-color 333ms;
+  transition: color 250ms, background-color 333ms; }
 
 .bar-fill {
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
-  background-color: #9E9E9E;
+  background-color: #848484;
   -webkit-box-shadow: 0px 6px 6px -6px rgba(0, 0, 0, 0.75) inset, 0px 0 4px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 6px 6px -6px rgba(0, 0, 0, 0.75) inset, 0px 0 4px 0px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 6px 6px -6px rgba(0, 0, 0, 0.75) inset, 0px 0 4px 0px rgba(0, 0, 0, 0.75); }
+  box-shadow: 0px 6px 6px -6px rgba(0, 0, 0, 0.75) inset, 0px 0 4px 0px rgba(0, 0, 0, 0.75);
+  -webkit-transition: height 333ms, box-shadow 333ms, background-color 333ms;
+  -moz-transition: height 333ms, box-shadow 333ms, background-color 333ms;
+  -o-transition: height 333ms, box-shadow 333ms, background-color 333ms;
+  transition: height 333ms, box-shadow 333ms, background-color 333ms; }
 
 #chimes-bar {
   width: 100%;
   height: 100%;
   line-height: 25px; }
+
+#chimes-bar.ghost-active {
+  color: #BEF9FD;
+  background-color: #082438; }
+  #chimes-bar.ghost-active #chimes-bar-fill {
+    background-color: #0B4D80; }
 
 #chimes-rate {
   position: absolute;
@@ -38,6 +52,12 @@
   width: 100%;
   height: 100%;
   line-height: 25px; }
+
+#damage-bar.ignite-active {
+  color: #F3DE9D;
+  background-color: #771A16; }
+  #damage-bar.ignite-active #damage-bar-fill {
+    background-color: #D1481A; }
 
 #damage-rate {
   position: absolute;
@@ -72,11 +92,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: calc(100% - 25px);
-  -webkit-transition: height 333ms, box-shadow 333ms;
-  -moz-transition: height 333ms, box-shadow 333ms;
-  -o-transition: height 333ms, box-shadow 333ms;
-  transition: height 333ms, box-shadow 333ms; }
+  width: calc(100% - 25px); }
 
 .dropdown-button {
   position: absolute;
@@ -132,6 +148,10 @@
   #damage-bar-dropdown .dropdown-button {
     height: 25px;
     line-height: 25px; }
+
+#chimes-bar-dropdown.collapsed .bar-fill,
+#damage-bar-dropdown.collapsed .bar-fill {
+  height: 0; }
 
 .selector {
   position: relative; }
@@ -369,7 +389,7 @@ body {
   transition: background-color 175ms; }
 
 #damage-status.smite-active {
-  background-color: #F3CC5F; }
+  background-color: #FFCC5F; }
 
 #monster-gold {
   position: absolute;
@@ -458,7 +478,7 @@ body {
   text-align: center;
   font-size: 60px;
   font-weight: bold;
-  background-color: #9E9E9E;
+  background-color: #848484;
   -webkit-box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.75);
   box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.75); }

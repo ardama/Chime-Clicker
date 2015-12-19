@@ -499,7 +499,7 @@ Game.prototype.updateMonsters = function() {
   for (var monsterName in this.monsters) {
     if (this.monsters.hasOwnProperty(monsterName)) {
       var monster = this.monsters[monsterName];
-      if (this.level == monster.level) {
+      if (this.level == monster.level && this.monstersAvailable.indexOf(monsterName) < 0) {
         this.monstersAvailable.push(monsterName);
         this.monster = monsterName;
       }
@@ -925,7 +925,7 @@ Game.prototype.saveUpgrades = function() {
       var upgrade = upgrades[upgradeName];
 
       var upgradeData = {};
-      upgradeData['count'] = upgrade.count;
+      upgradeData['status'] = upgrade.status;
 
       obj[upgradeName] = upgradeData;
     }

@@ -301,18 +301,9 @@ function initializeButtons(game) {
 
   $('.dropdown-button').click(function(){
     $(this).find('.rotate').toggleClass('down');
-
-    var dropdown = $(this).parent();
-    var value =  dropdown.attr('data-collapsed') == 'true' ? 'false' : 'true';
-    if (value == 'true') {
-      dropdown.children('.dropdown-content').height('0px');
-    }
-    else {
-      // update if $dropdownButtonSize changes
-      dropdown.children('.dropdown-content').height('25px');
-    }
-
-    dropdown.attr('data-collapsed', value);
+    $(this).parent().toggleClass('collapsed');
+    // var value =  dropdown.attr('data-collapsed') == 'true' ? 'false' : 'true';
+    // dropdown.attr('data-collapsed', value);
   });
 
   $('#monster-selector .selector-left').click(function() {

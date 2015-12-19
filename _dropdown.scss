@@ -8,8 +8,6 @@
   left: 0;
 
   width: calc(100% - 25px); // update if $dropdownButtonSize changes
-
-  @include transition(height 333ms, box-shadow 333ms);
 }
 
 .dropdown-button {
@@ -71,5 +69,12 @@
     height: $dropdownButtonSize;
 
     line-height: $dropdownButtonSize;
+  }
+}
+
+#chimes-bar-dropdown.collapsed,
+#damage-bar-dropdown.collapsed {
+  .bar-fill {
+    height: 0;
   }
 }

@@ -37,7 +37,6 @@ Upgrade.prototype.Init = function(game, item, cost, level, discovery, swiftness,
   this.item = item;
   this.cost = cost;
   this.level = level;
-  this.startCost = cost;
   this.discovery = discovery;
   this.swiftness = swiftness;
   this.power = power;
