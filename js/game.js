@@ -182,7 +182,7 @@ Game.prototype.createSpells = function() {
       function(game) {},
       function(game) {return game.level >= 6},
       function(game) {return game.spells[FLASH].status == game.LOCKED ? "":
-      "+5% total meeps.  </br></br>2 minute cooldown. <b>(W)</b>"}
+      "+5% (<b>" + Math.ceil(game.meeps * game.flashBonus) + "</b>) total meeps.  </br></br>2 minute cooldown. <b>(W)</b>"}
     );
 
     spells[SMITE] = new Spell(this, 0, 60, SPELL_ACTIVE, MONSTER_JUNGLE,
