@@ -7,6 +7,7 @@
 
   #main-container {
     min-width: 600px;
+    overflow-x: auto;
   }
 
   .row {
@@ -17,7 +18,7 @@
     overflow: auto;
   }
 }
-
+// TODO: horizontal scrolling
 #content {
   width: calc(100% - 80px);
   max-width: 950px;
@@ -28,6 +29,7 @@
 
   h4 {
     color: $smite;
+    font-size: 18px;
     margin-top: 4px;
     margin-bottom: 4px;
   }

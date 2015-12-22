@@ -222,7 +222,8 @@
   #help-wrapper #header {
     min-width: 600px; }
   #help-wrapper #main-container {
-    min-width: 600px; }
+    min-width: 600px;
+    overflow-x: auto; }
   #help-wrapper .row {
     color: white;
     background-color: black;
@@ -237,6 +238,7 @@
   background-color: #171c1e; }
   #content h4 {
     color: #ffcc5f;
+    font-size: 18px;
     margin-top: 4px;
     margin-bottom: 4px; }
   #content p {
