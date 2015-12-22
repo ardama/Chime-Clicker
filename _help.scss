@@ -1,0 +1,62 @@
+#help-wrapper {
+	padding: 36px 0 0 0;
+
+  #header {
+    min-width: 600px;
+  }
+
+  #main-container {
+    min-width: 600px;
+  }
+
+  .row {
+    color: $lightTextPrimary;
+    background-color: $black;
+    height: calc(100vh - 36px);
+
+    overflow: auto;
+  }
+}
+
+#content {
+  width: calc(100% - 80px);
+  max-width: 950px;
+
+  margin: auto;
+  padding: 24px 40px;
+  background-color: $primary1100;
+
+  h4 {
+    color: $smite;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+
+  p {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    line-height: 22px;
+    font-size: 14px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  }
+
+  a {
+    text-decoration: none;
+    color: $tertiary700;
+  }
+
+  ul {
+    list-style-type: none;
+    padding-left: 16px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 22px;
+    font-size: 14px;
+    margin-bottom: 0px;
+  }
+
+  .tooltip {
+    font-weight: normal;
+    color: $tertiary700;
+    cursor: pointer;
+  }
+}

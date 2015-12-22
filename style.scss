@@ -5,6 +5,9 @@
 @import 'dropdown';
 @import 'selector';
 
+@import 'help';
+@import 'about';
+
 // CONTENT CONTAINERS //////////////////////////////////////
 html {
 
@@ -45,7 +48,7 @@ body {
 	position: relative;
 	z-index: 10;
 
-	min-width: 885px;
+	min-width: 950px;
 	height: 36px;
 
 	margin-top: -36px;
@@ -54,15 +57,68 @@ body {
 	font-size: 20px;
 	line-height: 36px;
 
+	cursor: default;
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+
 	background-color: $gray1100;
 	@include box-shadow(0px 0px 12px 2px $boxShadow);
 
+	#header-home {
+		float: left;
+
+		color: $lightTextPrimary;
+		text-decoration: none;
+	}
 	#header-icon {
 		float: left;
 
 		height: 24px;
 
 		padding: 6px 12px 6px 18px;
+	}
+
+	#header-link-container {
+		float: right;
+
+		margin-right: 60px;
+
+		border-left: 1px solid $black;
+		border-right: 1px solid $gray1000;
+
+		.header-link {
+			float: right;
+
+			width: 90px;
+			height: 100%;
+
+
+			font-size: 18px;
+			color: $lightTextSecondary;
+			text-align: center;
+			text-decoration: none;
+
+			cursor: pointer;
+
+			border-left: 1px solid $gray1000;
+			border-right: 1px solid $black;
+		}
+
+		.header-link:hover {
+			background-color: $primary900;
+
+			color: $lightTextPrimary;
+
+			border-left: 1px solid $primary900;
+		}
+		.header-link:active {
+			background-color: $primary1000;
+			border-left: 1px solid $primary1000;
+		}
 	}
 }
 
@@ -200,7 +256,6 @@ body {
 	padding-top: 30px;
 	margin-top: -30px;
 
-	// TODO cleanup
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-image: url(images/backgrounds/Summoners_Rift_Top.png);
@@ -217,7 +272,6 @@ body {
 	padding-top: 30px;
 	margin-top: -30px;
 
-	// TODO cleanup
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-image: url(images/backgrounds/valley_1.png);
@@ -1097,7 +1151,6 @@ body {
 	margin: 8px 8px 0;
 
 	font-size: 16px;
-	font-weight: bold;
 	line-height: $itemBuyButtonSize;
 	text-align: center;
 	border-radius: 1px;
@@ -1183,4 +1236,9 @@ body {
 
 .tooltipster-custom .tooltipster-content b {
 	color: $secondary500;
+}
+
+.tooltipster-custom .tooltip-image {
+//	width: 140px;
+	border-radius: 2px;
 }

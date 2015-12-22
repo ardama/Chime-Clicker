@@ -99,9 +99,6 @@ Game.prototype.createItems = function() {
   items[AMPLIFYING_TOME] = new Item(this, 3000, 3,  0, 0, 100, 0, 0);
   items[DAGGER] = new Item(this, 3000, 3,           0, 0, 0, 1, 0);
 
-  // TODO: Ward Item
-  // items[] = new Item(this, GREEN_WARD, 100, 1, 0, 1, 0, 0, 0);
-
   return items;
 };
 
@@ -112,13 +109,13 @@ Game.prototype.createUpgrades = function() {
   upgrades[BOOTS_OF_SWIFTNESS] = new Upgrade(this, BOOTS_OF_SPEED,        8000, 4, 0, 1, 0, 0, 0, []);
   upgrades[BOOTS_OF_MOBILITY] = new Upgrade(this, BOOTS_OF_SPEED,         160000, 6, 0, 3, 0, 0, 0, [BOOTS_OF_SWIFTNESS]);
   upgrades[IONIAN_BOOTS_OF_LUCIDITY] = new Upgrade(this, BOOTS_OF_SPEED,  20000000, 9, 0, 4, 0, 5, 0, [BOOTS_OF_MOBILITY]);
-  upgrades[MERCURYS_TREADS] = new Upgrade(this, BOOTS_OF_SPEED,           1200000000, 12, 60, 6, 0, 0, 0, [IONIAN_BOOTS_OF_LUCIDITY]);
+  upgrades[MERCURYS_TREADS] = new Upgrade(this, BOOTS_OF_SPEED,           1800000000, 12, 60, 6, 0, 0, 0, [IONIAN_BOOTS_OF_LUCIDITY]);
   upgrades[SORCERERS_SHOES] = new Upgrade(this, BOOTS_OF_SPEED,           300000000000, 15, 0, 15, 120, 0, 0, [MERCURYS_TREADS]);
 
 
   // Ancient Coin
   upgrades[NOMADS_MEDALLION] = new Upgrade(this, ANCIENT_COIN,            60000, 5, 0, 2, 0, 0, 25, []);
-  upgrades[TALISMAN_OF_ASCENSION] = new Upgrade(this, ANCIENT_COIN,       5000000, 8, 0, 3, 0, 2, 170, [NOMADS_MEDALLION]);
+  upgrades[TALISMAN_OF_ASCENSION] = new Upgrade(this, ANCIENT_COIN,       6000000, 8, 0, 3, 0, 2, 170, [NOMADS_MEDALLION]);
 
 
   // Spellthief's Edge
@@ -145,8 +142,8 @@ Game.prototype.createUpgrades = function() {
 
   // Amplifying Tome
   upgrades[FIENDISH_CODEX] = new Upgrade(this, AMPLIFYING_TOME,           200000, 6, 0, 0, 100, 1, 0, []);
-  upgrades[AETHER_WISP] = new Upgrade(this, AMPLIFYING_TOME,              6000000, 8, 0, 2, 150, 1, 0, []);
-  upgrades[MORELLONOMICON] = new Upgrade(this, AMPLIFYING_TOME,           2500000000, 12, 0, 0, 200, 3, 0, [FIENDISH_CODEX]);
+  upgrades[AETHER_WISP] = new Upgrade(this, AMPLIFYING_TOME,              6500000, 8, 0, 2, 150, 1, 0, []);
+  upgrades[MORELLONOMICON] = new Upgrade(this, AMPLIFYING_TOME,           3000000000, 12, 0, 0, 200, 3, 0, [FIENDISH_CODEX]);
 
   upgrades[NEEDLESSLY_LARGE_ROD] = new Upgrade(this, AMPLIFYING_TOME,     100000000, 10, 0, 0, 300, 0, 0, []);
   upgrades[LUDENS_ECHO] = new Upgrade(this, AMPLIFYING_TOME,              50000000000, 14, 0, 3, 450, 0, 0, [NEEDLESSLY_LARGE_ROD]);
@@ -156,7 +153,7 @@ Game.prototype.createUpgrades = function() {
   // Dagger
   upgrades[RECURVE_BOW] = new Upgrade(this, DAGGER,                       250000, 6, 0, 0, 0, 2, 0, []);
   upgrades[RUNAANS_HURRICANE] = new Upgrade(this, DAGGER,                 7500000, 8, 0, 0, 20, 3, 0, [RECURVE_BOW]);
-  upgrades[WITS_END] = new Upgrade(this, DAGGER,                          5000000000, 12, 50, 0, 80, 5, 0, [RECURVE_BOW]);
+  upgrades[WITS_END] = new Upgrade(this, DAGGER,                          7500000000, 12, 50, 0, 80, 5, 0, [RECURVE_BOW]);
   upgrades[ZEAL] = new Upgrade(this, DAGGER,                              200000000, 10, 0, 3, 0, 4, 0, []);
   upgrades[STATIKK_SHIV] = new Upgrade(this, DAGGER,                      100000000000, 14, 0, 3, 150, 5, 0, [ZEAL]);
   upgrades[PHANTOM_DANCER] = new Upgrade(this, DAGGER,                    3000000000000, 16, 0, 4, 0, 10, 0, [ZEAL]);
@@ -182,7 +179,7 @@ Game.prototype.createSpells = function() {
       function(game) {},
       function(game) {return game.level >= 6},
       function(game) {return game.spells[FLASH].status == game.LOCKED ? "":
-      "+5% (<b>" + Math.ceil(game.meeps * game.flashBonus) + "</b>) total meeps.  </br></br>2 minute cooldown. <b>(W)</b>"}
+      "+5% total meeps.</br>(<b>" + Math.ceil(game.meeps * game.flashBonus) + "</b>)</br></br>2 minute cooldown. <b>(W)</b>"}
     );
 
     spells[SMITE] = new Spell(this, 0, 60, SPELL_ACTIVE, MONSTER_JUNGLE,
@@ -250,7 +247,9 @@ Game.prototype.createSpells = function() {
     );
 
     spells[TRIBUTE] = new Spell(this, 0, 20, SPELL_PASSIVE, MONSTER_ALL,
-        function(game) {game.gold += Math.ceil(game.monsters[game.monster].gold * game.getTributeBonus() / 100);},
+        function(game) {var gold = Math.ceil(game.monsters[game.monster].gold * game.getTributeBonus() / 100);
+                        gold /= game.monster == TEEMO ? 10 : 1;
+                        game.gold += gold;},
         function(game) {},
         function(game) {return game.upgrades[FROST_QUEENS_CLAIM].status == game.PURCHASED;},
         function(game) {return game.spells[TRIBUTE].status == game.LOCKED ? "":
@@ -275,7 +274,7 @@ Game.prototype.createMonsters = function() {
     scaleExp = Math.pow(SCALE_MONSTER_LEVEL_REWARD, i);
     scaleReward = Math.pow(SCALE_MONSTER_LEVEL_REWARD, i);
     if (i == MONSTERS.length - 1) {
-    scaleHealth *= 10;
+    scaleHealth = 999999000000000 / MONSTER_EXPERIENCE;
     scaleExp = 999999000000000000 / MONSTER_EXPERIENCE;
     scaleReward *= 10;
     }
@@ -329,15 +328,10 @@ Game.prototype.addChimes = function(chimes) {
 };
 
 Game.prototype.addDamage = function(damage, user) {
-  this.damage += damage;
-  this.userDamage += damage;
-
   var monster = this.monsters[this.monster];
   var executeThreshold = .30 * monster.maxHealth;
-  var excessDamage = executeThreshold - (monster.currentHealth - damage);
-  if (user && this.spells[SPOILS_OF_WAR].status == this.AVAILABLE && excessDamage >= 0) {
+  if (user && this.spells[SPOILS_OF_WAR].status == this.AVAILABLE && monster.currentHealth <= executeThreshold) {
     this.activateSpell(SPOILS_OF_WAR);
-    damage = excessDamage;
   }
 
   while (damage >= monster.currentHealth) {
@@ -764,7 +758,7 @@ Game.prototype.getFavorBonus = function() {
 };
 
 Game.prototype.getSpoilsOfWarBonus = function() {
-  return 10 + getBaseLog(1.25, this.items[RELIC_SHIELD].count + 1);
+  return getBaseLog(1.5, this.items[RELIC_SHIELD].count + 1);
 };
 
 Game.prototype.getTributeBonus = function() {
