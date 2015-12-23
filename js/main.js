@@ -104,7 +104,8 @@ var SPECIAL_PLURALS = [ZHONYAS_HOURGLASS, LUDENS_ECHO, FIENDISH_CODEX];
 // Default Values
 var STARTING_GOLD = 375;
 var CHIMES_PER_MEEP = 5;
-var MEEPS_DAMAGE = {'easy' : 5, 'medium' : 5, 'hard' : 4, 'expert' : 4, 'impossible' : 3};
+var CHIMES_EXPERIENCE = {'easy' : 1, 'medium' : 1, 'hard' : .5, 'marathon' : .25, 'impossible' : 0};
+var MEEPS_DAMAGE = {'easy' : 5, 'medium' : 5, 'hard' : 4, 'marathon' : 3, 'impossible' : 2};
 var EXPERIENCE_NEEDED = 200;
 var MONSTER_HEALTH = 450;
 var MONSTER_EXPERIENCE = 60;
@@ -112,11 +113,12 @@ var MONSTER_REWARD = 25;
 
 // Scale Values
 var SCALE_CHIMES_PER_MEEP = 1.00;
+var SCALE_CHIMES_EXPERIENCE = .90;
 var SCALE_ITEM_COST = 0.10;
 var SCALE_MONSTER_REWARD = 0.00;
 var SCALE_MONSTER_HEALTH = 0.02;
 var SCALE_MONSTER_LEVEL_REWARD = 5;
-var SCALE_MONSTER_LEVEL_HEALTH = {'easy' : 5, 'medium' : 5.5, 'hard' : 6, 'expert' : 6.5, 'impossible' : 8}
+var SCALE_MONSTER_LEVEL_HEALTH = {'easy' : 5, 'medium' : 5.5, 'hard' : 6, 'marathon' : 6.5, 'impossible' : 8}
 var SCALE_EXPERIENCE_NEEDED = 5;
 var SCALE_MEEP_STRENGTH = 1;
 
@@ -204,8 +206,12 @@ function updateTooltips() {
 function prettyIntBig(num, fixed) {
   if (!fixed)
     fixed = 3;
-  if(num >= 1000000000000000000000)
+  if(num >= 1000000000000000000000000000)
     return prettyInt(num)
+  if(num >= 1000000000000000000000000)
+    return (num / 1000000000000000000000000).toFixed(fixed) + 'septillion';
+  if(num >= 1000000000000000000000)
+    return (num / 1000000000000000000000).toFixed(fixed) + 'sextillion';
   if(num >= 1000000000000000000)
     return (num / 1000000000000000000).toFixed(fixed) + ' quintillion';
   if(num >= 1000000000000000)
@@ -219,11 +225,15 @@ function prettyIntBig(num, fixed) {
   return prettyInt(num);
 };
 
-function prettyIntBigCompact(num, fixed) {
-  if (!fixed)
+function prettyIntBigCompact(num, fixed, precision) {
+  if (!fixed && !precision)
     fixed = 3;
-  if(num >= 1000000000000000000000)
+  if(num >= 1000000000000000000000000000)
     return prettyInt(num)
+  if(num >= 1000000000000000000000000)
+    return (num / 1000000000000000000000000).toFixed(fixed) + 'st';
+  if(num >= 1000000000000000000000)
+    return (num / 1000000000000000000000).toFixed(fixed) + 's';
   if(num >= 1000000000000000000)
     return (num / 1000000000000000000).toFixed(fixed) + 'qt';
   if(num >= 1000000000000000)
