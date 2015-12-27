@@ -61,7 +61,9 @@ Game.prototype.Init = function(scope, difficulty) {
   this.damageRate = 0;
   this.damagePerClick = 0;
   this.damageClickRate = 0;
+
   this.userDamage = 0;
+  this.userClicks = 0;
 
   this.level = 0;
   this.experience = 0;
@@ -326,7 +328,8 @@ Game.prototype.step = function(step) {
 
 Game.prototype.addChimes = function(chimes) {
   this.chimes += chimes;
-  this.addExperience(this.chimesExperience * chimes);
+  if (this.level < 19)
+    this.addExperience(this.chimesExperience * chimes);
   while (this.chimes >= this.chimesPerMeepFloor) {
     this.chimes -= this.chimesPerMeepFloor;
     this.addMeeps(1);
@@ -356,7 +359,7 @@ Game.prototype.addGold = function(gold) {
 
 Game.prototype.addExperience = function(experience) {
   this.experience += experience;
-  while (this.experience >= this.experienceNeeded) {
+  while (this.experience >= this.experienceNeeded && this.level < 19) {
     this.experience -= this.experienceNeeded;
     this.levelUp();
   }
@@ -642,6 +645,7 @@ Game.prototype.killMonster = function() {
   monster.currentHealth = monster.maxHealth;
   monster.experience += monster.startExperience * SCALE_MONSTER_REWARD;
   monster.gold += monster.startGold * SCALE_MONSTER_REWARD;
+  monster.count++;
 
   this.addExperience(exp);
   this.addGold(gold);
@@ -874,6 +878,8 @@ Game.prototype.saveStats = function() {
   obj['damagePerClick'] = this.damagePerClick;
   obj['damageClickRate'] = this.damageClickRate;
   obj['userDamage'] = this.userDamage;
+  obj['userClicks'] = this.userClicks;
+
   obj['monster'] = this.monster;
 
   obj['level'] = this.level;
