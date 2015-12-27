@@ -6,6 +6,7 @@ var Game = function (scope, difficulty) {
 Game.prototype.Init = function(scope, difficulty) {
   this.scope = scope;
   this.difficulty = difficulty;
+  this.won = false;
 
   this.fps = 30;
   this.stepSize = 1 / this.fps;
@@ -664,8 +665,10 @@ Game.prototype.levelUp = function(levels) {
     this.experienceNeeded *= SCALE_EXPERIENCE_NEEDED;
     this.chimeExperience *= SCALE_CHIMES_EXPERIENCE;
 
-    if (this.level == 19)
+    if (this.level == 19) {
       this.experienceNeeded = 999999000000000000;
+      this.experience = 0;
+   }
 
     this.updateStats();
     this.unlockItems();
@@ -681,6 +684,7 @@ Game.prototype.levelUp = function(levels) {
 };
 
 Game.prototype.win = function() {
+  this.won = true;
   console.log('You Win!');
 };
 
@@ -755,6 +759,11 @@ Game.prototype.getMonsterHealthPercent = function() {
 Game.prototype.getExperiencePercent = function() {
   var percent = 100 * this.experience / this.experienceNeeded;
   return percent > 100 ? 100 : percent;
+};
+
+Game.prototype.getExperienceText = function() {
+  return this.won ? "You Win!" : prettyInt(game.experience) + " / " + prettyInt(game.experienceNeeded) + " xp";
+
 };
 
 Game.prototype.getSpellTimePercent = function(spellName) {
