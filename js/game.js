@@ -762,7 +762,7 @@ Game.prototype.getExperiencePercent = function() {
 };
 
 Game.prototype.getExperienceText = function() {
-  return this.won ? "You Win!" : prettyInt(game.experience) + " / " + prettyInt(game.experienceNeeded) + " xp";
+  return this.won ? "You Win!" : prettyInt(this.experience) + " / " + prettyInt(this.experienceNeeded) + " xp";
 
 };
 
