@@ -29,7 +29,7 @@ Game.prototype.Init = function(scope, difficulty) {
   this.chimesPerMeepFloor = CHIMES_PER_MEEP;
   this.chimesClickRate = 0;
   this.chimesRate = 0;
-  this.chimesExperience = 5 / CHIMES_EXPERIENCE[difficulty];
+  this.chimesExperience = CHIMES_EXPERIENCE[difficulty];
 
   this.meeps = 0;
   this.meepGold = 0;
