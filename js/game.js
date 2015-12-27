@@ -753,7 +753,8 @@ Game.prototype.getMonsterHealthPercent = function() {
 };
 
 Game.prototype.getExperiencePercent = function() {
-  return 100 * this.experience / this.experienceNeeded;
+  var percent = 100 * this.experience / this.experienceNeeded;
+  return percent > 100 ? 100 : percent;
 };
 
 Game.prototype.getSpellTimePercent = function(spellName) {
