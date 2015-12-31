@@ -265,6 +265,7 @@ body {
 #monster-container {
 	float: left;
 	position: relative;
+	overflow-x: hidden;
 
 	width: 100%;
 	height: calc(100% - 80px);
@@ -1134,7 +1135,7 @@ body {
 }
 
 /* OTHER ///////////////////////////////////// */
-#reset-container {
+#restart-container {
 	float: left;
 
 	width: 100%;
@@ -1142,10 +1143,10 @@ body {
 
 	background-color: $black;
 }
-#reset-button {
+#restart-button {
 	float: left;
 
-	width: calc(100% - 16px);
+	width: calc(100% - 12px);
 	height: $itemBuyButtonSize;
 
 	margin: 8px 8px 0;
@@ -1164,12 +1165,12 @@ body {
 	}
 }
 
-#reset-button:hover {
+#restart-button:hover {
 	background-color: $primary700;
 	color: $lightTextPrimary;
 }
 
-#reset-button:active {
+#restart-button:active {
 	background-color: $primary700;
 	@include box-shadow(0 0 2px 0px $boxShadow inset);
 }
@@ -1241,4 +1242,94 @@ body {
 .tooltipster-custom .tooltip-image {
 //	width: 140px;
 	border-radius: 2px;
+}
+
+
+/* MODALS ///////////////////////////////////// */
+.modal {
+
+	color: $lightTextPrimary;
+	background-color: $primary1000;
+	border-radius: 1px;
+	overflow: hidden;
+
+	cursor: default;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	@include box-shadow(0 0 6px 1px $boxShadow);
+}
+
+.simplemodal-overlay {
+	background-color: $boxShadow;
+}
+
+#progress-modal {
+
+}
+
+#progress-modal-header {
+	height: 32px;
+
+	padding: 8px 16px;
+
+	color: $lightTextSecondary;
+	line-height: 32px;
+	font-size: 24px;
+	background-color: $gray1100;
+
+	.close-icon {
+		float: right;
+
+		padding: 0px 8px;
+		margin-right: -8px;
+
+		border-radius: 1px;
+		font-size: 32px;
+		cursor: pointer;
+
+		@include transition(background-color 200ms);
+	}
+
+	.close-icon:hover {
+		background-color: $gray1000;
+	}
+}
+
+#progress-modal-body {
+	width: 500px;
+	min-height: 400px;
+
+	padding: 8px 16px;
+
+	@include box-shadow(0 3px 3px -3px $boxShadow inset);
+
+	.progress-stat-container {
+		float: left;
+
+		width: 100%;
+
+		padding: 4px 0;
+	}
+
+	.progress-stat {
+		float: left;
+
+		text-align: right;
+		color: $lightTextSecondary;
+
+		width: 125px;
+	}
+
+	.progress-stat-value {
+		float: left;
+
+		padding-left: 8px;
+
+		font-weight: bold;
+	}
 }

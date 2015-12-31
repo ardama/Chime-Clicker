@@ -6,6 +6,7 @@
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery.tooltipster.js"></script>
 <script src="js/jquery.hotkeys.js"></script>
+<script src="js/jquery.simplemodal.1.4.4.min.js"></script>
 <script src="js/angular.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/game.js"></script>
@@ -31,6 +32,9 @@
 			</a>
 			<a id="header-help" class="header-link" href="help.html">
 				Help
+			</a>
+			<a id="header-stats" class="header-link" onclick="showStats()">
+				Stats
 			</a>
 		</div>
 	</div>
@@ -287,8 +291,8 @@
 			</div>
 			<!-- timer and spells -->
 			<div id="column-3" class="column">
-				<div id="reset-container">
-					<div id="reset-button" class="button" ng-click="game.reset()">Reset <i class="fa fa-refresh"></i></div>
+				<div id="restart-container">
+					<div id="restart-button" class="button" ng-click="game.newGame()">New Game</div>
 					<div id="time-container">
 						<div id="time">
 							Time
@@ -314,5 +318,51 @@
 		</div>
 	</div>
 </div>
+
+<div id="modal-holder" style="display:none;">
+	<div id="progress-modal" class="modal">
+		<div id="progress-modal-header">Statistics
+			<div class="close-icon" onclick="hideStats()">&times;</div>
+		</div>
+
+		<div id="progress-modal-body">
+			<div class="progress-stat-container">
+				<div class="progress-stat">Time Played </div>
+				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.timePlayed)}}</div>
+			</div>
+			<div class="progress-stat-container">
+				<div class="progress-stat">Chimes Collected </div>
+				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalChimes)}}</div>
+			</div>
+			<div class="progress-stat-container">
+				<div class="progress-stat">Clicked Chimes </div>
+				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.clickChimes)}}</div>
+			</div>
+			<div class="progress-stat-container">
+				<div class="progress-stat">Meeps Earned </div>
+				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalMeeps)}}</div>
+			</div>
+			<div class="progress-stat-container">
+				<div class="progress-stat">Damage Dealt </div>
+				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalDamage)}}</div>
+			</div>
+			<div class="progress-stat-container">
+				<div class="progress-stat">Clicked Damage </div>
+				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.clickDamage)}}</div>
+			</div>
+			<div class="progress-stat-container">
+				<div class="progress-stat">Gold Earned </div>
+				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.goldEarned)}}</div>
+			</div>
+			<div class="progress-stat-container">
+				<div class="progress-stat">Gold Spent </div>
+				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.goldSpent)}}</div>
+			</div>
+			<div class="progress-stat-container">
+				<div class="progress-stat">Experience Earned </div>
+				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.experienceEarned)}}</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

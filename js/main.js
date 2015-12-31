@@ -110,6 +110,8 @@ var EXPERIENCE_NEEDED = 200;
 var MONSTER_HEALTH = 450;
 var MONSTER_EXPERIENCE = 60;
 var MONSTER_REWARD = 25;
+var POINT_BONUS = {'easy' : .5, 'medium' : 1, 'hard' : 2, 'marathon' : 5, 'impossible' : 10};
+
 
 // Scale Values
 var SCALE_CHIMES_PER_MEEP = 1.00;
@@ -448,3 +450,25 @@ $(window).load(function() {
 
   SCOPE.game.start();
 });
+
+function showStats() {
+  $('#progress-modal').modal({
+    persist: true,
+    overlayClose: true,
+    position: [72, null],
+    onOpen: function (dialog) {
+    	dialog.overlay.fadeIn(200);
+      dialog.container.fadeIn(200);
+      dialog.data.fadeIn(200);
+    },
+    onClose: function (dialog) {
+      dialog.overlay.fadeOut(200);
+      dialog.container.fadeOut(200);
+      dialog.data.fadeOut(200, function() {$.modal.close();});
+    }
+  });
+};
+
+function hideStats() {
+  $.modal.close();
+};

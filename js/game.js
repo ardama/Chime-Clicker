@@ -1,6 +1,6 @@
 var Game = function (scope, difficulty) {
   this.Init(scope, difficulty);
-  this.load();
+  this.loadGame();
 };
 
 Game.prototype.Init = function(scope, difficulty) {
@@ -90,6 +90,7 @@ Game.prototype.Init = function(scope, difficulty) {
   this.ACTIVE = ACTIVE;
   this.COOLDOWN = COOLDOWN;
 
+  this.progress = this.loadProgress();
 };
 
 Game.prototype.createItems = function() {
@@ -253,7 +254,8 @@ Game.prototype.createSpells = function() {
     spells[TRIBUTE] = new Spell(this, 0, 30, SPELL_PASSIVE, MONSTER_ALL,
         function(game) {var gold = Math.ceil(game.monsters[game.monster].gold * game.getTributeBonus() / 100);
                         gold /= game.monster == TEEMO ? 10 : 1;
-                        game.gold += gold;},
+                        game.gold += gold;
+                        game.progress.spells[TRIBUTE].goldGained += gold;},
         function(game) {},
         function(game) {return game.upgrades[FROST_QUEENS_CLAIM].status == game.PURCHASED;},
         function(game) {return game.spells[TRIBUTE].status == game.LOCKED ? "":
@@ -318,8 +320,9 @@ Game.prototype.step = function(step) {
   this.addSpellTime(step);
 
   this.steps++;
+  this.progress.general.timePlayed += this.stepSize;
 
-  // autosave every 10th second
+  // autosave every 20th second
   if (this.getTime() % 20 == 0) {
     this.save();
   }
@@ -335,6 +338,7 @@ Game.prototype.addChimes = function(chimes) {
     this.chimes -= this.chimesPerMeepFloor;
     this.addMeeps(1);
   }
+  this.progress.general.totalChimes += chimes;
 };
 
 Game.prototype.addDamage = function(damage, user) {
@@ -347,19 +351,22 @@ Game.prototype.addDamage = function(damage, user) {
     this.activateSpell(SPOILS_OF_WAR);
   }
 
-  while (damage >= monster.currentHealth) {
-    damage -= monster.currentHealth;
+  while (damage >= this.monsters[this.monster].currentHealth) {
+    damage -= this.monsters[this.monster].currentHealth;
     this.killMonster();
   }
   monster.currentHealth -= damage;
+  this.progress.general.totalDamage += damage;
 };
 
 Game.prototype.addGold = function(gold) {
   this.gold += gold;
+  this.progress.general.goldEarned += gold;
 };
 
 Game.prototype.addExperience = function(experience) {
   this.experience += experience;
+  this.progress.general.experienceEarned += experience;
   while (this.experience >= this.experienceNeeded && this.level < 19) {
     this.experience -= this.experienceNeeded;
     this.levelUp();
@@ -370,6 +377,7 @@ Game.prototype.addMeeps = function(meeps) {
   meeps = meeps || 1;
 
   this.meeps += meeps;
+  this.progress.general.totalMeeps += meeps;
   this.chimesPerMeep += Math.log2(this.meeps);
   this.chimesPerMeepFloor = Math.floor(this.chimesPerMeep);
 
@@ -519,7 +527,10 @@ Game.prototype.updateMonsters = function() {
 
 // Action Functions
 Game.prototype.chimesClick = function() {
-  this.addChimes(this.chimesPerClick);
+  // chimes collected equals base discovery + 2% of current cps
+  var chimes = this.chimesPerClick * (1 + .02 * this.chimesClickRate * this.ghostBonus);
+  this.addChimes(chimes);
+  this.progress.general.clickChimes += chimes;
   this.updateView();
 };
 
@@ -527,7 +538,10 @@ Game.prototype.damageClick = function() {
   if (this.spells[TRIBUTE].status == this.AVAILABLE)
     this.activateSpell(TRIBUTE);
 
-  this.addDamage(this.damagePerClick, true);
+  // damage dealt equals base power + 2% of current dps
+  var damage = this.damagePerClick + .02 * (this.damagePerClick * this.damageClickRate * this.exhaustBonus + (this.igniteDamage / 5));
+  this.addDamage(damage, true);
+  this.progress.general.clickDamage += damage;
   this.updateView();
 };
 
@@ -547,6 +561,8 @@ Game.prototype.activateSpell = function(name) {
   spell.durationLeft = spell.duration
   spell.status = this.ACTIVE;
 
+  this.progress.spells[name].count++;
+
   this.updateStats();
   this.updateView();
 };
@@ -564,6 +580,8 @@ Game.prototype.buyItem = function(name, count) {
   for (var i = 0; i < count; i++) {
     if (this.gold >= item.cost) {
       this.gold -= item.cost;
+      this.progress.items[name].goldSpent += item.cost;
+      this.progress.general.goldSpent += item.cost;
       item.count++;
       item.cost += item.startCost * SCALE_ITEM_COST * item.count;
       bought++;
@@ -579,6 +597,8 @@ Game.prototype.buyItem = function(name, count) {
   this.powerBase += bought * item.power;
   this.agilityBase += bought * item.agility;
   this.incomeBase += bought * item.income;
+
+  this.progress.items[name].count += bought;
 
   this.updateStats();
   this.updateView();
@@ -610,6 +630,8 @@ Game.prototype.buyUpgrade = function(name) {
     this.agilityBase += count * upgrade.agility;
     this.incomeBase += count * upgrade.income;
 
+    this.progress.general.goldSpent += upgrade.cost;
+
     this.unlockUpgrades();
     this.unlockSpells();
     this.updateStats();
@@ -637,16 +659,22 @@ Game.prototype.killMonster = function() {
   var monster = this.monsters[this.monster];
   var exp = monster.experience;
 
-  // use smite and/or spoils of war bonus if either/both dealt killing blow
-  // otherwise grant favor bonus
-  var bonus = this.smiteBonus + this.spoilsOfWarBonus || this.favorBonus;
-  var gold = Math.ceil(monster.gold * (1 + bonus));
+  var smiteGold = this.smiteBonus * monster.gold;
+  var spoilsGold = this.spoilsOfWarBonus * monster.gold;
+  var favorGold = this.favorBonus * monster.gold;
+  var gold = Math.ceil(monster.gold + smiteGold + spoilsGold + favorGold);
+
+  this.progress.spells[SMITE].goldGained += smiteGold;
+  this.progress.spells[SPOILS_OF_WAR].goldGained += spoilsGold;
+  this.progress.spells[FAVOR].goldGained += favorGold;
 
   monster.maxHealth += monster.startHealth * SCALE_MONSTER_HEALTH;
   monster.currentHealth = monster.maxHealth;
   monster.experience += monster.startExperience * SCALE_MONSTER_REWARD;
   monster.gold += monster.startGold * SCALE_MONSTER_REWARD;
   monster.count++;
+
+  this.progress.monsters[this.monster].count++;
 
   this.addExperience(exp);
   this.addGold(gold);
@@ -663,7 +691,7 @@ Game.prototype.levelUp = function(levels) {
 
 
     this.experienceNeeded *= SCALE_EXPERIENCE_NEEDED;
-    this.chimeExperience *= SCALE_CHIMES_EXPERIENCE;
+    this.chimesExperience *= SCALE_CHIMES_EXPERIENCE;
 
     if (this.level == 19) {
       this.experienceNeeded = 999999000000000000;
@@ -684,8 +712,37 @@ Game.prototype.levelUp = function(levels) {
 };
 
 Game.prototype.win = function() {
-  this.won = true;
-  console.log('You Win!');
+  if (!this.won) {
+    this.won = true;
+
+    switch (this.difficulty) {
+      case 'easy':
+        this.progress.wins.easy++;
+        this.progress.times.easy = Math.min(this.getTime(), this.progress.times.easy);
+        break;
+      case 'medium':
+        this.progress.wins.medium++;
+        this.progress.times.medium = Math.min(this.getTime(), this.progress.times.medium);
+        break;
+      case 'hard':
+        this.progress.wins.hard++;
+        this.progress.times.hard = Math.min(this.getTime(), this.progress.times.hard);
+        break;
+      case 'marathon':
+        this.progress.wins.marathon++;
+        this.progress.times.marathon = Math.min(this.getTime(), this.progress.times.marathon);
+        break;
+      case 'impossible':
+        this.progress.wins.impossible++;
+        this.progress.times.impossible = Math.min(this.getTime(), this.progress.times.impossible);
+        break;
+      default:
+    }
+
+
+
+    console.log('You Win!');
+  }
 };
 
 // Utility Functions
@@ -826,6 +883,15 @@ Game.prototype.getClassName = function(name) {
 };
 
 Game.prototype.save = function() {
+  this.saveGame();
+  this.saveProgress();
+};
+
+Game.prototype.saveProgress = function() {
+  localStorage.setItem('progress', JSON.stringify(this.progress));
+};
+
+Game.prototype.saveGame = function() {
   var obj = {};
   obj['stats'] = this.saveStats();
   obj['items'] = this.saveItems();
@@ -839,6 +905,7 @@ Game.prototype.save = function() {
 Game.prototype.saveStats = function() {
   var obj = {};
   obj['difficulty'] = this.difficulty;
+  obj['won'] = this.won;
   obj['fps'] = this.fps;
   obj['stepSize'] = this.stepSize;
   obj['steps'] = this.steps;
@@ -995,7 +1062,20 @@ Game.prototype.saveMonsters = function() {
   return obj;
 };
 
+
 Game.prototype.load = function() {
+  this.loadGame();
+  this.loadProgress();
+};
+
+Game.prototype.loadProgress = function() {
+  var obj = localStorage.getItem('progress', obj);
+  if (obj)
+    obj = JSON.parse(obj);
+  return obj || this.initProgress();
+};
+
+Game.prototype.loadGame = function() {
   var obj = localStorage.getItem('save', obj);
   if (obj) {
     obj = JSON.parse(obj);
@@ -1072,7 +1152,70 @@ Game.prototype.loadMonsters = function(obj) {
   }
 };
 
-Game.prototype.reset = function() {
-  localStorage.removeItem('save');
-  location.reload(true);
+Game.prototype.initProgress = function() {
+  var progress = {};
+
+  progress['general'] = {};
+  progress['general']['timePlayed'] = 0;
+  progress['general']['experienceEarned'] = 0;
+
+  progress['general']['totalDamage'] = 0;
+  progress['general']['clickDamage'] = 0;
+
+  progress['general']['totalChimes'] = 0;
+  progress['general']['clickChimes'] = 0;
+
+  progress['general']['totalMeeps'] = 0;
+
+  progress['general']['goldEarned'] = 0;
+  progress['general']['goldSpent'] = 0;
+
+  // items purchased
+  progress['items'] = {};
+  for (var item in this.items) {
+    progress['items'][item] = {'count': 0, 'goldSpent': 0};
+  }
+
+  // monsters killed
+  progress['monsters'] = {};
+  for (var monster in this.monsters) {
+    progress['monsters'][monster] = {'count': 0};
+  }
+
+  // spells used
+  progress['spells'] = {};
+  for (var spell in this.spells) {
+    progress['spells'][spell] = {'count': 0, 'goldGained': 0, 'meepsGained': 0};
+  }
+
+  progress['wins'] = {};
+  progress['wins']['easy'] = 0;
+  progress['wins']['medium'] = 0;
+  progress['wins']['hard'] = 0;
+  progress['wins']['marathon'] = 0;
+  progress['wins']['impossible'] = 0;
+
+
+  progress['times'] = {};
+  progress['times']['easy'] = Infinity;
+  progress['times']['medium'] = Infinity;
+  progress['times']['hard'] = Infinity;
+  progress['times']['marathon'] = Infinity;
+  progress['times']['impossible'] = Infinity;
+
+  progress['pointsEarned'] = 0;
+
+
+  return progress;
+}
+
+Game.prototype.newGame = function() {
+  var confirm = window.confirm('Start new game?  Overall progress will be saved.')
+  if (confirm) {
+    this.saveProgress();
+    if (this.monsters[TEEMO].count > 0)
+      this.progress.general.pointsEarned += (getBaseLog(20, this.monsters[TEEMO].count) + 1) * POINT_BONUS[this.difficulty];
+    localStorage.removeItem('save');
+    location.reload(true);
+  }
 }
