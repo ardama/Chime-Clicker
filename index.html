@@ -8,6 +8,7 @@
 <script src="js/jquery.hotkeys.js"></script>
 <script src="js/jquery.simplemodal.1.4.4.min.js"></script>
 <script src="js/angular.min.js"></script>
+<script src="js/ng-order-object-by.js"></script>
 <script src="js/main.js"></script>
 <script src="js/game.js"></script>
 <script src="js/classes.js"></script>
@@ -204,7 +205,7 @@
 								+1000
 							</div>
 							<div class="item-name">
-								{{item}}{{game.isPlural(game.items[item].count, item)}}
+								{{item + game.isPlural(game.items[item].count, item)}}
 							</div>
 							<div class="item-count">
 								{{game.prettyIntCompact(game.items[item].count)}}
@@ -326,41 +327,83 @@
 		</div>
 
 		<div id="progress-modal-body">
-			<div class="progress-stat-container">
-				<div class="progress-stat">Time Played </div>
-				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.timePlayed)}}</div>
-			</div>
-			<div class="progress-stat-container">
-				<div class="progress-stat">Chimes Collected </div>
-				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalChimes)}}</div>
-			</div>
-			<div class="progress-stat-container">
-				<div class="progress-stat">Clicked Chimes </div>
-				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.clickChimes)}}</div>
-			</div>
-			<div class="progress-stat-container">
-				<div class="progress-stat">Meeps Earned </div>
-				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalMeeps)}}</div>
-			</div>
-			<div class="progress-stat-container">
-				<div class="progress-stat">Damage Dealt </div>
-				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalDamage)}}</div>
-			</div>
-			<div class="progress-stat-container">
-				<div class="progress-stat">Clicked Damage </div>
-				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.clickDamage)}}</div>
-			</div>
-			<div class="progress-stat-container">
-				<div class="progress-stat">Gold Earned </div>
-				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.goldEarned)}}</div>
-			</div>
-			<div class="progress-stat-container">
-				<div class="progress-stat">Gold Spent </div>
-				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.goldSpent)}}</div>
-			</div>
-			<div class="progress-stat-container">
-				<div class="progress-stat">Experience Earned </div>
-				<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.experienceEarned)}}</div>
+			<div id="progress-modal-body-container">
+				<div class="progress-modal-column">
+					<div class="progress-modal-title">General</div>
+					<div class="progress-stat-container">
+						<div class="progress-stat">Time Played </div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.timePlayed)}}</div>
+					</div>
+					<div class="progress-stat-container">
+						<div class="progress-stat">Chimes Collected </div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalChimes)}}</div>
+					</div>
+					<div class="progress-stat-container">
+						<div class="progress-stat">Clicked Chimes </div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.clickChimes)}}</div>
+					</div>
+					<div class="progress-stat-container">
+						<div class="progress-stat">Meeps Earned </div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalMeeps)}}</div>
+					</div>
+					<div class="progress-stat-container">
+						<div class="progress-stat">Damage Dealt </div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalDamage)}}</div>
+					</div>
+					<div class="progress-stat-container">
+						<div class="progress-stat">Clicked Damage </div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.clickDamage)}}</div>
+					</div>
+					<div class="progress-stat-container">
+						<div class="progress-stat">Gold Earned </div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.goldEarned)}}</div>
+					</div>
+					<div class="progress-stat-container">
+						<div class="progress-stat">Gold Spent </div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.goldSpent)}}</div>
+					</div>
+					<div class="progress-stat-container">
+						<div class="progress-stat">Experience Earned </div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.experienceEarned)}}</div>
+					</div>
+					<div class="progress-modal-spacer"></div>
+
+					<div class="progress-modal-title">Wins</div>
+					<div ng-repeat="object in game.progress.wins | orderObjectBy: 'order'" class="progress-stat-container progress-win">
+						<div class="progress-stat">{{object.difficulty.capitalize()}}</div>
+						<div class="progress-stat-value">{{object.count}}</div>
+					</div>
+					<div class="progress-modal-spacer"></div>
+
+					<div class="progress-modal-title">Fastest Times</div>
+					<div ng-repeat="object in game.progress.times | orderObjectBy: 'order'" class="progress-stat-container progress-time">
+						<div class="progress-stat">{{object.difficulty.capitalize()}}</div>
+						<div class="progress-stat-value">{{object.count > 0 ? game.prettyIntCompact(object.count) : '--'}}</div>
+					</div>
+				</div>
+
+				<div class="progress-modal-column">
+					<div class="progress-modal-title">Items Bought</div>
+					<div ng-repeat="object in game.progress.items | orderObjectBy: 'order'" class="{{game.isZero(object.count)}} progress-stat-container progress-item">
+						<div class="progress-stat">{{object.item + game.isPlural(2, object.item)}}</div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(object.count)}}</div>
+					</div>
+					<div class="progress-modal-spacer"></div>
+
+					<div class="progress-modal-title">Monsters Killed</div>
+					<div ng-repeat="object in game.progress.monsters | orderObjectBy: 'order'" class="{{game.isZero(object.count)}} progress-stat-container progress-monster">
+						<div class="progress-stat">{{object.monster + game.isPlural(2, object.monster)}}</div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(object.count)}}</div>
+					</div>
+					<div class="progress-modal-spacer"></div>
+
+					<div class="progress-modal-title">Spells Used</div>
+					<div ng-repeat="object in game.progress.spells | orderObjectBy: 'order'" class="{{game.isZero(object.count)}} progress-stat-container progress-spell">
+						<div class="progress-stat">{{object.spell}}</div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(object.count)}}</div>
+					</div>
+
+				</div>
 			</div>
 		</div>
 	</div>

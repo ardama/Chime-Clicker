@@ -98,8 +98,8 @@ var MONSTERS = [CASTER_MINION, RIFT_SCUTTLER, MELEE_MINION, CANNON_MINION, RAZOR
                 CHO_GATH, DR_MUNDO, SION, TEEMO];
 var CHAMPIONS = [CHO_GATH, DR_MUNDO, SION, TEEMO];
 var IGNORE_PLURALS = [BOOTS_OF_SPEED, BOOTS_OF_SWIFTNESS, BOOTS_OF_MOBILITY, IONIAN_BOOTS_OF_LUCIDITY,
-                      SORCERERS_SHOES, MERCURYS_TREADS, FLASH];
-var SPECIAL_PLURALS = [ZHONYAS_HOURGLASS, LUDENS_ECHO, FIENDISH_CODEX];
+                      SORCERERS_SHOES, MERCURYS_TREADS, SPOILS_OF_WAR];
+var SPECIAL_PLURALS = [ZHONYAS_HOURGLASS, LUDENS_ECHO, FIENDISH_CODEX, FLASH];
 
 // Default Values
 var STARTING_GOLD = 375;
@@ -288,7 +288,7 @@ function createFloatingText(parent, text, event) {
 };
 
 ///// INITIALIZE ////////////////////
-var GameApp = angular.module('GameApp', []);
+var GameApp = angular.module('GameApp', ['ngOrderObjectBy']);
 GameApp.controller('GameController', function($scope) {
     window.SCOPE = $scope;
     $scope.game = new Game($scope, 'medium');
@@ -450,6 +450,10 @@ $(window).load(function() {
 
   SCOPE.game.start();
 });
+
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+};
 
 function showStats() {
   $('#progress-modal').modal({

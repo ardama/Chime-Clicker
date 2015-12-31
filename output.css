@@ -362,7 +362,7 @@ body {
   width: 8px; }
 
 .column::-webkit-scrollbar-track {
-  background-color: #212121; }
+  background-color: #191919; }
 
 .column::-webkit-scrollbar-thumb {
   background: rgba(245, 245, 245, 0.7); }
@@ -869,7 +869,7 @@ body {
   height: 8px; }
 
 .item-upgrades-wrapper::-webkit-scrollbar-track {
-  background-color: #212121; }
+  background-color: #191919; }
 
 .item-upgrades-wrapper::-webkit-scrollbar-thumb {
   background: rgba(245, 245, 245, 0.7); }
@@ -1200,21 +1200,72 @@ body {
 
 #progress-modal-body {
   width: 500px;
-  min-height: 400px;
+  height: 500px;
   padding: 8px 16px;
+  overflow-y: auto;
   -webkit-box-shadow: 0 3px 3px -3px rgba(0, 0, 0, 0.75) inset;
   -moz-box-shadow: 0 3px 3px -3px rgba(0, 0, 0, 0.75) inset;
   box-shadow: 0 3px 3px -3px rgba(0, 0, 0, 0.75) inset; }
-  #progress-modal-body .progress-stat-container {
-    float: left;
-    width: 100%;
-    padding: 4px 0; }
-  #progress-modal-body .progress-stat {
-    float: left;
-    text-align: right;
-    color: rgba(255, 255, 255, 0.7);
-    width: 125px; }
-  #progress-modal-body .progress-stat-value {
-    float: left;
-    padding-left: 8px;
-    font-weight: bold; }
+
+#progress-modal-body-container {
+  display: table-row; }
+
+.progress-modal-column {
+  display: table-cell;
+  vertical-align: top;
+  width: 249px;
+  padding: 8px 0;
+  border-left: 1px solid #263238;
+  border-right: 1px solid #171c1e; }
+
+.progress-modal-column:first-child {
+  border-left: none; }
+
+.progress-modal-column:last-child {
+  border-right: none; }
+
+.progress-stat-container {
+  float: left;
+  width: 100%;
+  padding: 2px 0; }
+
+.progress-stat-container.zero {
+  display: none; }
+
+.progress-stat {
+  float: left;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.7);
+  width: 130px; }
+
+.progress-stat-value {
+  float: left;
+  padding-left: 12px;
+  font-weight: bold; }
+
+.progress-modal-spacer {
+  float: left;
+  width: 100%;
+  height: 1px;
+  background-color: #171c1e;
+  border-bottom: solid 1px #263238;
+  margin: 8px 0; }
+
+.progress-modal-title {
+  float: left;
+  width: 100%;
+  color: #ffc107;
+  text-align: center; }
+
+#progress-modal-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; }
+
+#progress-modal-body::-webkit-scrollbar-track {
+  background-color: #191919; }
+
+#progress-modal-body::-webkit-scrollbar-thumb {
+  background: rgba(245, 245, 245, 0.7); }
+
+#progress-modal-body::-webkit-scrollbar-thumb:hover {
+  background: whitesmoke; }

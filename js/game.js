@@ -676,12 +676,11 @@ Game.prototype.killMonster = function() {
 
   this.progress.monsters[this.monster].count++;
 
-  this.addExperience(exp);
-  this.addGold(gold);
-
   if (this.monster == TEEMO)
-    this.win();
+  this.win();
 
+  this.addGold(gold);
+  this.addExperience(exp);
 };
 
 Game.prototype.levelUp = function(levels) {
@@ -715,26 +714,32 @@ Game.prototype.win = function() {
   if (!this.won) {
     this.won = true;
 
+    var time;
     switch (this.difficulty) {
       case 'easy':
-        this.progress.wins.easy++;
-        this.progress.times.easy = Math.min(this.getTime(), this.progress.times.easy);
+        this.progress.wins.easy.count++;
+        time = this.progress.times.easy.count;
+        this.progress.times.easy.count = Math.min(this.getTime(), time ? time : Infinity);
         break;
       case 'medium':
-        this.progress.wins.medium++;
-        this.progress.times.medium = Math.min(this.getTime(), this.progress.times.medium);
+        this.progress.wins.medium.count++;
+        time = this.progress.times.medium.count;
+        this.progress.times.medium.count = Math.min(this.getTime(), time ? time : Infinity);
         break;
       case 'hard':
-        this.progress.wins.hard++;
-        this.progress.times.hard = Math.min(this.getTime(), this.progress.times.hard);
+        this.progress.wins.hard.count++;
+        time = this.progress.times.hard.count;
+        this.progress.times.hard.count = Math.min(this.getTime(), time ? time : Infinity);
         break;
       case 'marathon':
-        this.progress.wins.marathon++;
-        this.progress.times.marathon = Math.min(this.getTime(), this.progress.times.marathon);
+        this.progress.wins.marathon.count++;
+        time = this.progress.times.marathon.count;
+        this.progress.times.marathon.count = Math.min(this.getTime(), time ? time : Infinity);
         break;
       case 'impossible':
-        this.progress.wins.impossible++;
-        this.progress.times.impossible = Math.min(this.getTime(), this.progress.times.impossible);
+        this.progress.wins.impossible.count++;
+        time = this.progress.times.impossible.count;
+        this.progress.times.impossible.count = Math.min(this.getTime(), time ? time : Infinity);
         break;
       default:
     }
@@ -880,6 +885,10 @@ Game.prototype.getObjectsByStatus = function(objectMap, status) {
 Game.prototype.getClassName = function(name) {
   var name = name.toLowerCase();
   return name.split(' ')[0];
+};
+
+Game.prototype.isZero = function(count) {
+  return count == 0 ? 'zero' : '';
 };
 
 Game.prototype.save = function() {
@@ -1171,37 +1180,43 @@ Game.prototype.initProgress = function() {
   progress['general']['goldSpent'] = 0;
 
   // items purchased
+  var order = 0;
   progress['items'] = {};
   for (var item in this.items) {
-    progress['items'][item] = {'count': 0, 'goldSpent': 0};
+    progress['items'][item] = {'item': item, 'count': 0, 'goldSpent': 0, 'order': order};
+    order++;
   }
 
   // monsters killed
+  order = 0;
   progress['monsters'] = {};
   for (var monster in this.monsters) {
-    progress['monsters'][monster] = {'count': 0};
+    progress['monsters'][monster] = {'monster': monster, 'count': 0, 'order': order};
+    order++;
   }
 
   // spells used
+  order = 0;
   progress['spells'] = {};
   for (var spell in this.spells) {
-    progress['spells'][spell] = {'count': 0, 'goldGained': 0, 'meepsGained': 0};
+    progress['spells'][spell] = {'spell': spell, 'count': 0, 'goldGained': 0, 'meepsGained': 0, 'order': order};
+    order++;
   }
 
   progress['wins'] = {};
-  progress['wins']['easy'] = 0;
-  progress['wins']['medium'] = 0;
-  progress['wins']['hard'] = 0;
-  progress['wins']['marathon'] = 0;
-  progress['wins']['impossible'] = 0;
+  progress['wins']['easy'] = {'difficulty': 'easy', 'count': 0, 'order': 0};
+  progress['wins']['medium'] = {'difficulty': 'medium', 'count': 0, 'order': 1};
+  progress['wins']['hard'] = {'difficulty': 'hard', 'count': 0, 'order': 2};
+  progress['wins']['marathon'] = {'difficulty': 'marathon', 'count': 0, 'order': 3};
+  progress['wins']['impossible'] = {'difficulty': 'impossible', 'count': 0, 'order': 4};
 
 
   progress['times'] = {};
-  progress['times']['easy'] = Infinity;
-  progress['times']['medium'] = Infinity;
-  progress['times']['hard'] = Infinity;
-  progress['times']['marathon'] = Infinity;
-  progress['times']['impossible'] = Infinity;
+  progress['times']['easy'] = {'difficulty': 'easy', 'count': null, 'order': 0};
+  progress['times']['medium'] = {'difficulty': 'medium', 'count': null, 'order': 1};
+  progress['times']['hard'] = {'difficulty': 'hard', 'count': null, 'order': 2};
+  progress['times']['marathon'] = {'difficulty': 'marathon', 'count': null, 'order': 3};
+  progress['times']['impossible'] = {'difficulty': 'impossible', 'count': null, 'order': 4};
 
   progress['pointsEarned'] = 0;
 
