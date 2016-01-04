@@ -768,7 +768,6 @@ body {
 
 	background-color: $primary1100;
 	border-radius: 1px;
-	@include transition(color 150ms);
 }
 
 .item-middle {
@@ -1139,19 +1138,20 @@ body {
 	float: left;
 
 	width: 100%;
-	height: 80px;
+	height: 100px;
 
 	background-color: $black;
 }
-#restart-button {
+#restart-button,
+#reset-button {
 	float: left;
 
 	width: calc(100% - 12px);
 	height: $itemBuyButtonSize;
 
-	margin: 8px 8px 0;
+	margin: 6px 6px 0;
 
-	font-size: 16px;
+	font-size: 14px;
 	line-height: $itemBuyButtonSize;
 	text-align: center;
 	border-radius: 1px;
@@ -1161,16 +1161,18 @@ body {
 	@include transition(background-color 100ms, margin 100ms, color 100ms);
 
 	i {
-		font-size: 13px;
+		font-size: 12px;
 	}
 }
 
-#restart-button:hover {
+#restart-button:hover,
+#reset-button:hover {
 	background-color: $primary700;
 	color: $lightTextPrimary;
 }
 
-#restart-button:active {
+#restart-button:active,
+#reset-button:active {
 	background-color: $primary700;
 	@include box-shadow(0 0 2px 0px $boxShadow inset);
 }
@@ -1180,9 +1182,9 @@ body {
 
 	width: 100%;
 
-	padding: 5px 0;
+	padding: 6px 0;
 
-	line-height: 20px;
+	line-height: 18px;
 	font-size: 16px;
 
 	#time {
@@ -1342,7 +1344,8 @@ body {
 	padding: 2px 0;
 }
 
-.progress-stat-container.zero {
+// LOCKED
+.progress-stat-container.zero[data-status='0'] {
 	display: none;
 }
 

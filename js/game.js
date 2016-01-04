@@ -7,6 +7,15 @@ Game.prototype.Init = function(scope, difficulty) {
   this.scope = scope;
   this.difficulty = difficulty;
   this.won = false;
+  this.level = 1;
+
+  // Status Values
+  this.LOCKED = LOCKED;
+  this.AVAILABLE = AVAILABLE;
+  this.UNAVAILABLE = UNAVAILABLE;
+  this.PURCHASED = PURCHASED
+  this.ACTIVE = ACTIVE;
+  this.COOLDOWN = COOLDOWN;
 
   this.fps = 30;
   this.stepSize = 1 / this.fps;
@@ -15,20 +24,23 @@ Game.prototype.Init = function(scope, difficulty) {
   this.scaleMonsterLevelHealth = SCALE_MONSTER_LEVEL_HEALTH[difficulty];
 
   this.items = this.createItems();
-  this.spells = this.createSpells();
   this.spellsUnlocked = [];
-  this.upgrades = this.createUpgrades();
+  this.spells = this.createSpells();
   this.upgradesAvailable = [];
+  this.upgrades = this.createUpgrades();
+  this.monstersAvailable = [];
   this.monsters = this.createMonsters();
-  this.monstersAvailable = [MONSTERS[0]];
-  this.monster = MONSTERS[0];
+
+  this.unlockItems();
+  this.unlockSpells();
+  this.unlockUpgrades();
+  this.updateMonsters();
 
   this.chimes = 0;
-  this.chimesPerClick = 1;
+  this.chimesRate = 0;
+  this.chimesPerClick = 0;
   this.chimesPerMeep = CHIMES_PER_MEEP;
   this.chimesPerMeepFloor = CHIMES_PER_MEEP;
-  this.chimesClickRate = 0;
-  this.chimesRate = 0;
   this.chimesExperience = CHIMES_EXPERIENCE[difficulty];
 
   this.meeps = 0;
@@ -38,35 +50,16 @@ Game.prototype.Init = function(scope, difficulty) {
   this.gold = STARTING_GOLD;
   this.goldRate = 0;
 
-  this.discovery = 0;
-  this.discoveryBase = 0;
-  this.discoveryBonus = 1.0;
-
+  this.discovery = 1;
   this.swiftness = 0;
-  this.swiftnessBase = 0;
-  this.swiftnessBonus = 1.0;
-
-  this.power = 0;
-  this.powerBase = 5;
-  this.powerBonus = 1.0;
-
+  this.power = 5;
   this.agility = 0;
-  this.agilityBase = 0;
-  this.agilityBonus = 1.0;
-
   this.income = 0;
-  this.incomeBase = 0;
-  this.incomeBonus = 1.0;
 
   this.damage = 0;
   this.damageRate = 0;
   this.damagePerClick = 0;
-  this.damageClickRate = 0;
 
-  this.userDamage = 0;
-  this.userClicks = 0;
-
-  this.level = 0;
   this.experience = 0;
   this.experienceRate = 0;
   this.experienceNeeded = EXPERIENCE_NEEDED;
@@ -82,13 +75,7 @@ Game.prototype.Init = function(scope, difficulty) {
   this.exhaustBonus = 1.0;
   this.igniteDamage = 0;
 
-  // Status Values
-  this.LOCKED = LOCKED;
-  this.AVAILABLE = AVAILABLE;
-  this.UNAVAILABLE = UNAVAILABLE;
-  this.PURCHASED = PURCHASED
-  this.ACTIVE = ACTIVE;
-  this.COOLDOWN = COOLDOWN;
+  this.updateStats();
 
   this.progress = this.loadProgress();
 };
@@ -98,10 +85,10 @@ Game.prototype.createItems = function() {
 
   items[RELIC_SHIELD] = new Item(this, 250, 1,      1, 0, 0, 0, 1);
   items[ANCIENT_COIN] = new Item(this, 250, 1,      0, 0, 0, 0, 5);
-  items[SPELLTHIEFS_EDGE] = new Item(this, 250, 1,  0, 0, 10, 0, 3);
+  items[SPELLTHIEFS_EDGE] = new Item(this, 250, 1,  0, 0, 5, 0, 3);
   items[BOOTS_OF_SPEED] = new Item(this, 750, 2,    0, 1, 0, 0, 0);
   items[RUBY_CRYSTAL] = new Item(this, 750, 2,      5, 0, 0, 0, 0);
-  items[AMPLIFYING_TOME] = new Item(this, 3000, 3,  0, 0, 100, 0, 0);
+  items[AMPLIFYING_TOME] = new Item(this, 3000, 3,  0, 0, 50, 0, 0);
   items[DAGGER] = new Item(this, 3000, 3,           0, 0, 0, 1, 0);
 
   return items;
@@ -115,7 +102,7 @@ Game.prototype.createUpgrades = function() {
   upgrades[BOOTS_OF_MOBILITY] = new Upgrade(this, BOOTS_OF_SPEED,         180000, 6, 0, 3, 0, 0, 0, [BOOTS_OF_SWIFTNESS]);
   upgrades[IONIAN_BOOTS_OF_LUCIDITY] = new Upgrade(this, BOOTS_OF_SPEED,  25000000, 9, 0, 4, 0, 5, 0, [BOOTS_OF_MOBILITY]);
   upgrades[MERCURYS_TREADS] = new Upgrade(this, BOOTS_OF_SPEED,           2500000000, 12, 60, 6, 0, 0, 0, [IONIAN_BOOTS_OF_LUCIDITY]);
-  upgrades[SORCERERS_SHOES] = new Upgrade(this, BOOTS_OF_SPEED,           400000000000, 15, 0, 15, 120, 0, 0, [MERCURYS_TREADS]);
+  upgrades[SORCERERS_SHOES] = new Upgrade(this, BOOTS_OF_SPEED,           400000000000, 15, 0, 15, 50, 0, 0, [MERCURYS_TREADS]);
 
 
   // Ancient Coin
@@ -124,8 +111,8 @@ Game.prototype.createUpgrades = function() {
 
 
   // Spellthief's Edge
-  upgrades[FROSTFANG] = new Upgrade(this, SPELLTHIEFS_EDGE,               30000, 5, 0, 0, 20, 0, 12, []);
-  upgrades[FROST_QUEENS_CLAIM] = new Upgrade(this, SPELLTHIEFS_EDGE,      3500000, 8, 0, 0, 90, 2, 85, [FROSTFANG]);
+  upgrades[FROSTFANG] = new Upgrade(this, SPELLTHIEFS_EDGE,               30000, 5, 0, 0, 10, 0, 12, []);
+  upgrades[FROST_QUEENS_CLAIM] = new Upgrade(this, SPELLTHIEFS_EDGE,      3500000, 8, 0, 0, 45, 2, 85, [FROSTFANG]);
 
 
   // Relic Shield
@@ -139,30 +126,30 @@ Game.prototype.createUpgrades = function() {
 
   upgrades[GIANTS_BELT] = new Upgrade(this, RUBY_CRYSTAL,                 35000000, 9, 20, 0, 0, 0, 0, []);
   upgrades[WARMOGS_ARMOR] = new Upgrade(this, RUBY_CRYSTAL,               750000000, 11, 40, 0, 0, 0, 0, [GIANTS_BELT]);
-  upgrades[FROZEN_MALLET] = new Upgrade(this, RUBY_CRYSTAL,               17500000000000, 17, 130, 0, 250, 0, 0, [GIANTS_BELT]);
+  upgrades[FROZEN_MALLET] = new Upgrade(this, RUBY_CRYSTAL,               17500000000000, 17, 130, 0, 100, 0, 0, [GIANTS_BELT]);
 
   upgrades[CRYSTALLINE_BRACER] = new Upgrade(this, RUBY_CRYSTAL,          1000000, 7, 10, 0, 0, 0, 0, []);
   upgrades[RIGHTEOUS_GLORY] = new Upgrade(this, RUBY_CRYSTAL,             18000000000, 13, 60, 5, 0, 0, 0, [CRYSTALLINE_BRACER]);
 
 
   // Amplifying Tome
-  upgrades[FIENDISH_CODEX] = new Upgrade(this, AMPLIFYING_TOME,           300000, 6, 0, 0, 100, 1, 0, []);
-  upgrades[AETHER_WISP] = new Upgrade(this, AMPLIFYING_TOME,              8000000, 8, 0, 2, 150, 1, 0, []);
-  upgrades[MORELLONOMICON] = new Upgrade(this, AMPLIFYING_TOME,           4000000000, 12, 0, 0, 200, 3, 0, [FIENDISH_CODEX]);
+  upgrades[FIENDISH_CODEX] = new Upgrade(this, AMPLIFYING_TOME,           300000, 6, 0, 0, 50, 1, 0, []);
+  upgrades[AETHER_WISP] = new Upgrade(this, AMPLIFYING_TOME,              8000000, 8, 0, 2, 70, 1, 0, []);
+  upgrades[MORELLONOMICON] = new Upgrade(this, AMPLIFYING_TOME,           4000000000, 12, 0, 0, 80, 3, 0, [FIENDISH_CODEX]);
 
-  upgrades[NEEDLESSLY_LARGE_ROD] = new Upgrade(this, AMPLIFYING_TOME,     150000000, 10, 0, 0, 300, 0, 0, []);
-  upgrades[LUDENS_ECHO] = new Upgrade(this, AMPLIFYING_TOME,              75000000000, 14, 0, 3, 450, 0, 0, [NEEDLESSLY_LARGE_ROD]);
-  upgrades[ZHONYAS_HOURGLASS] = new Upgrade(this, AMPLIFYING_TOME,        2000000000000, 16, 80, 0, 600, 0, 0, [NEEDLESSLY_LARGE_ROD]);
-  upgrades[RABADONS_DEATHCAP] = new Upgrade(this, AMPLIFYING_TOME,        40000000000000, 18, 0, 0, 1100, 0, 0, [NEEDLESSLY_LARGE_ROD]);
+  upgrades[NEEDLESSLY_LARGE_ROD] = new Upgrade(this, AMPLIFYING_TOME,     150000000, 10, 0, 0, 150, 0, 0, []);
+  upgrades[LUDENS_ECHO] = new Upgrade(this, AMPLIFYING_TOME,              75000000000, 14, 0, 3, 200, 0, 0, [NEEDLESSLY_LARGE_ROD]);
+  upgrades[ZHONYAS_HOURGLASS] = new Upgrade(this, AMPLIFYING_TOME,        2000000000000, 16, 80, 0, 250, 0, 0, [NEEDLESSLY_LARGE_ROD]);
+  upgrades[RABADONS_DEATHCAP] = new Upgrade(this, AMPLIFYING_TOME,        40000000000000, 18, 0, 0, 550, 0, 0, [NEEDLESSLY_LARGE_ROD]);
 
   // Dagger
   upgrades[RECURVE_BOW] = new Upgrade(this, DAGGER,                       350000, 6, 0, 0, 0, 2, 0, []);
-  upgrades[RUNAANS_HURRICANE] = new Upgrade(this, DAGGER,                 9000000, 8, 0, 0, 20, 3, 0, [RECURVE_BOW]);
-  upgrades[WITS_END] = new Upgrade(this, DAGGER,                          9000000000, 12, 50, 0, 80, 5, 0, [RECURVE_BOW]);
+  upgrades[RUNAANS_HURRICANE] = new Upgrade(this, DAGGER,                 9000000, 8, 0, 0, 10, 3, 0, [RECURVE_BOW]);
+  upgrades[WITS_END] = new Upgrade(this, DAGGER,                          9000000000, 12, 50, 0, 40, 5, 0, [RECURVE_BOW]);
   upgrades[ZEAL] = new Upgrade(this, DAGGER,                              450000000, 10, 0, 3, 0, 4, 0, []);
-  upgrades[STATIKK_SHIV] = new Upgrade(this, DAGGER,                      150000000000, 14, 0, 3, 150, 5, 0, [ZEAL]);
+  upgrades[STATIKK_SHIV] = new Upgrade(this, DAGGER,                      150000000000, 14, 0, 3, 70, 5, 0, [ZEAL]);
   upgrades[PHANTOM_DANCER] = new Upgrade(this, DAGGER,                    4500000000000, 16, 0, 4, 0, 10, 0, [ZEAL]);
-  upgrades[TRINITY_FORCE] = new Upgrade(this, DAGGER,                     100000000000000, 18, 100, 5, 150, 10, 0, [ZEAL]);
+  upgrades[TRINITY_FORCE] = new Upgrade(this, DAGGER,                     100000000000000, 18, 100, 5, 80, 10, 0, [ZEAL]);
 
   return upgrades;
 };
@@ -176,7 +163,7 @@ Game.prototype.createSpells = function() {
       function(game) {game.ghostBonus = 1.0;},
       function(game) {return game.level >= 4},
       function(game) {return game.spells[GHOST].status == game.LOCKED ? "":
-      "+100% chime generation for 10 seconds.  </br></br>90 second cooldown. <b>(Q)</b>"}
+      "+100% chime gathering for 10 seconds.  </br></br>90 second cooldown. <b>(Q)</b>"}
     );
 
     spells[FLASH] = new Spell(this, 0, 120, SPELL_ACTIVE, MONSTER_ALL,
@@ -217,13 +204,15 @@ Game.prototype.createSpells = function() {
     spells[TELEPORT] = new Spell(this, 0, 300, SPELL_ACTIVE, MONSTER_ALL,
         function(game) {},
         function(game) {var cooldownSpells = game.getObjectsByStatus(game.spells, game.COOLDOWN);
-                        for (var i = 0; i < cooldownSpells.length; i++) {
+                        var len = cooldownSpells.length;
+                        for (var i = 0; i < len; i++) {
                           var spell = game.spells[cooldownSpells[i]];
                           spell.cooldownLeft = 0;
-                          spell.status = AVAILABLE;
+                          spell.status = game.AVAILABLE;
                         }
                         var activeSpells = game.getObjectsByStatus(game.spells, game.ACTIVE);
-                        for (var i = 0; i < activeSpells.length; i++) {
+                        len = activeSpells.length;
+                        for (var i = 0; i < len; i++) {
                           var spell = game.spells[activeSpells[i]];
                           spell.durationLeft = spell.duration;
                         }
@@ -273,13 +262,13 @@ Game.prototype.createMonsters = function() {
   var scaleReward;
   var type;
   var i;
-
-  for (i = 0; i < MONSTERS.length; i++) {
+  var len = MONSTERS.length;
+  for (i = 0; i < len; i++) {
     monster = MONSTERS[i];
     scaleHealth = Math.pow(this.scaleMonsterLevelHealth, i);
     scaleExp = Math.pow(SCALE_MONSTER_LEVEL_REWARD, i);
     scaleReward = Math.pow(SCALE_MONSTER_LEVEL_REWARD, i);
-    if (i == MONSTERS.length - 1) {
+    if (i == len - 1) {
       var health = MONSTER_HEALTH * scaleHealth * 10;
       var healthPower = Math.floor(Math.log10(health));
       var newHealth = Math.pow(10, healthPower) * 1.11111.toFixed(2 + healthPower % 3);
@@ -300,10 +289,6 @@ Game.prototype.createMonsters = function() {
 };
 
 Game.prototype.start = function() {
-  if (!this.level)
-    this.levelUp();
-
-
   var thisRef = this;
   window.setInterval(function() {
       thisRef.step(thisRef.stepSize);
@@ -313,8 +298,8 @@ Game.prototype.start = function() {
 
 // Increment functions
 Game.prototype.step = function(step) {
-  this.addChimes(this.chimesPerClick * this.chimesClickRate * this.ghostBonus * step);
-  this.addDamage((this.damagePerClick * this.damageClickRate * this.exhaustBonus + (this.igniteDamage / 5)) * step);
+  this.addChimes(this.chimesRate * step);
+  this.addDamage(this.damageRate * step);
   this.addGold(this.goldRate * step);
   this.addExperience(this.experienceRate * step);
   this.addSpellTime(step);
@@ -377,8 +362,12 @@ Game.prototype.addMeeps = function(meeps) {
   meeps = meeps || 1;
 
   this.meeps += meeps;
+  this.power += meeps * this.meepDamage;
   this.progress.general.totalMeeps += meeps;
-  this.chimesPerMeep += Math.log2(this.meeps);
+
+  while (meeps--) {
+    this.chimesPerMeep += Math.log2(this.meeps);
+  }
   this.chimesPerMeepFloor = Math.floor(this.chimesPerMeep);
 
   this.updateStats();
@@ -388,8 +377,8 @@ Game.prototype.addSpellTime = function(time) {
   var activeSpells = this.getObjectsByStatus(this.spells, this.ACTIVE);
   var cooldownSpells = this.getObjectsByStatus(this.spells, this.COOLDOWN);
   var unavailableSpells = this.getObjectsByStatus(this.spells, this.UNAVAILABLE);
-
-  for (var i = 0; i < activeSpells.length; i++) {
+  var len = activeSpells.length;
+  for (var i = 0; i < len; i++) {
     var activeSpell = this.spells[activeSpells[i]];
     activeSpell.durationLeft -= time;
     if (activeSpell.durationLeft <= -.2) {
@@ -399,8 +388,8 @@ Game.prototype.addSpellTime = function(time) {
       this.updateStats();
     }
   }
-
-  for (var i = 0; i < cooldownSpells.length; i++) {
+  len = cooldownSpells.length;
+  for (var i = 0; i < len; i++) {
     var cooldownSpell = this.spells[cooldownSpells[i]];
     cooldownSpell.cooldownLeft -= time;
     if (cooldownSpell.cooldownLeft <= 0) {
@@ -415,7 +404,8 @@ Game.prototype.addSpellTime = function(time) {
   }
 
   // if unavailable but with duration remaining, end spell and put on cooldown.
-  for (var i = 0; i < unavailableSpells.length; i++) {
+  len = unavailableSpells.length;
+  for (var i = 0; i < len; i++) {
     var unavailableSpell = this.spells[unavailableSpells[i]];
     if (unavailableSpell.durationLeft > 0) {
       unavailableSpell.end(this);
@@ -428,19 +418,15 @@ Game.prototype.addSpellTime = function(time) {
 
 // Update Functions
 Game.prototype.updateStats = function() {
-  this.chimesPerClick = 1 + this.discoveryBase * this.discoveryBonus;
-  this.chimesClickRate = this.swiftnessBase * this.swiftnessBonus;
-  this.chimesRate = this.chimesPerClick * this.chimesClickRate * this.ghostBonus;
+  this.chimesRate = this.discovery * this.swiftness * this.ghostBonus;
+  // chimes collected equals base discovery + 2% of current cps
+  this.chimesPerClick = this.discovery * this.ghostBonus + .02 * this.chimesRate;
 
-  this.damagePerClick = (this.meeps * this.meepDamage) + (this.powerBase * this.powerBonus);
-  this.damageClickRate = this.agilityBase * this.agilityBonus;
-  this.damageRate = this.damagePerClick * this.damageClickRate * this.exhaustBonus + this.igniteDamage / 5;
+  this.damageRate = this.power * this.agility * this.exhaustBonus + this.igniteDamage / 5;
+  // damage dealt equals base power + 2% of current dps
+  this.damagePerClick = this.exhaustBonus * this.power + .02 * this.damageRate;
 
-  this.goldRate = (this.meeps * this.meepGold) + (this.incomeBase * this.incomeBonus);
-
-  if (this.spells[FAVOR].status == this.AVAILABLE) {
-    this.favorBonus = this.getFavorBonus() / 100;
-  }
+  this.goldRate = this.income;
 };
 
 Game.prototype.updateView = function() {
@@ -458,7 +444,8 @@ Game.prototype.updateTooltips = function() {
 
 Game.prototype.unlockItems = function() {
   var items = this.getObjectsByStatus(this.items, this.LOCKED);
-  for (var i = 0; i < items.length; i++) {
+  var len = items.length;
+  for (var i = 0; i < len; i++) {
     var item = this.items[items[i]];
     if (item.unlock(this)) {
       item.status = this.AVAILABLE;
@@ -468,7 +455,8 @@ Game.prototype.unlockItems = function() {
 
 Game.prototype.unlockUpgrades = function() {
   var upgrades = this.getObjectsByStatus(this.upgrades, this.LOCKED);
-  for (var i = 0; i < upgrades.length; i++) {
+  var len = upgrades.length;
+  for (var i = 0; i < len; i++) {
     var upgrade = this.upgrades[upgrades[i]];
     var item = this.items[upgrade.item];
     if (upgrade.unlock(this)) {
@@ -480,7 +468,8 @@ Game.prototype.unlockUpgrades = function() {
 
 Game.prototype.unlockSpells = function() {
   var spells = this.getObjectsByStatus(this.spells, this.LOCKED);
-  for (var i = 0; i < spells.length; i++) {
+  var len = spells.length;
+  for (var i = 0; i < len; i++) {
     var spell = this.spells[spells[i]];
     if (spell.unlock(this)) {
       spell.status = this.AVAILABLE;
@@ -490,7 +479,8 @@ Game.prototype.unlockSpells = function() {
 
   // disable spells when on wrong monster type
   spells = this.getObjectsByStatus(this.spells, this.AVAILABLE).concat(this.getObjectsByStatus(this.spells, this.ACTIVE));
-  for (var i = 0; i < spells.length; i++) {
+  len = spells.length;
+  for (var i = 0; i < len; i++) {
     var spell = this.spells[spells[i]];
     var monster = this.monsters[this.monster];
     if (monster && spell.target != MONSTER_ALL && spell.target != monster.type) {
@@ -500,7 +490,8 @@ Game.prototype.unlockSpells = function() {
 
   // enables spells when on correct monster type
   spells = this.getObjectsByStatus(this.spells, this.UNAVAILABLE);
-  for (var i = 0; i < spells.length; i++) {
+  len = spells.length;
+  for (var i = 0; i < len; i++) {
     var spell = this.spells[spells[i]];
     var monster = this.monsters[this.monster];
     if (!monster || spell.target == MONSTER_ALL || spell.target == monster.type) {
@@ -514,12 +505,14 @@ Game.prototype.updateMonsters = function() {
   for (var monsterName in this.monsters) {
     if (this.monsters.hasOwnProperty(monsterName)) {
       var monster = this.monsters[monsterName];
-      if (this.level == monster.level && this.monstersAvailable.indexOf(monsterName) < 0) {
+      if (this.level >= monster.level && this.monstersAvailable.indexOf(monsterName) < 0) {
         this.monstersAvailable.push(monsterName);
         this.monster = monsterName;
+        monster.status = this.ACTIVE;
       }
-      if (this.level - 1 == monster.level) {
+      if (this.level - 1 >= monster.level && monster.status == this.ACTIVE) {
         monster.experience /= 5;
+        monster.status = this.AVAILABLE;
       }
     }
   }
@@ -527,10 +520,10 @@ Game.prototype.updateMonsters = function() {
 
 // Action Functions
 Game.prototype.chimesClick = function() {
-  // chimes collected equals base discovery + 2% of current cps
-  var chimes = this.chimesPerClick * (1 + .02 * this.chimesClickRate * this.ghostBonus);
-  this.addChimes(chimes);
-  this.progress.general.clickChimes += chimes;
+  this.addChimes(this.chimesPerClick);
+  this.progress.general.clickChimes += this.chimesPerClick;
+  this.progress.general.totalClicks++;
+  this.progress.general.chimeClicks++;
   this.updateView();
 };
 
@@ -538,10 +531,10 @@ Game.prototype.damageClick = function() {
   if (this.spells[TRIBUTE].status == this.AVAILABLE)
     this.activateSpell(TRIBUTE);
 
-  // damage dealt equals base power + 2% of current dps
-  var damage = this.damagePerClick + .02 * (this.damagePerClick * this.damageClickRate * this.exhaustBonus + (this.igniteDamage / 5));
-  this.addDamage(damage, true);
-  this.progress.general.clickDamage += damage;
+  this.addDamage(this.damagePerClick, true);
+  this.progress.general.clickDamage += this.damagePerClick;
+  this.progress.general.totalClicks++;
+  this.progress.general.damageClicks++;
   this.updateView();
 };
 
@@ -577,7 +570,7 @@ Game.prototype.buyItem = function(name, count) {
   // control + shift + click buys 50
   // var ctrl = window.event.ctrlKey ? 5 : 1;
   // var shift = window.event.shiftKey ? 10 : 1;
-  for (var i = 0; i < count; i++) {
+  while (count--) {
     if (this.gold >= item.cost) {
       this.gold -= item.cost;
       this.progress.items[name].goldSpent += item.cost;
@@ -592,13 +585,17 @@ Game.prototype.buyItem = function(name, count) {
     }
   }
 
-  this.discoveryBase += bought * item.discovery;
-  this.swiftnessBase += bought * item.swiftness;
-  this.powerBase += bought * item.power;
-  this.agilityBase += bought * item.agility;
-  this.incomeBase += bought * item.income;
+  this.discovery += bought * item.discovery;
+  this.swiftness += bought * item.swiftness;
+  this.power += bought * item.power;
+  this.agility += bought * item.agility;
+  this.income += bought * item.income;
 
   this.progress.items[name].count += bought;
+
+  if (this.spells[FAVOR].status == this.AVAILABLE && name == ANCIENT_COIN) {
+    this.favorBonus = this.getFavorBonus() / 100;
+  }
 
   this.updateStats();
   this.updateView();
@@ -624,11 +621,11 @@ Game.prototype.buyUpgrade = function(name) {
 
     // Upgrade all previously bought items
     var count = item.count;
-    this.discoveryBase += count * upgrade.discovery;
-    this.swiftnessBase += count * upgrade.swiftness;
-    this.powerBase += count * upgrade.power;
-    this.agilityBase += count * upgrade.agility;
-    this.incomeBase += count * upgrade.income;
+    this.discovery += count * upgrade.discovery;
+    this.swiftness += count * upgrade.swiftness;
+    this.power += count * upgrade.power;
+    this.agility += count * upgrade.agility;
+    this.income += count * upgrade.income;
 
     this.progress.general.goldSpent += upgrade.cost;
 
@@ -685,7 +682,7 @@ Game.prototype.killMonster = function() {
 
 Game.prototype.levelUp = function(levels) {
   levels = levels || 1;
-  while (levels > 0 && this.level < 19) {
+  while (levels > 0 && this.level < 19 && this.level > 0) {
     this.level += 1;
 
 
@@ -696,18 +693,17 @@ Game.prototype.levelUp = function(levels) {
       this.experienceNeeded = 999999000000000000;
       this.experience = 0;
    }
-
-    this.updateStats();
-    this.unlockItems();
-    this.unlockUpgrades();
-    this.updateMonsters();
-    this.unlockSpells();
-
-    this.updateButtons();
-    this.updateTooltips();
-
     levels--;
   };
+
+  this.updateStats();
+  this.unlockItems();
+  this.unlockUpgrades();
+  this.updateMonsters();
+  this.unlockSpells();
+
+  this.updateButtons();
+  this.updateTooltips();
 };
 
 Game.prototype.win = function() {
@@ -926,11 +922,10 @@ Game.prototype.saveStats = function() {
   obj['monstersAvailable'] = this.monstersAvailable;
 
   obj['chimes'] = this.chimes;
+  obj['chimesRate'] = this.chimesRate;
   obj['chimesPerClick'] = this.chimesPerClick;
   obj['chimesPerMeep'] = this.chimesPerMeep;
   obj['chimesPerMeepFloor'] = this.chimesPerMeepFloor;
-  obj['chimesClickRate'] = this.chimesClickRate;
-  obj['chimesRate'] = this.chimesRate;
 
   obj['meeps'] = this.meeps;
   obj['meepGold'] = this.meepGold;
@@ -940,31 +935,14 @@ Game.prototype.saveStats = function() {
   obj['goldRate'] = this.goldRate;
 
   obj['discovery'] = this.discovery;
-  obj['discoveryBase'] = this.discoveryBase;
-  obj['discoveryBonus'] = this.discoveryBonus;
-
   obj['swiftness'] = this.swiftness;
-  obj['swiftnessBase'] = this.swiftnessBase;
-  obj['swiftnessBonus'] = this.swiftnessBonus;
-
   obj['power'] = this.power;
-  obj['powerBase'] = this.powerBase;
-  obj['powerBonus'] = this.powerBonus;
-
   obj['agility'] = this.agility;
-  obj['agilityBase'] = this.agilityBase;
-  obj['agilityBonus'] = this.agilityBonus;
-
   obj['income'] = this.income;
-  obj['incomeBase'] = this.incomeBase;
-  obj['incomeBonus'] = this.incomeBonus;
 
   obj['damage'] = this.damage;
   obj['damageRate'] = this.damageRate;
   obj['damagePerClick'] = this.damagePerClick;
-  obj['damageClickRate'] = this.damageClickRate;
-  obj['userDamage'] = this.userDamage;
-  obj['userClicks'] = this.userClicks;
 
   obj['monster'] = this.monster;
 
@@ -1168,11 +1146,15 @@ Game.prototype.initProgress = function() {
   progress['general']['timePlayed'] = 0;
   progress['general']['experienceEarned'] = 0;
 
+  progress['general']['totalChimes'] = 0;
+  progress['general']['clickChimes'] = 0;
+
   progress['general']['totalDamage'] = 0;
   progress['general']['clickDamage'] = 0;
 
-  progress['general']['totalChimes'] = 0;
-  progress['general']['clickChimes'] = 0;
+  progress['general']['totalClicks'] = 0;
+  progress['general']['chimeClicks'] = 0;
+  progress['general']['damageClicks'] = 0;
 
   progress['general']['totalMeeps'] = 0;
 
@@ -1224,12 +1206,18 @@ Game.prototype.initProgress = function() {
   return progress;
 }
 
-Game.prototype.newGame = function() {
-  var confirm = window.confirm('Start new game?  Overall progress will be saved.')
+Game.prototype.newGame = function(reset) {
+  var message = reset ? 'Reset all stats and start new game?' : 'Start new game?  Overall progress will be saved.';
+  var confirm = window.confirm(message);
   if (confirm) {
-    this.saveProgress();
-    if (this.monsters[TEEMO].count > 0)
-      this.progress.general.pointsEarned += (getBaseLog(20, this.monsters[TEEMO].count) + 1) * POINT_BONUS[this.difficulty];
+    if (reset) {
+      localStorage.removeItem('progress');
+    }
+    else {
+      this.saveProgress();
+      if (this.monsters[TEEMO].count > 0)
+        this.progress.general.pointsEarned += (getBaseLog(20, this.monsters[TEEMO].count) + 1) * POINT_BONUS[this.difficulty];
+    }
     localStorage.removeItem('save');
     location.reload(true);
   }

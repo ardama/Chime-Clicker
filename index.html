@@ -147,22 +147,22 @@
 							<div id="game-stats">
 								<div id="discovery-value" class="game-stat game-stat-top game-stat-left">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Chimes collected per click.">
-										<div class="game-stat-name">Discovery</div> {{game.prettyIntCompact(game.chimesPerClick)}}
+										<div class="game-stat-name">Discovery</div> {{game.prettyIntCompact(game.discovery)}}
 									</div>
 								</div>
 								<div id="power-value" class="game-stat game-stat-top game-stat-right">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Damage dealt per click.">
-										<div class="game-stat-name">Power</div> {{game.prettyIntCompact(game.damagePerClick)}}
+										<div class="game-stat-name">Power</div> {{game.prettyIntCompact(game.power)}}
 									</div>
 								</div>
 								<div id="swiftness-value" class="game-stat game-stat-bottom game-stat-left">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Chime clicks per second.">
-										<div class="game-stat-name">Swiftness</div> {{game.prettyIntCompact(game.chimesClickRate)}}
+										<div class="game-stat-name">Swiftness</div> {{game.prettyIntCompact(game.swiftness)}}
 									</div>
 								</div>
 								<div id="agility-value" class="game-stat game-stat-bottom game-stat-right">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Damage clicks per second.">
-										<div class="game-stat-name">Agility</div> {{game.prettyIntCompact(game.damageClickRate)}}
+										<div class="game-stat-name">Agility</div> {{game.prettyIntCompact(game.agility)}}
 									</div>
 								</div>
 							</div>
@@ -294,6 +294,7 @@
 			<div id="column-3" class="column">
 				<div id="restart-container">
 					<div id="restart-button" class="button" ng-click="game.newGame()">New Game</div>
+					<div id="reset-button" class="button" ng-click="game.newGame(true)">Reset <i class='fa fa-refresh'></i></div>
 					<div id="time-container">
 						<div id="time">
 							Time
@@ -331,16 +332,16 @@
 				<div class="progress-modal-column">
 					<div class="progress-modal-title">General</div>
 					<div class="progress-stat-container">
-						<div class="progress-stat">Time Played </div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.timePlayed)}}</div>
-					</div>
-					<div class="progress-stat-container">
 						<div class="progress-stat">Chimes Collected </div>
 						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalChimes)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Clicked Chimes </div>
 						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.clickChimes)}}</div>
+					</div>
+					<div class="progress-stat-container">
+						<div class="progress-stat">Chime Clicks </div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.chimeClicks)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Meeps Earned </div>
@@ -355,6 +356,10 @@
 						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.clickDamage)}}</div>
 					</div>
 					<div class="progress-stat-container">
+						<div class="progress-stat">Damage Clicks </div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.damageClicks)}}</div>
+					</div>
+					<div class="progress-stat-container">
 						<div class="progress-stat">Gold Earned </div>
 						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.goldEarned)}}</div>
 					</div>
@@ -365,6 +370,14 @@
 					<div class="progress-stat-container">
 						<div class="progress-stat">Experience Earned </div>
 						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.experienceEarned)}}</div>
+					</div>
+					<div class="progress-stat-container">
+						<div class="progress-stat">Time Played </div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.timePlayed)}}</div>
+					</div>
+					<div class="progress-stat-container">
+						<div class="progress-stat">Total Clicks </div>
+						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalClicks)}}</div>
 					</div>
 					<div class="progress-modal-spacer"></div>
 
@@ -384,21 +397,21 @@
 
 				<div class="progress-modal-column">
 					<div class="progress-modal-title">Items Bought</div>
-					<div ng-repeat="object in game.progress.items | orderObjectBy: 'order'" class="{{game.isZero(object.count)}} progress-stat-container progress-item">
+					<div ng-repeat="object in game.progress.items | orderObjectBy: 'order'" data-status="{{game.items[object.item].status}}" class="{{game.isZero(object.count)}} progress-stat-container progress-item">
 						<div class="progress-stat">{{object.item + game.isPlural(2, object.item)}}</div>
 						<div class="progress-stat-value">{{game.prettyIntCompact(object.count)}}</div>
 					</div>
 					<div class="progress-modal-spacer"></div>
 
 					<div class="progress-modal-title">Monsters Killed</div>
-					<div ng-repeat="object in game.progress.monsters | orderObjectBy: 'order'" class="{{game.isZero(object.count)}} progress-stat-container progress-monster">
+					<div ng-repeat="object in game.progress.monsters | orderObjectBy: 'order'" data-status="{{game.monsters[object.monster].status}}" class="{{game.isZero(object.count)}} progress-stat-container progress-monster">
 						<div class="progress-stat">{{object.monster + game.isPlural(2, object.monster)}}</div>
 						<div class="progress-stat-value">{{game.prettyIntCompact(object.count)}}</div>
 					</div>
 					<div class="progress-modal-spacer"></div>
 
 					<div class="progress-modal-title">Spells Used</div>
-					<div ng-repeat="object in game.progress.spells | orderObjectBy: 'order'" class="{{game.isZero(object.count)}} progress-stat-container progress-spell">
+					<div ng-repeat="object in game.progress.spells | orderObjectBy: 'order'" data-status="{{game.spells[object.spell].status}}" class="{{game.isZero(object.count)}} progress-stat-container progress-spell">
 						<div class="progress-stat">{{object.spell}}</div>
 						<div class="progress-stat-value">{{game.prettyIntCompact(object.count)}}</div>
 					</div>

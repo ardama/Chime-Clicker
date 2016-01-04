@@ -105,12 +105,12 @@ var SPECIAL_PLURALS = [ZHONYAS_HOURGLASS, LUDENS_ECHO, FIENDISH_CODEX, FLASH];
 var STARTING_GOLD = 375;
 var CHIMES_PER_MEEP = 5;
 var CHIMES_EXPERIENCE = {'easy' : 1, 'medium' : 1, 'hard' : .5, 'marathon' : .25, 'impossible' : 0};
-var MEEPS_DAMAGE = {'easy' : 5, 'medium' : 5, 'hard' : 4, 'marathon' : 3, 'impossible' : 2};
-var EXPERIENCE_NEEDED = 200;
-var MONSTER_HEALTH = 450;
-var MONSTER_EXPERIENCE = 60;
+var MEEPS_DAMAGE = {'easy' : 2, 'medium' : 2, 'hard' : 1, 'marathon' : 1, 'impossible' : .5};
+var EXPERIENCE_NEEDED = 1250;
+var MONSTER_HEALTH = 200;
+var MONSTER_EXPERIENCE = 75;
 var MONSTER_REWARD = 25;
-var POINT_BONUS = {'easy' : .5, 'medium' : 1, 'hard' : 2, 'marathon' : 5, 'impossible' : 10};
+var POINT_BONUS = {'easy' : 1, 'medium' : 2, 'hard' : 4, 'marathon' : 8, 'impossible' : 16};
 
 
 // Scale Values
@@ -120,7 +120,7 @@ var SCALE_ITEM_COST = 0.10;
 var SCALE_MONSTER_REWARD = 0.00;
 var SCALE_MONSTER_HEALTH = 0.02;
 var SCALE_MONSTER_LEVEL_REWARD = 5;
-var SCALE_MONSTER_LEVEL_HEALTH = {'easy' : 5, 'medium' : 5.5, 'hard' : 6, 'marathon' : 6.5, 'impossible' : 8}
+var SCALE_MONSTER_LEVEL_HEALTH = {'easy' : 5.2, 'medium' : 5.8, 'hard' : 6.4, 'marathon' : 7.2, 'impossible' : 9.6};
 var SCALE_EXPERIENCE_NEEDED = 5;
 var SCALE_MEEP_STRENGTH = 1;
 
@@ -206,53 +206,49 @@ function updateTooltips() {
 
 ///// UTILITY ////////////////////
 function prettyIntBig(num, fixed) {
-  if (!fixed)
-    fixed = 3;
+  var n = fixed ? Math.pow(10, fixed) : 1000;
   if(num >= 1000000000000000000000000000)
     return prettyInt(num)
   if(num >= 1000000000000000000000000)
-    return (num / 1000000000000000000000000).toFixed(fixed) + 'septillion';
+    return Math.round(n * num / 1000000000000000000000000) / n + 'septillion';
   if(num >= 1000000000000000000000)
-    return (num / 1000000000000000000000).toFixed(fixed) + 'sextillion';
+    return Math.round(n * num / 1000000000000000000000) / n + 'sextillion';
   if(num >= 1000000000000000000)
-    return (num / 1000000000000000000).toFixed(fixed) + ' quintillion';
+    return Math.round(n * num / 1000000000000000000) / n + ' quintillion';
   if(num >= 1000000000000000)
-    return (num / 1000000000000000).toFixed(fixed) + ' quadrillion';
+    return Math.round(n * num / 1000000000000000) / n + ' quadrillion';
   if(num >= 1000000000000)
-    return (num / 1000000000000).toFixed(fixed) + ' trillion';
+    return Math.round(n * num / 1000000000000) / n + ' trillion';
   if(num >= 1000000000)
-    return (num / 1000000000).toFixed(fixed) + ' billion';
+    return Math.round(n * num / 1000000000) / n + ' billion';
   if(num >= 1000000)
-    return (num / 1000000).toFixed(fixed) + ' million';
+    return Math.round(n * num / 1000000) / n + ' million';
   return prettyInt(num);
 };
 
-function prettyIntBigCompact(num, fixed, precision) {
-  if (!fixed && !precision)
-    fixed = 3;
+function prettyIntBigCompact(num, fixed) {
+  var n = fixed ? Math.pow(10, fixed) : 1000;
   if(num >= 1000000000000000000000000000)
     return prettyInt(num)
   if(num >= 1000000000000000000000000)
-    return (num / 1000000000000000000000000).toFixed(fixed) + 'st';
+    return Math.round(n * num / 1000000000000000000000000) / n + 'st';
   if(num >= 1000000000000000000000)
-    return (num / 1000000000000000000000).toFixed(fixed) + 's';
+    return Math.round(n * num / 1000000000000000000000) / n + 's';
   if(num >= 1000000000000000000)
-    return (num / 1000000000000000000).toFixed(fixed) + 'qt';
+    return Math.round(n * num / 1000000000000000000) / n + 'qt';
   if(num >= 1000000000000000)
-    return (num / 1000000000000000).toFixed(fixed) + 'q';
+    return Math.round(n * num / 1000000000000000) / n + 'q';
   if(num >= 1000000000000)
-    return (num / 1000000000000).toFixed(fixed) + 't';
+    return Math.round(n * num / 1000000000000) / n + 't';
   if(num >= 1000000000)
-    return (num / 1000000000).toFixed(fixed) + 'b';
+    return Math.round(n * num / 1000000000) / n + 'b';
   if(num >= 1000000)
-    return (num / 1000000).toFixed(fixed) + 'm';
+    return Math.round(n * num / 1000000) / n + 'm';
   return prettyInt(num);
 };
 
 function prettyInt(num) {
-  num = Math.floor(num);
-  var str = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return str;
+  return Math.floor(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
 function prettyTime(seconds) {
@@ -282,6 +278,10 @@ function createFloatingText(parent, text, event) {
   $obj.css({left: posX + 'px', top: posY + 'px'});
 
   parent.append($obj);
+  var children = parent.children();
+  if (children.length > 5) {
+    children[0].remove();
+  }
   $obj.animate({top: '-=100', left:'+=' + (60 * Math.random() - 30), opacity: 0}, 1000, function() {
     $obj.remove();
   });
@@ -314,8 +314,6 @@ function initializeButtons(game) {
   $('.dropdown-button').click(function(){
     $(this).find('.rotate').toggleClass('down');
     $(this).parent().toggleClass('collapsed');
-    // var value =  dropdown.attr('data-collapsed') == 'true' ? 'false' : 'true';
-    // dropdown.attr('data-collapsed', value);
   });
 
   $('#monster-selector .selector-left').click(function() {

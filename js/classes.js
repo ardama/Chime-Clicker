@@ -102,4 +102,5 @@ Monster.prototype.Init = function(game, level, health, experience, gold, type) {
   this.startGold = gold;
 
   this.count = 0;
+  this.status = LOCKED;
 };
