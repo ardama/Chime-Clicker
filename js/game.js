@@ -905,6 +905,7 @@ Game.prototype.saveGame = function() {
   obj['monsters'] = this.saveMonsters();
 
   localStorage.setItem('save', JSON.stringify(obj));
+  localStorage.setItem('difficulty', DIFFICULTIES[this.difficulty]);
 };
 
 Game.prototype.saveStats = function() {
@@ -1206,8 +1207,8 @@ Game.prototype.initProgress = function() {
   return progress;
 }
 
-Game.prototype.newGame = function(reset) {
-  var message = reset ? 'Reset all stats and start new game?' : 'Start new game?  Overall progress will be saved.';
+Game.prototype.newGame = function(reset, difficulty) {
+  var message = reset ? 'Reset all progress and start new game?' : 'Start new game' + (difficulty ? ' on ' + difficulty : '')+'?  Overall progress will be saved.';
   var confirm = window.confirm(message);
   if (confirm) {
     if (reset) {
@@ -1218,6 +1219,7 @@ Game.prototype.newGame = function(reset) {
       if (this.monsters[TEEMO].count > 0)
         this.progress.general.pointsEarned += (getBaseLog(20, this.monsters[TEEMO].count) + 1) * POINT_BONUS[this.difficulty];
     }
+    localStorage.setItem('difficulty', difficulty ? DIFFICULTIES.indexOf(difficulty) : DIFFICULTIES.indexOf(this.difficulty));
     localStorage.removeItem('save');
     location.reload(true);
   }

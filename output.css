@@ -359,7 +359,7 @@ body {
   overflow-y: auto; }
 
 .column::-webkit-scrollbar {
-  width: 8px; }
+  width: 6px; }
 
 .column::-webkit-scrollbar-track {
   background-color: #191919; }
@@ -861,8 +861,8 @@ body {
   border-right: 1px solid #000000; }
 
 .item-upgrades-wrapper::-webkit-scrollbar {
-  width: 8px;
-  height: 8px; }
+  width: 6px;
+  height: 6px; }
 
 .item-upgrades-wrapper::-webkit-scrollbar-track {
   background-color: #191919; }
@@ -967,7 +967,7 @@ body {
 #spells-container {
   float: left;
   width: 100%;
-  margin-bottom: 10px; }
+  margin-bottom: 5px; }
 
 .spell {
   position: relative;
@@ -979,7 +979,7 @@ body {
   position: relative;
   width: 60px;
   height: 60px;
-  margin: 10px auto 0 auto;
+  margin: 5px auto;
   border-radius: 1px; }
 
 .spell[data-type='active'][data-status='1'] .spell-wrapper {
@@ -1075,7 +1075,6 @@ body {
 #restart-container {
   float: left;
   width: 100%;
-  height: 100px;
   background-color: #000000; }
 
 #restart-button,
@@ -1113,14 +1112,21 @@ body {
 #time-container {
   float: left;
   width: 100%;
-  padding: 6px 0;
-  line-height: 18px;
-  font-size: 16px; }
+  padding: 4px 0 0;
+  line-height: 20px; }
   #time-container #time {
     float: left;
-    width: calc(100% - 16px);
-    padding: 0 8px;
-    color: rgba(255, 255, 255, 0.7); }
+    width: calc(100%);
+    padding: 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    -webkit-transition: color 200ms;
+    -moz-transition: color 200ms;
+    -o-transition: color 200ms;
+    transition: color 200ms; }
+  #time-container #time:hover {
+    color: white; }
   #time-container #time-value {
     float: left;
     width: calc(100% - 16px);
@@ -1258,8 +1264,8 @@ body {
   text-align: center; }
 
 #progress-modal-body::-webkit-scrollbar {
-  width: 8px;
-  height: 8px; }
+  width: 6px;
+  height: 6px; }
 
 #progress-modal-body::-webkit-scrollbar-track {
   background-color: #191919; }

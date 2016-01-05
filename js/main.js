@@ -112,6 +112,7 @@ var MONSTER_EXPERIENCE = 75;
 var MONSTER_REWARD = 25;
 var POINT_BONUS = {'easy' : 1, 'medium' : 2, 'hard' : 4, 'marathon' : 8, 'impossible' : 16};
 
+var DIFFICULTIES = ['easy', 'medium', 'hard', 'marathon', 'impossible'];
 
 // Scale Values
 var SCALE_CHIMES_PER_MEEP = 1.00;
@@ -291,7 +292,12 @@ function createFloatingText(parent, text, event) {
 var GameApp = angular.module('GameApp', ['ngOrderObjectBy']);
 GameApp.controller('GameController', function($scope) {
     window.SCOPE = $scope;
-    $scope.game = new Game($scope, 'medium');
+    var difficulty = localStorage.getItem('difficulty');
+    if (difficulty && difficulty > -1)
+      difficulty = DIFFICULTIES[difficulty];
+    else
+      difficulty = 'medium';
+    $scope.game = new Game($scope, difficulty);
 
     initializeHotkeys($scope.game);
     initializeButtons($scope.game);
@@ -444,6 +450,11 @@ $(window).load(function() {
     if (content.length == 0) {
       $(this).tooltipster('disable');
     }
+  });
+
+  $('.click-button').bind('touchend', function(e) {
+    e.preventDefault();
+    this.click();
   });
 
   SCOPE.game.start();
