@@ -454,7 +454,7 @@ $(window).load(function() {
     }
   });
 
-  $('.click-button').bind('touchend', function(e) {
+  $('.touch-target').bind('touchend', function(e) {
     e.preventDefault();
     this.click();
   });
