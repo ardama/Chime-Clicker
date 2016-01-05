@@ -34,7 +34,7 @@
 			<a id="header-help" class="header-link" href="help.html">
 				Help
 			</a>
-			<a id="header-stats" class="header-link" onclick="showStats()">
+			<a id="header-stats" class="header-link">
 				Stats
 			</a>
 		</div>
@@ -273,7 +273,7 @@
 								</div>
 								<div class="item-upgrades-wrapper">
 									<div class="item-upgrades">
-										<div ng-repeat="upgrade in game.items[item].upgrades" style="background-image:url({{game.getItemImageUrl(upgrade)}})" class="item-upgrade button"></div>
+										<div ng-repeat="upgrade in game.items[item].upgrades" style="background-image:url({{game.getItemImageUrl(upgrade)}})" class="item-upgrade"></div>
 									</div>
 								</div>
 							</div>
@@ -296,11 +296,11 @@
 					<div id="restart-button" class="button" ng-click="game.newGame()">New Game</div>
 					<div id="reset-button" class="button" ng-click="game.newGame(true)">Reset <i class='fa fa-refresh'></i></div>
 					<div id="time-container">
-						<div id="time">
+						<div id="difficulty">
 							{{game.difficulty.capitalize()}} <i class="fa fa-angle-down"></i>
 						</div>
 						<br/>
-						<div id="time-value">
+						<div id="time">
 							{{game.getRoundedTime()}}
 						</div>
 					</div>
@@ -322,9 +322,14 @@
 </div>
 
 <div id="modal-holder" style="display:none;">
+	<div id="difficulty-modal" class="modal">
+		<div id="difficulty-modal-body">
+			<div ng-repeat="difficulty in game.DIFFICULTIES" class="{{difficulty == game.difficulty ? 'hide': ''}} difficulty-button" ng-click="game.newGame(false, difficulty)">{{difficulty.capitalize()}}</div>
+		</div>
+	</div>
 	<div id="progress-modal" class="modal">
 		<div id="progress-modal-header">Statistics
-			<div class="close-icon" onclick="hideStats()">&times;</div>
+			<div class="close-icon" onclick="hideModal()">&times;</div>
 		</div>
 
 		<div id="progress-modal-body">

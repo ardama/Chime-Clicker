@@ -1011,6 +1011,8 @@ body {
 	margin: 5px auto;
 
 	border-radius: 1px;
+
+	@include transition(width 200ms, height 200ms, margin-top 200ms);
 }
 
 // AVAILABLE
@@ -1022,7 +1024,7 @@ body {
 .spell[data-type='active'][data-status='1'] .spell-wrapper:hover {
 	width: 64px;
 	height: 64px;
-	margin-top: 8px;
+	margin-top: 3px;
 
 }
 
@@ -1030,7 +1032,7 @@ body {
 .spell[data-type='active'][data-status='1'] .spell-wrapper:active {
 	width: 60px;
 	height: 60px;
-	margin-top: 10px;
+	margin-top: 5px;
 
 }
 
@@ -1038,7 +1040,7 @@ body {
 .spell[data-status='4'] .spell-wrapper {
 	width: 64px;
 	height: 64px;
-	margin-top: 8px;
+	margin-top: 3px;
 }
 
 .spell-image {
@@ -1185,7 +1187,7 @@ body {
 
 	line-height: 20px;
 
-	#time {
+	#difficulty {
 		float: left;
 
 		width: calc(100%);
@@ -1200,11 +1202,11 @@ body {
 		@include transition(color 200ms);
 	}
 
-	#time:hover {
+	#difficulty:hover {
 		color: $lightTextPrimary;
 	}
 
-	#time-value {
+	#time {
 		float: left;
 
 		width: calc(100% - 16px);
@@ -1257,6 +1259,13 @@ body {
 /* MODALS ///////////////////////////////////// */
 .modal {
 
+}
+
+#progress-modal-overlay {
+	background-color: $boxShadow;
+}
+
+#progress-modal {
 	color: $lightTextPrimary;
 	background-color: $primary1000;
 	border-radius: 1px;
@@ -1271,13 +1280,6 @@ body {
 	user-select: none;
 
 	@include box-shadow(0 0 6px 1px $boxShadow);
-}
-
-.simplemodal-overlay {
-	background-color: $boxShadow;
-}
-
-#progress-modal {
 
 }
 
@@ -1409,4 +1411,49 @@ body {
 
 #progress-modal-body::-webkit-scrollbar-thumb:hover {
   background: rgba($gray100, 1);
+}
+
+#difficulty-modal {
+	float: left;
+
+	width: 90px;
+}
+
+#difficulty-modal-body {
+	float: left;
+
+	width: calc(100% - 12px);
+
+	margin: 0 0 0 6px;
+
+	border-bottom-left-radius: 1px;
+	border-bottom-right-radius: 1px;
+	overflow: hidden;
+
+	@include box-shadow(0 0 5px 1px $boxShadow);
+}
+
+.difficulty-button {
+	float: left;
+
+	width: 100%;
+	height: $itemBuyButtonSize;
+
+
+	color: $lightTextSecondary;
+	line-height: $itemBuyButtonSize;
+	font-size: 14px;
+	text-align: center;
+	background-color: $primary900;
+
+	cursor: pointer;
+}
+
+.difficulty-button:hover {
+	background-color: $primary700;
+	color: $lightTextPrimary;
+}
+
+.difficulty-button.hide {
+	display: none;
 }

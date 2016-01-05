@@ -17,6 +17,8 @@ Game.prototype.Init = function(scope, difficulty) {
   this.ACTIVE = ACTIVE;
   this.COOLDOWN = COOLDOWN;
 
+  this.DIFFICULTIES = DIFFICULTIES;
+
   this.fps = 30;
   this.stepSize = 1 / this.fps;
   this.steps = 0;
@@ -101,8 +103,8 @@ Game.prototype.createUpgrades = function() {
   upgrades[BOOTS_OF_SWIFTNESS] = new Upgrade(this, BOOTS_OF_SPEED,        9000, 4, 0, 1, 0, 0, 0, []);
   upgrades[BOOTS_OF_MOBILITY] = new Upgrade(this, BOOTS_OF_SPEED,         180000, 6, 0, 3, 0, 0, 0, [BOOTS_OF_SWIFTNESS]);
   upgrades[IONIAN_BOOTS_OF_LUCIDITY] = new Upgrade(this, BOOTS_OF_SPEED,  25000000, 9, 0, 4, 0, 5, 0, [BOOTS_OF_MOBILITY]);
-  upgrades[MERCURYS_TREADS] = new Upgrade(this, BOOTS_OF_SPEED,           2500000000, 12, 60, 6, 0, 0, 0, [IONIAN_BOOTS_OF_LUCIDITY]);
-  upgrades[SORCERERS_SHOES] = new Upgrade(this, BOOTS_OF_SPEED,           400000000000, 15, 0, 15, 50, 0, 0, [MERCURYS_TREADS]);
+  upgrades[MERCURYS_TREADS] = new Upgrade(this, BOOTS_OF_SPEED,           2500000000, 12, 50, 6, 0, 0, 0, [IONIAN_BOOTS_OF_LUCIDITY]);
+  upgrades[SORCERERS_SHOES] = new Upgrade(this, BOOTS_OF_SPEED,           400000000000, 15, 0, 15, 60, 0, 0, [MERCURYS_TREADS]);
 
 
   // Ancient Coin
@@ -905,7 +907,7 @@ Game.prototype.saveGame = function() {
   obj['monsters'] = this.saveMonsters();
 
   localStorage.setItem('save', JSON.stringify(obj));
-  localStorage.setItem('difficulty', DIFFICULTIES[this.difficulty]);
+  localStorage.setItem('difficulty', DIFFICULTIES.indexOf(this.difficulty));
 };
 
 Game.prototype.saveStats = function() {
@@ -927,6 +929,7 @@ Game.prototype.saveStats = function() {
   obj['chimesPerClick'] = this.chimesPerClick;
   obj['chimesPerMeep'] = this.chimesPerMeep;
   obj['chimesPerMeepFloor'] = this.chimesPerMeepFloor;
+  obj['chimesExperience'] = this.chimesExperience;
 
   obj['meeps'] = this.meeps;
   obj['meepGold'] = this.meepGold;

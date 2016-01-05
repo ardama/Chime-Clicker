@@ -141,6 +141,8 @@ var buttonXMargin = 45;
 var buttonMaxSize = 260;
 var buttonOffset = 1; // for press animation
 
+var modal = false;
+
 function updateButtons(force) {
   $('.click-button').each(function() {
     if ( $(this).css('display') != 'none' && !force)
@@ -457,6 +459,64 @@ $(window).load(function() {
     this.click();
   });
 
+  $('#header-stats').click(function(event) {
+    event.stopPropagation();
+    $('#progress-modal').modal({
+      persist: true,
+      overlayClose: true,
+      overlayId: 'progress-modal-overlay',
+      position: [72, null],
+      onOpen: function (dialog) {
+        dialog.overlay.fadeIn(200);
+        dialog.container.fadeIn(200);
+        dialog.data.fadeIn(200);
+      },
+      onClose: function (dialog) {
+        dialog.overlay.fadeOut(200);
+        dialog.container.fadeOut(200);
+        dialog.data.fadeOut(200, function() {$.modal.close();});
+      }
+    });
+  })
+
+  $('#difficulty').click(function(event) {
+    if (modal) {
+      hideModal();
+      return;
+    }
+
+    event.stopPropagation();
+    var posX = $(this).offset().left;
+    var posY = $(this).offset().top + $(this).outerHeight() + 2;
+
+    $('#difficulty-modal').modal({
+      persist: true,
+      overlayClose: true,
+      position: [posY, posX],
+      modal: false,
+      onOpen: function(dialog) {
+      	dialog.overlay.slideDown(200);
+        dialog.container.slideDown(200);
+        dialog.data.slideDown(200);
+      },
+      onClose: function(dialog) {
+        dialog.overlay.slideUp(200);
+        dialog.container.slideUp(200);
+        dialog.data.slideUp(200, function() {$.modal.close();});
+      },
+      onShow: function () {
+        modal = true;
+      }
+    });
+  });
+
+
+
+  $('body').click(function(){
+    if (modal)
+      hideModal();
+  });
+
   SCOPE.game.start();
 });
 
@@ -464,24 +524,7 @@ String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
-function showStats() {
-  $('#progress-modal').modal({
-    persist: true,
-    overlayClose: true,
-    position: [72, null],
-    onOpen: function (dialog) {
-    	dialog.overlay.fadeIn(200);
-      dialog.container.fadeIn(200);
-      dialog.data.fadeIn(200);
-    },
-    onClose: function (dialog) {
-      dialog.overlay.fadeOut(200);
-      dialog.container.fadeOut(200);
-      dialog.data.fadeOut(200, function() {$.modal.close();});
-    }
-  });
-};
-
-function hideStats() {
+function hideModal() {
   $.modal.close();
+  modal = false;
 };
