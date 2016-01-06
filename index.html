@@ -45,7 +45,7 @@
 				<div id="meeps-row" class="row">
 					<div id="meeps-container" class="container">
 						<div id="meeps-status" class="status {{game.spells['Flash'].status == game.ACTIVE ? 'flash-active' : '';}}">
-							<div id="meeps-wrapper" data-toggle="tooltip" data-title="Collect chimes to earn meeps.  Meeps grant {{game.meepDamage}} Power." data-position="right">
+							<div id="meeps-wrapper" data-toggle="tooltip" data-title="Collect chimes to earn meeps.  Meeps grant {{game.meepDamage}} Damage." data-position="right">
 								<text>
 									{{game.prettyInt(game.meeps)}}
 								</text>
@@ -59,7 +59,7 @@
 								<div id="chimes-bar" class="bar {{game.spells['Ghost'].status == game.ACTIVE ? 'ghost-active' : '';}}">
 									<div id="chimes-bar-fill" class="bar-fill" style="width:{{game.getMeepProgressPercent()}}%"></div>
 									<div id="chimes-rate" data-toggle="tooltip" data-title="Chimes collected per second." data-position="right">
-										CPS {{game.prettyInt(game.chimesRate)}}
+										CPS {{game.prettyIntVariable(game.chimesRate)}}
 									</div>
 									<div id="chimes-progress" data-toggle="tooltip" data-title="Chimes for next meep." data-position="left">
 										{{game.prettyIntCompact(game.chimes)}}/{{game.prettyIntCompact(game.chimesPerMeepFloor)}}	chimes
@@ -72,6 +72,11 @@
 						</div>
 					</div>
 					<div id="chimes-container" class="container">
+						<div id="chimes-count-container">
+							<div id="chimes-count">
+								Chimes: {{game.prettyIntVariable(game.chimesCollected)}}
+							</div>
+						</div>
 						<div id="chimes-button-wrapper" class="click-button-wrapper">
 							<div id="chimes-button-holder" class="click-button-holder"></div>
 							<div id="chimes-button" class="click-button button touch-target"></div>
@@ -108,10 +113,10 @@
 								<div id="damage-bar" class="bar {{game.spells['Ignite'].status == game.ACTIVE ? 'ignite-active' : '';}} {{game.spells['Exhaust'].status == game.ACTIVE ? 'exhaust-active' : '';}}">
 									<div id="damage-bar-fill" class="bar-fill" style="width:{{game.getMonsterHealthPercent()}}%"></div>
 									<div id="damage-rate" data-toggle="tooltip" data-title="Damage dealt per second." data-position="right">
-										DPS {{game.prettyInt(game.damageRate)}}
+										DPS {{game.prettyIntVariable(game.damageRate)}}
 									</div>
 									<div id="damage-progress">
-										{{game.prettyIntCompact(game.monsters[game.monster].currentHealth, 2)}} / {{game.prettyIntCompact(game.monsters[game.monster].maxHealth, 2)}} hp
+										{{game.prettyIntCompact(game.monsters[game.monster].currentHealth)}} / {{game.prettyIntCompact(game.monsters[game.monster].maxHealth)}} hp
 									</div>
 								</div>
 							</div>
@@ -121,6 +126,11 @@
 						</div>
 					</div>
 					<div id="monster-container" class="container">
+						<div id="monster-kill-count-container">
+							<div id="monster-kill-count">
+								Kills: {{game.prettyIntVariable(game.monsters[game.monster].count)}}
+							</div>
+						</div>
 						<div id="monster-button-wrapper" class="click-button-wrapper">
 							<div id="monster-button-holder" class="click-button-holder"></div>
 							<div id="monster-button" class="click-button button touch-target" ng-style="{'background-image':'url(' + game.getMonsterImageUrl(game.monster) +')'}"></div>
@@ -136,7 +146,7 @@
 							<div id="gold-status">
 								<div id="gold-value">
 									<i class="fa fa-database fa-sm icon-gold"></i>
-									{{game.prettyIntVariable(game.gold, null, 1050)}}
+									{{game.prettyIntVariable(game.gold, 3)}}
 								</div>
 								<div id="income-value">
 									<div>Income</div>
@@ -147,22 +157,22 @@
 							<div id="game-stats">
 								<div id="discovery-value" class="game-stat game-stat-top game-stat-left">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Chimes collected per click.">
-										<div class="game-stat-name">Discovery</div> {{game.prettyIntCompact(game.discovery)}}
+										<div class="game-stat-name">{{game.getStatNameVariable('Defense', 100)}}</div> {{game.prettyIntCompact(game.discovery)}}
 									</div>
 								</div>
 								<div id="power-value" class="game-stat game-stat-top game-stat-right">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Damage dealt per click.">
-										<div class="game-stat-name">Power</div> {{game.prettyIntCompact(game.power)}}
+										<div class="game-stat-name">{{game.getStatNameVariable('Damage', 100)}}</div> {{game.prettyIntCompact(game.power)}}
 									</div>
 								</div>
 								<div id="swiftness-value" class="game-stat game-stat-bottom game-stat-left">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Chime clicks per second.">
-										<div class="game-stat-name">Swiftness</div> {{game.prettyIntCompact(game.swiftness)}}
+										<div class="game-stat-name">{{game.getStatNameVariable('Movespeed', 100)}}</div> {{game.prettyIntCompact(game.swiftness)}}
 									</div>
 								</div>
 								<div id="agility-value" class="game-stat game-stat-bottom game-stat-right">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Damage clicks per second.">
-										<div class="game-stat-name">Agility</div> {{game.prettyIntCompact(game.agility)}}
+										<div class="game-stat-name">{{game.getStatNameVariable('Attackspeed', 100)}}</div> {{game.prettyIntCompact(game.agility)}}
 									</div>
 								</div>
 							</div>
@@ -214,10 +224,10 @@
 						<!-- item content -->
 						<div class="item-middle">
 							<div class="item-stats">
-								<div class="item-stat {{game.items[item].isZero('discovery')}} discovery">Discovery</div>
-								<div class="item-stat {{game.items[item].isZero('swiftness')}} swiftness">Swiftness</div>
-								<div class="item-stat {{game.items[item].isZero('power')}} power">Power</div>
-								<div class="item-stat {{game.items[item].isZero('agility')}} agility">Agility</div>
+								<div class="item-stat {{game.items[item].isZero('discovery')}} discovery">Defense</div>
+								<div class="item-stat {{game.items[item].isZero('swiftness')}} swiftness">Movespeed</div>
+								<div class="item-stat {{game.items[item].isZero('power')}} power">Damage</div>
+								<div class="item-stat {{game.items[item].isZero('agility')}} agility">Attackspeed</div>
 								<div class="item-stat {{game.items[item].isZero('income')}} income">Income</div>
 							</div>
 							<div class="item-stat-values">

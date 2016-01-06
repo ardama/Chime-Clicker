@@ -267,6 +267,29 @@ body {
 
 /* STATUS CONTAINERS ///////////////////////////////////// */
 
+#chimes-count-container,
+#monster-kill-count-container {
+	position: absolute;
+	top: 30px;
+	left: 0;
+
+	width: calc(100% - 25px);
+}
+
+#chimes-count,
+#monster-kill-count {
+	position: absolute;
+	top: 0;
+	left: 5%;
+
+	width: 100%;
+
+	text-align: left;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 25px;
+}
+
 .status {
 	min-height: 55px;
 
@@ -379,8 +402,6 @@ body {
 
 #gold-status {
 	float: left;
-
-	padding-right: 10px;
 }
 
 #gold-value {
@@ -429,7 +450,9 @@ body {
 #game-stats {
 	float: right;
 
-	width: 270px;
+	min-width: 300px;
+	// min width of game-status 465px
+	width: 30%;
 	height: 100%;
 }
 
@@ -446,6 +469,8 @@ body {
 	.game-stat-name {
 		float: left;
 
+		padding-right: 5px;
+		text-align: right;
 		color: $lightTextSecondary;
 		font-weight: normal;
 	}
@@ -465,18 +490,18 @@ body {
 }
 
 .game-stat-left {
-	width: 55%;
+	width: 48%;
 
  	.game-stat-name {
-		width: 70px;
+		width: 76px;
 	}
 }
 
 .game-stat-right  {
-	width: 45%;
+	width: 52%;
 
 	.game-stat-name {
-		width: 45px;
+		width: 84px;
 	}
 }
 
@@ -781,15 +806,15 @@ body {
 .item-stats {
 	float: left;
 
-	width: 70px;
+	width: 74px;
 
 	text-align: right;
 	font-size: 14px;
-	line-height: 18px;
+	line-height: 19px;
 }
 
 .item-stat {
-	color: $lightTextPrimary;
+	color: $lightTextSecondary;
 }
 
 .item-stat.item-zero {
@@ -802,11 +827,11 @@ body {
 	width: 40px;
 	height: 100%;
 
-	padding-left: 10px;
+	padding-left: 6px;
 
 	text-align: left;
 	font-size: 14px;
-	line-height: 18px;
+	line-height: 19px;
 	font-weight: bold;
 
 }

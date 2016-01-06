@@ -224,45 +224,39 @@ function updateLastItem() {
 };
 
 ///// UTILITY ////////////////////
+var LONG_NUMBER_NAMES = ['million', 'billion', 'trillion', 'quadrillion', 'quintillion', 'sextillion', 'septillion', 'octillion', 'nontillion', 'decillion']
+var SHORT_NUMBER_NAMES = ['m', 'b', 't', 'qd', 'qt', 'sx', 'sp', 'o', 'n', 'd']
 function prettyIntBig(num, fixed) {
-  var n = fixed ? Math.pow(10, fixed) : 1000;
-  if(num >= 1000000000000000000000000000)
-    return prettyInt(num)
-  if(num >= 1000000000000000000000000)
-    return Math.round(n * num / 1000000000000000000000000) / n + 'septillion';
-  if(num >= 1000000000000000000000)
-    return Math.round(n * num / 1000000000000000000000) / n + 'sextillion';
-  if(num >= 1000000000000000000)
-    return Math.round(n * num / 1000000000000000000) / n + ' quintillion';
-  if(num >= 1000000000000000)
-    return Math.round(n * num / 1000000000000000) / n + ' quadrillion';
-  if(num >= 1000000000000)
-    return Math.round(n * num / 1000000000000) / n + ' trillion';
-  if(num >= 1000000000)
-    return Math.round(n * num / 1000000000) / n + ' billion';
-  if(num >= 1000000)
-    return Math.round(n * num / 1000000) / n + ' million';
+  fixed = fixed || 2;
+  var n = Math.pow(10, fixed);
+  
+  var a = num;
+  var b = -2;
+  while (a >= 1000) {
+    a /= 1000;
+    b++;
+  }
+
+  if (b >= 0 && b < LONG_NUMBER_NAMES.length) {
+    return (Math.floor(a*n)/n).toFixed(fixed) + ' ' + LONG_NUMBER_NAMES[b];
+  }
   return prettyInt(num);
 };
 
 function prettyIntBigCompact(num, fixed) {
-  var n = fixed ? Math.pow(10, fixed) : 1000;
-  if(num >= 1000000000000000000000000000)
-    return prettyInt(num)
-  if(num >= 1000000000000000000000000)
-    return Math.round(n * num / 1000000000000000000000000) / n + 'st';
-  if(num >= 1000000000000000000000)
-    return Math.round(n * num / 1000000000000000000000) / n + 's';
-  if(num >= 1000000000000000000)
-    return Math.round(n * num / 1000000000000000000) / n + 'qt';
-  if(num >= 1000000000000000)
-    return Math.round(n * num / 1000000000000000) / n + 'q';
-  if(num >= 1000000000000)
-    return Math.round(n * num / 1000000000000) / n + 't';
-  if(num >= 1000000000)
-    return Math.round(n * num / 1000000000) / n + 'b';
-  if(num >= 1000000)
-    return Math.round(n * num / 1000000) / n + 'm';
+  fixed = fixed || 2;
+  var n = Math.pow(10, fixed);
+
+  var a = num;
+  var b = -2;
+  while (a >= 1000) {
+    a /= 1000;
+    b++;
+  }
+
+  if (b >= 0 && b < SHORT_NUMBER_NAMES.length) {
+    return (Math.floor(a*n)/n).toFixed(fixed) + SHORT_NUMBER_NAMES[b];
+  }
   return prettyInt(num);
 };
 

@@ -452,6 +452,24 @@ body {
   background-color: #ffffff; }
 
 /* STATUS CONTAINERS ///////////////////////////////////// */
+#chimes-count-container,
+#monster-kill-count-container {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: calc(100% - 25px); }
+
+#chimes-count,
+#monster-kill-count {
+  position: absolute;
+  top: 0;
+  left: 5%;
+  width: 100%;
+  text-align: left;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 25px; }
+
 .status {
   min-height: 55px;
   position: relative;
@@ -544,8 +562,7 @@ body {
   box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.75); }
 
 #gold-status {
-  float: left;
-  padding-right: 10px; }
+  float: left; }
 
 #gold-value {
   margin-top: 6px;
@@ -584,7 +601,8 @@ body {
 
 #game-stats {
   float: right;
-  width: 270px;
+  min-width: 300px;
+  width: 30%;
   height: 100%; }
 
 .game-stat-wrapper {
@@ -596,6 +614,8 @@ body {
   font-weight: bold; }
   .game-stat .game-stat-name {
     float: left;
+    padding-right: 5px;
+    text-align: right;
     color: rgba(255, 255, 255, 0.7);
     font-weight: normal; }
 
@@ -608,14 +628,14 @@ body {
   margin-top: -10px; }
 
 .game-stat-left {
-  width: 55%; }
+  width: 48%; }
   .game-stat-left .game-stat-name {
-    width: 70px; }
+    width: 76px; }
 
 .game-stat-right {
-  width: 45%; }
+  width: 52%; }
   .game-stat-right .game-stat-name {
-    width: 45px; }
+    width: 84px; }
 
 /* CLICK BUTTONS ///////////////////////////////////// */
 .click-button-wrapper {
@@ -829,13 +849,13 @@ body {
 
 .item-stats {
   float: left;
-  width: 70px;
+  width: 74px;
   text-align: right;
   font-size: 14px;
-  line-height: 18px; }
+  line-height: 19px; }
 
 .item-stat {
-  color: white; }
+  color: rgba(255, 255, 255, 0.7); }
 
 .item-stat.item-zero {
   color: rgba(255, 255, 255, 0.2); }
@@ -844,10 +864,10 @@ body {
   float: right;
   width: 40px;
   height: 100%;
-  padding-left: 10px;
+  padding-left: 6px;
   text-align: left;
   font-size: 14px;
-  line-height: 18px;
+  line-height: 19px;
   font-weight: bold; }
 
 .item-stat-value.item-zero {
