@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="GameApp">
+<html>
 <head>
 <title>Chime Clicker</title>
 
@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
 </head>
-<body ng-controller="GameController">
+<body ng-app="GameApp" ng-controller="GameController">
 <div id="wrapper">
 	<div id="header" class="container title">
 		<a id="header-home" class="header-link" href="index.html">
@@ -105,7 +105,7 @@
 						</div>
 						<div id="damage-bar-dropdown" class="dropdown">
 							<div class="dropdown-content">
-								<div id="damage-bar" class="bar {{game.spells['Ignite'].status == game.ACTIVE ? 'ignite-active' : '';}}">
+								<div id="damage-bar" class="bar {{game.spells['Ignite'].status == game.ACTIVE ? 'ignite-active' : '';}} {{game.spells['Exhaust'].status == game.ACTIVE ? 'exhaust-active' : '';}}">
 									<div id="damage-bar-fill" class="bar-fill" style="width:{{game.getMonsterHealthPercent()}}%"></div>
 									<div id="damage-rate" data-toggle="tooltip" data-title="Damage dealt per second." data-position="right">
 										DPS {{game.prettyInt(game.damageRate)}}
@@ -123,7 +123,7 @@
 					<div id="monster-container" class="container">
 						<div id="monster-button-wrapper" class="click-button-wrapper">
 							<div id="monster-button-holder" class="click-button-holder"></div>
-							<div id="monster-button" class="click-button button touch-target" style="background-image:url({{game.getMonsterImageUrl(game.monster)}})"></div>
+							<div id="monster-button" class="click-button button touch-target" ng-style="{'background-image':'url(' + game.getMonsterImageUrl(game.monster) +')'}"></div>
 						</div>
 					</div>
 				</div>
@@ -188,7 +188,7 @@
 								<i class="fa fa-database fa-sm icon-gold"></i>
 								{{game.prettyIntCompact(game.items[item].cost)}}
 							</div>
-							<div style="background-image:url({{game.getItemImageUrl(item)}})" class="item-image">
+							<div ng-style="{'background-image':'url(' + game.getItemImageUrl(item) + ')'}" class="item-image">
 							</div>
 							<div class="item-left-shadow">
 							</div>
@@ -260,7 +260,7 @@
 													+{{game.upgrades[upgradeAvailable].income}}
 											</div>
 										</div>
-										<div class="upgrade-image" style="background-image:url({{game.getItemImageUrl(upgradeAvailable)}})">
+										<div class="upgrade-image" ng-style="{'background-image':'url(' + game.getItemImageUrl(upgradeAvailable) + ')'}">
 											<div class="upgrade-cost">
 												<i class="fa fa-database fa-sm icon-gold"></i>
 												{{game.prettyIntCompact(game.upgrades[upgradeAvailable].cost)}}
@@ -273,7 +273,7 @@
 								</div>
 								<div class="item-upgrades-wrapper">
 									<div class="item-upgrades">
-										<div ng-repeat="upgrade in game.items[item].upgrades" style="background-image:url({{game.getItemImageUrl(upgrade)}})" class="item-upgrade"></div>
+										<div ng-repeat="upgrade in game.items[item].upgrades" ng-style="{'background-image':'url(' + game.getItemImageUrl(upgrade) + ')'}" class="item-upgrade"></div>
 									</div>
 								</div>
 							</div>
@@ -306,10 +306,10 @@
 					</div>
 				</div>
 				<div id="spells-container">
-					<div ng-repeat="spell in game.getObjectsByStatus(game.spells)" class="spell container {{game.getClassName(spell)}} touch-target" ng-click="game.spellClick(spell)"
+					<div ng-repeat="spell in game.getObjectsByStatus(game.spells)" class="spell container {{game.getClassName(spell)}} touch-target"
 							 data-status="{{game.spells[spell].status}}" data-type="{{game.spells[spell].type}}">
-						<div class="spell-wrapper" data-toggle="tooltip" data-title="{{game.spells[spell].tooltip(game)}}">
-							<div class="spell-image" style="background-image:url({{game.getSpellImageUrl(spell)}})"></div>
+						<div class="spell-wrapper" data-toggle="tooltip" data-title="{{game.spells[spell].tooltip(game)}}" ng-click="game.spellClick(spell)">
+							<div class="spell-image" ng-style="{'background-image':'url(' + game.getSpellImageUrl(spell) + ')'}"></div>
 							<div class="spell-image-overlay" style="height: {{game.getSpellTimePercent(spell)}}%"></div>
 							<div class="spell-locked-image"><i class="fa fa-2x fa-lock"></i></div>
 							<div class="spell-cooldown">{{game.spells[spell].cooldownLeft.toFixed(0)}}</div>

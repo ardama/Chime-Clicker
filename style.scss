@@ -16,26 +16,12 @@ html {
 body {
 	padding: 0;
 	margin: 0;
+	min-width: 950px;
+
 
 	font-family: "Rajdhani", "Trebuchet MS", sans-serif;
 	overflow-y: hidden;
 }
-
-// body::-webkit-scrollbar {
-//   width: 5px;
-// }
-//
-// body::-webkit-scrollbar-track {
-// 	background-color: rgba($black, .4);
-// }
-//
-// body::-webkit-scrollbar-thumb {
-//   background: rgba($gray100, .8);
-// }
-//
-// body::-webkit-scrollbar-thumb:hover {
-//   background: rgba($gray100, 1);
-// }
 
 .title {
 }
@@ -177,7 +163,7 @@ body {
 	position: relative;
 	z-index: 9;
 
-	width: calc(30% + 30px);
+	width: calc(30% + 25px);
 
 	color: $lightTextPrimary;
 	text-align: center;
@@ -193,7 +179,7 @@ body {
 #column-2 {
 	float: left;
 
-	width: calc(70% - 120px);
+	width: calc(70% - 125px);
 	height: calc(100vh - 116px); // header + status
 
 	margin-top: 80px;
@@ -207,7 +193,7 @@ body {
 #column-3 {
 	float: left;
 
-	width: 90px;
+	width: 100px;
 
 	color: #eee;
 	text-align: center;
@@ -358,9 +344,9 @@ body {
 #game-status {
 	position: absolute;
 	top: 0;
-	left: calc(30% + 30px); /* width of #column-1 */
+	left: calc(30% + 25px); /* width of #column-1 */
 
-	width: calc(70% - 120px); /* width of #column-2 */
+	width: calc(70% - 125px); /* width of #column-2 */
 	height: 80px;
 
 	color: #eee;
@@ -991,7 +977,7 @@ body {
 
 	width: 100%;
 
-	margin-bottom: 5px;
+	margin-bottom: 4px;
 }
 
 .spell {
@@ -999,16 +985,16 @@ body {
 	float: left;
 
 	width: 100%;
-	height: 70px;
+	height: 72px;
 }
 
 .spell-wrapper {
 	position: relative;
 
-	width: 60px;
-	height: 60px;
+	width: 64px;
+	height: 64px;
 
-	margin: 5px auto;
+	margin: 4px auto;
 
 	border-radius: 1px;
 
@@ -1022,9 +1008,6 @@ body {
 
 // AVAILABLE:hover
 .spell[data-type='active'][data-status='1'] .spell-wrapper:hover {
-	width: 64px;
-	height: 64px;
-	margin-top: 3px;
 
 }
 
@@ -1032,7 +1015,7 @@ body {
 .spell[data-type='active'][data-status='1'] .spell-wrapper:active {
 	width: 60px;
 	height: 60px;
-	margin-top: 5px;
+	margin-top: 6px;
 
 }
 

@@ -191,8 +191,12 @@ function updateButtons(force) {
   });
 };
 
-function updateTooltips() {
+function updateTooltips(scroll) {
   $('.spell-wrapper').each(function() {
+    // TODO: figure out how to position off-screen tooltips properly
+    if (scroll) {
+      return;
+    }
     var newContent = $(this).attr('data-title');
     var oldContent = $(this).tooltipster('content');
     if (newContent != oldContent) {
@@ -205,6 +209,18 @@ function updateTooltips() {
       }
     }
   });
+};
+
+function updateLastItem() {
+  if ($(window).hasHScrollBar()) {
+    $('.item').last().css('margin-bottom', '16px');
+    $('#spells-container').css('padding-bottom', '16px');
+  }
+  else {
+    $('.item').last().css('margin-bottom', '0');
+    $('#spells-container').css('padding-bottom', '0');
+  }
+
 };
 
 ///// UTILITY ////////////////////
@@ -290,6 +306,10 @@ function createFloatingText(parent, text, event) {
   });
 };
 
+jQuery.fn.hasHScrollBar = function() {
+  return $(window).width() < $('body').width();
+};
+
 ///// INITIALIZE ////////////////////
 var GameApp = angular.module('GameApp', ['ngOrderObjectBy']);
 GameApp.controller('GameController', function($scope) {
@@ -326,12 +346,10 @@ function initializeButtons(game) {
 
   $('#monster-selector .selector-left').click(function() {
     game.selectMonster('left');
-    updateButtons();
   });
 
   $('#monster-selector .selector-right').click(function() {
     game.selectMonster('right');
-    updateButtons();
   });
 };
 
@@ -433,10 +451,16 @@ function initializeHotkeys(game) {
 ///// OTHER ////////////////////
 $(window).resize(function() {
   updateButtons(true);
+  updateLastItem();
+  $('#difficulty-modal').width($('#restart-container').width());
 });
 
 $(window).load(function() {
   updateButtons(true);
+  updateLastItem();
+
+  $('#difficulty-modal').width($('#restart-container').width());
+
   $('[data-toggle="tooltip"]').each(function() {
     var content = $(this).attr('data-title');
     var position = $(this).attr('data-position') || 'left';
@@ -486,7 +510,7 @@ $(window).load(function() {
     }
 
     event.stopPropagation();
-    var posX = $(this).offset().left;
+    var posX = $(this).offset().left - $('body').scrollLeft();
     var posY = $(this).offset().top + $(this).outerHeight() + 2;
 
     $('#difficulty-modal').modal({
@@ -510,11 +534,17 @@ $(window).load(function() {
     });
   });
 
-
-
   $('body').click(function(){
-    if (modal)
-      hideModal();
+    if (modal) hideModal();
+  });
+
+  $(window).scroll(function(event) {
+    if (modal) hideModal();
+    updateTooltips(true);
+  });
+
+  $('#column-3').scroll(function(event) {
+    if (modal) hideModal();
   });
 
   SCOPE.game.start();

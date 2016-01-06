@@ -65,6 +65,15 @@
   line-height: $barHeight;
 }
 
+#damage-bar.exhaust-active {
+	color: $exhaust3;
+	background-color: $exhaust1;
+
+	#damage-bar-fill {
+		background-color: $exhaust2;
+	}
+}
+
 #damage-bar.ignite-active {
 	color: $ignite3;
 	background-color: $ignite1;

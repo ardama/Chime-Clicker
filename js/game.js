@@ -19,7 +19,7 @@ Game.prototype.Init = function(scope, difficulty) {
 
   this.DIFFICULTIES = DIFFICULTIES;
 
-  this.fps = 30;
+  this.fps = 18;
   this.stepSize = 1 / this.fps;
   this.steps = 0;
 
@@ -293,7 +293,10 @@ Game.prototype.createMonsters = function() {
 Game.prototype.start = function() {
   var thisRef = this;
   window.setInterval(function() {
+    thisRef.scope.$apply(function(scope) {
       thisRef.step(thisRef.stepSize);
+    });
+    updateTooltips();
   }, thisRef.stepSize * 1000);
 };
 
@@ -313,8 +316,6 @@ Game.prototype.step = function(step) {
   if (this.getTime() % 20 == 0) {
     this.save();
   }
-
-  this.updateView();
 };
 
 Game.prototype.addChimes = function(chimes) {
@@ -431,19 +432,6 @@ Game.prototype.updateStats = function() {
   this.goldRate = this.income;
 };
 
-Game.prototype.updateView = function() {
-  this.scope.$applyAsync(function(scope) {updateButtons();updateTooltips();});
-};
-
-Game.prototype.updateButtons = function() {
-  this.scope.$applyAsync(function(scope) {updateButtons();});
-};
-
-Game.prototype.updateTooltips = function() {
-  this.scope.$applyAsync(function(scope) {updateTooltips();});
-};
-
-
 Game.prototype.unlockItems = function() {
   var items = this.getObjectsByStatus(this.items, this.LOCKED);
   var len = items.length;
@@ -526,7 +514,6 @@ Game.prototype.chimesClick = function() {
   this.progress.general.clickChimes += this.chimesPerClick;
   this.progress.general.totalClicks++;
   this.progress.general.chimeClicks++;
-  this.updateView();
 };
 
 Game.prototype.damageClick = function() {
@@ -537,7 +524,6 @@ Game.prototype.damageClick = function() {
   this.progress.general.clickDamage += this.damagePerClick;
   this.progress.general.totalClicks++;
   this.progress.general.damageClicks++;
-  this.updateView();
 };
 
 Game.prototype.spellClick = function(name) {
@@ -559,7 +545,6 @@ Game.prototype.activateSpell = function(name) {
   this.progress.spells[name].count++;
 
   this.updateStats();
-  this.updateView();
 };
 
 Game.prototype.buyItem = function(name, count) {
@@ -600,8 +585,6 @@ Game.prototype.buyItem = function(name, count) {
   }
 
   this.updateStats();
-  this.updateView();
-  this.updateTooltips();
 };
 
 Game.prototype.buyUpgrade = function(name) {
@@ -634,8 +617,6 @@ Game.prototype.buyUpgrade = function(name) {
     this.unlockUpgrades();
     this.unlockSpells();
     this.updateStats();
-    this.updateView();
-    this.updateTooltips();
 
   }
 };
@@ -650,7 +631,7 @@ Game.prototype.selectMonster = function(direction) {
 
   this.monster = this.monstersAvailable[index];
   this.unlockSpells();
-  this.updateButtons();
+//  this.updateButtons();
 };
 
 // Threshold functions
@@ -704,8 +685,8 @@ Game.prototype.levelUp = function(levels) {
   this.updateMonsters();
   this.unlockSpells();
 
-  this.updateButtons();
-  this.updateTooltips();
+//  this.updateButtons();
+//  this.updateTooltips();
 };
 
 Game.prototype.win = function() {
@@ -1211,7 +1192,7 @@ Game.prototype.initProgress = function() {
 }
 
 Game.prototype.newGame = function(reset, difficulty) {
-  var message = reset ? 'Reset all progress and start new game?' : 'Start new game' + (difficulty ? ' on ' + difficulty : '')+'?  Overall progress will be saved.';
+  var message = reset ? 'Reset all progress and start new game?' : 'Start new game' + (difficulty ? ' on ' + difficulty.capitalize() : '')+'?  Overall progress will be saved.';
   var confirm = window.confirm(message);
   if (confirm) {
     if (reset) {

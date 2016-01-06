@@ -25,7 +25,7 @@ Item.prototype.Init = function(game, cost, level, discovery, swiftness, power, a
 };
 
 Item.prototype.isZero = function(stat) {
-  return this[stat] == 0 ? 'item-zero' : '';
+  return this[stat] ? '' : 'item-zero';
 };
 
 var Upgrade = function(game, item, cost, level, discovery, swiftness, power, agility, income, requirements) {
@@ -59,7 +59,7 @@ Upgrade.prototype.Init = function(game, item, cost, level, discovery, swiftness,
 };
 
 Upgrade.prototype.isZero = function(stat) {
-  return this[stat] == 0 ? 'upgrade-zero' : '';
+  return this[stat] ? '' : 'upgrade-zero';
 };
 
 var Spell = function(game, duration, cooldown, type, target, start, end, unlock, tooltip) {

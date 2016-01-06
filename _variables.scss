@@ -11,18 +11,6 @@ $secondary700: #FFA000;
 $secondary900: #FF6F00;
 
 $tertiary700: #3E9DFF;
-// Spell effect colors
-$flash: #E0D987;
-$smite: #FFCC5F;
-$ghost1: #082438;
-$ghost2: #0B4D80;
-$ghost3: #BEF9FD;
-$ignite1: #771A16;
-$ignite2: #D1481A;
-$ignite3: #F3DE9D;
-$exhaust1: #30BBD6;
-$exhaust2: #D1481A;
-$exhaust3: #F3DE9D;
 
 // $secondary500: #FF9800;
 // $secondary700: #F57C00;
@@ -57,6 +45,19 @@ $lightDivider: rgba(255,255,255,.12);
 $boxShadow: rgba(0,0,0,.75);
 $dividerLight: $primary1000;
 $dividerDark: $black;
+
+// Spell effect colors
+$flash: #E0D987;
+$smite: #FFCC5F;
+$ghost1: #082438;
+$ghost2: #0B4D80;
+$ghost3: #BEF9FD;
+$ignite1: #771A16;
+$ignite2: #D1481A;
+$ignite3: #F3DE9D;
+$exhaust1: #694E12;
+$exhaust2: #C9A73F;
+$exhaust3: $lightTextPrimary;
 
 // Alternate Colors
 	// blue: rgb(14, 91, 207)
