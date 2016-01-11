@@ -1,6 +1,7 @@
 var Game = function (scope, difficulty) {
   this.Init(scope, difficulty);
   this.loadGame();
+  this.loadProgress();
 };
 
 Game.prototype.Init = function(scope, difficulty) {
@@ -59,7 +60,6 @@ Game.prototype.Init = function(scope, difficulty) {
   this.attackrateStat = 0;
   this.income = 0;
 
-  this.damage = 0;
   this.damageRate = 0;
   this.damagePerClick = 0;
 
@@ -81,8 +81,7 @@ Game.prototype.Init = function(scope, difficulty) {
   this.igniteDamageRate = 0;
 
   this.updateStats();
-
-  this.progress = this.loadProgress();
+  this.initProgress();
 };
 
 Game.prototype.createItems = function() {
@@ -139,8 +138,8 @@ Game.prototype.createUpgrades = function() {
 
   // Amplifying Tome
   upgrades[FIENDISH_CODEX] = new Upgrade(this, AMPLIFYING_TOME,           300000, 6, 0, 0, 50, 1, 0, []);
-  upgrades[AETHER_WISP] = new Upgrade(this, AMPLIFYING_TOME,              8000000, 8, 0, 2, 70, 1, 0, []);
-  upgrades[MORELLONOMICON] = new Upgrade(this, AMPLIFYING_TOME,           4000000000, 12, 0, 0, 80, 3, 0, [FIENDISH_CODEX]);
+  upgrades[AETHER_WISP] = new Upgrade(this, AMPLIFYING_TOME,              8000000, 8, 0, 2, 70, 0, 0, []);
+  upgrades[MORELLONOMICON] = new Upgrade(this, AMPLIFYING_TOME,           4000000000, 12, 0, 0, 80, 4, 0, [FIENDISH_CODEX]);
 
   upgrades[NEEDLESSLY_LARGE_ROD] = new Upgrade(this, AMPLIFYING_TOME,     150000000, 10, 0, 0, 150, 0, 0, []);
   upgrades[LUDENS_ECHO] = new Upgrade(this, AMPLIFYING_TOME,              75000000000, 14, 0, 3, 200, 0, 0, [NEEDLESSLY_LARGE_ROD]);
@@ -186,7 +185,7 @@ Game.prototype.createSpells = function() {
       function(game) {},
       function(game) {return game.level >= 2},
       function(game) {return game.spells[SMITE].status == game.LOCKED ? "":
-      "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage instantly.  Damage scales with level and DPS.  Kills with smite grant +20% gold.  Does not work against champions.  </br></br>1 minute cooldown. <b>(E)</b>"}
+      "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage instantly.  Damage scales with level and experience.  Kills with smite grant +20% gold.  Does not work against champions.  </br></br>1 minute cooldown. <b>(E)</b>"}
       );
 
 
@@ -281,13 +280,13 @@ Game.prototype.createMonsters = function() {
 
       scaleHealth =  newHealth / MONSTER_HEALTH;
       scaleExp = 999990000000000000 / MONSTER_EXPERIENCE;
-      scaleReward = 999990000000000 / MONSTER_REWARD;
+      scaleReward = 666660000000000 / MONSTER_REWARD;
     }
 
     type = CHAMPIONS.indexOf(monster) > -1 ? MONSTER_CHAMPION : MONSTER_JUNGLE;
     monsters[monster] = new Monster(this, i + 1, MONSTER_HEALTH * scaleHealth,
-                                                 MONSTER_EXPERIENCE * scaleExp,
-                                                 MONSTER_REWARD * scaleReward,
+                                                 MONSTER_EXPERIENCE * scaleExp + 10 * (i + 1),
+                                                 MONSTER_REWARD * scaleReward + 10 * (i + 1),
                                                  type);
   }
   return monsters;
@@ -558,12 +557,6 @@ Game.prototype.buyItem = function(name, count) {
   count = count ? count : 1;
   var item = this.items[name];
   var bought = 0;
-
-  // control + click buys 5
-  // shift + click buys 10
-  // control + shift + click buys 50
-  // var ctrl = window.event.ctrlKey ? 5 : 1;
-  // var shift = window.event.shiftKey ? 10 : 1;
   while (count--) {
     if (this.gold >= item.cost) {
       this.gold -= item.cost;
@@ -641,7 +634,6 @@ Game.prototype.selectMonster = function(direction) {
 
   this.monster = this.monstersAvailable[index];
   this.unlockSpells();
-//  this.updateButtons();
 };
 
 // Threshold functions
@@ -839,7 +831,7 @@ Game.prototype.getTributeBonus = function() {
 };
 
 Game.prototype.getSmiteDamage = function() {
-  return 150 + this.damageStat * this.attackrateStat * 10 + MONSTER_HEALTH * Math.pow(this.scaleMonsterLevelHealth, this.level - 1) * .05;
+  return MONSTER_HEALTH * Math.pow(this.scaleMonsterLevelHealth, this.level - 1) * (.1 + .001 * this.getExperiencePercent());
 };
 
 Game.prototype.getIgniteDamage = function() {
@@ -950,7 +942,6 @@ Game.prototype.saveStats = function() {
   obj['attackrateStat'] = this.attackrateStat;
   obj['income'] = this.income;
 
-  obj['damage'] = this.damage;
   obj['damageRate'] = this.damageRate;
   obj['damagePerClick'] = this.damagePerClick;
 
@@ -1069,9 +1060,10 @@ Game.prototype.load = function() {
 
 Game.prototype.loadProgress = function() {
   var obj = localStorage.getItem('progress', obj);
-  if (obj)
+  if (obj) {
     obj = JSON.parse(obj);
-  return obj || this.initProgress();
+    $.extend(this.progress, obj);
+  }
 };
 
 Game.prototype.loadGame = function() {
@@ -1152,7 +1144,7 @@ Game.prototype.loadMonsters = function(obj) {
 };
 
 Game.prototype.initProgress = function() {
-  var progress = {};
+  progress = {};
 
   progress['general'] = {};
   progress['general']['timePlayed'] = 0;
@@ -1213,9 +1205,7 @@ Game.prototype.initProgress = function() {
   progress['times']['impossible'] = {'difficulty': 'impossible', 'count': null, 'order': 4};
 
   progress['pointsEarned'] = 0;
-
-
-  return progress;
+  this.progress = progress;
 }
 
 Game.prototype.newGame = function(reset, difficulty) {

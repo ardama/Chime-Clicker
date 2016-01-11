@@ -8,63 +8,66 @@
 <script src="js/help.js"></script>
 <link rel="shortcut icon" href="favicon.ico" type="image/icon">
 <link rel="icon" href="favicon.ico" type="image/icon">
-<link href="output.css" rel="stylesheet" type="text/css">
+<link href="subpage.css" rel="stylesheet" type="text/css">
 <link href="tooltipster.css" rel="stylesheet" type="text/css">
 <link href='http://fonts.googleapis.com/css?family=Rajdhani:400,600' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
 </head>
 <body>
-<div id="help-wrapper">
+<div id="help-wrapper" class="wrapper">
   <div id="header" class="container title">
 		<a id="header-home" class="header-link" href="index.html">
 			<img id="header-icon" src="images/Mask_negative.png"></img>
 			Chime Clicker
 		</a>
 		<div id="header-link-container">
-      <a id="header-about" class="header-link" href="about.html">
-        About
-      </a>
-      <a id="header-help" class="header-link" href="help.html">
-        Help
-      </a>
+      <a id="header-issues" class="header-link" href="issues.html">
+				Issues
+			</a>
+			<a id="header-about" class="header-link" href="about.html">
+				About
+			</a>
+			<a id="header-help" class="header-link" href="help.html">
+				Help
+			</a>
 		</div>
 	</div>
 	<div id="main-container" class="container">
 		<div class="row">
       <div id="content">
         <h4>Introduction</h4>
-        <p>Chime Clicker is <a href="http://na.leagueoflegends.com/">League of Legends</a> themed incremental game based off <a href="http://na.leagueoflegends.com/en/champion-reveal/bard-wandering-caretaker">Bard, the Wandering Caretaker</a>.  Your goal is to collect chimes, kill monsters, and gain experience as you level up to victory.  To help you get there are a series of items, upgrades, and spells that you'll unlock along the way.</p>
+        <p>Chime Clicker is <a href="http://na.leagueoflegends.com/">League of Legends</a> themed incremental game based off <a href="http://na.leagueoflegends.com/en/champion-reveal/bard-wandering-caretaker">Bard, the Wandering Caretaker</a>.  Your goal is to collect chimes, kill monsters, and gain experience as you level up to victory.  To help you get there are a series of items, upgrades, and spells that you&#8217;ll unlock along the way.</p>
         <br/>
 
         <h4>Chimes and Meeps</h4>
-        <p>Click the <b id="chime-button" class="tooltip">large chime button</b> in the top of the left panel to collect Chimes.  After gathering enough, you'll earn Meeps.  Each Meep grants bonus damage to help you kill monsters.  Collecting chimes also grants experience to help you level up.</p>
+        <p>Click the <b id="chime-button" class="tooltip">large chime button</b> in the top of the left panel to collect Chimes.  After gathering enough, you&#8217;ll earn Meeps.  Each Meep grants bonus damage to help you kill monsters.  Collecting chimes also grants experience to help you level up.</p>
         <br/>
 
         <h4>Monsters</h4>
-        <p>Click the <b id="monster-button" class="tooltip">large monster button</b> in the bottom of the left panel to deal damage to the current monster.  After defeating a monster by bringing its health to zero, you'll be rewarded with gold (to buy items and upgrades) and experience (to level up).  New monsters are unlocked at each level, but get progressively harder to kill.  You can always go back and fight easier opponents if the latest monster proves too strong.</p>
+        <p>Click the <b id="monster-button" class="tooltip">large monster button</b> in the bottom of the left panel to deal damage to the current monster.  After defeating a monster by bringing its health to zero, you&#8217;ll be rewarded with gold (to buy items and upgrades) and experience (to level up).  New monsters are unlocked at each level, but get progressively harder to kill.  You can always go back and fight easier opponents if the latest monster is too strong.</p>
         <br/>
 
         <h4>Items</h4>
-        <p>In the center panel are items to help you gather more chimes and kill monsters faster.  Each item has its own <b id="item-price" class="tooltip">price</b> that increases for every unit purchased. Buy multiple of an item at once using the additional <b id="item-purchase-buttons" class="tooltip">purchase buttons</b>. Item <b id="item-stats" class="tooltip">stats</b> consist of the following:</p>
-          <ul>
-            <li><b>Defense</b> - Chimes gathered per click, 1 defense = 1 chime per click.</li>
-            <li><b>Move Speed</b> - Automatic chime gathering, 1 move speed = 1 chime click per second.</li>
-            <li><b>Damage</b> - Damage dealt per click, 1 damage = 1 damage per click.</li>
-            <li><b>Attack Rate</b> - Automatic damage dealing, 1 attack rate = 1 damage click per second.</li>
-            <li><b>Income</b> - Gold generation, 1 income = 1 gold per second.</li>
-          </ul>
-          </br>
-        <p>When manually clicking the chime button, you'll gather additional chimes equal to 2% of total CPS (chimes per second, <b>Defense</b> &times; <b>Move Speed</b>).  Similarly, you'll deal extra damage equal to 2% of total DPS (damage per second, <b>Damage</b> &times; <b>Attack Rate</b>) when clicking the monster button.</p>
+        <p>The shop (center panel) holds items to help you gather more chimes and kill monsters faster.  Each item has its own <b id="item-price" class="tooltip">price</b> that increases for every unit purchased. Buy multiple of an item at once using the additional <b id="item-purchase-buttons" class="tooltip">purchase buttons</b>. Item <b id="item-stats" class="tooltip">stats</b> consist of the following:</p>
+        <ul>
+          <li><b>Defense</b> - Chimes gathered per click, 1 defense = 1 chime per click.</li>
+          <li><b>Move Speed</b> - Automatic chime gathering, 1 move speed = 1 chime click per second.</li>
+          <li><b>Damage</b> - Damage dealt per click, 1 damage = 1 damage per click.</li>
+          <li><b>Attack Rate</b> - Automatic damage dealing, 1 attack rate = 1 damage click per second.</li>
+          <li><b>Income</b> - Gold generation, 1 income = 1 gold per second.</li>
+        </ul>
+        <br/>
+        <p>When manually clicking the chime button, you&#8217;ll gather additional chimes equal to 2% of total CPS (chimes per second, <b>Defense</b> &times; <b>Move Speed</b>).  Similarly, you&#8217;ll deal extra damage equal to 2% of total DPS (damage per second, <b>Damage</b> &times; <b>Attack Rate</b>) when clicking the monster button.</p>
 
         <br/>
 
         <h4>Upgrades</h4>
-        <p>After leveling up enough, you'll start to unlock <b id="upgrade-upgrades" class="tooltip">upgrades</b> for your items.  As with items, each upgrade has its own price and stats.  After purchasing an upgrade, all past and future units of the associated item are granted bonus stats.</p>
+        <p>After leveling up enough, you&#8217;ll start to unlock <b id="upgrade-upgrades" class="tooltip">upgrades</b> for your items.  As with items, each upgrade has its own price and stats.  After purchasing an upgrade, all past and future units of the associated item are granted bonus stats.</p>
         <br/>
 
         <h4>Spells</h4>
-        <p>In the final panel, you'll find a series of <b id="spell-spells" class="tooltip">spells</b>, each with its own unique effect.  Unlock them all by leveling up or purchasing specific upgrades.  Spells are free to use, but most have cooldowns, during which a given spell becomes unusable.  Hover over unlocked spells to learn how each works.</p>
+        <p>On the right side, you&#8217;ll find a series of <b id="spell-spells" class="tooltip">spells</b>, each with its own unique effect.  Unlock them all by leveling up or purchasing specific upgrades.  Spells are free to use, but most have cooldowns, during which a given spell becomes unusable.  Hover over unlocked spells to learn how each works.</p>
         <br/>
 
         <h4>Hotkeys</h4>
@@ -96,12 +99,8 @@
             <li><b>s</b> - <b id="hotkey-next" class="tooltip">Next</b> monster.</li>
             <li><b>d</b> - <b id="hotkey-meep" class="tooltip">Hide</b> Meep progress.</li>
             <li><b>f</b> - <b id="hotkey-monster" class="tooltip">Hide</b> Monster progress.</li>
-
           </ul>
         </p>
-        <br/>
-
-
       </div>
     </div>
   </div>

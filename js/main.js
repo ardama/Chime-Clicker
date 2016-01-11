@@ -104,13 +104,13 @@ var SPECIAL_PLURALS = [ZHONYAS_HOURGLASS, LUDENS_ECHO, FIENDISH_CODEX, FLASH];
 // Default Values
 var STARTING_GOLD = 375;
 var CHIMES_PER_MEEP = 5;
-var CHIMES_EXPERIENCE = {'easy' : 1, 'medium' : 1, 'hard' : .5, 'marathon' : .25, 'impossible' : 0};
+var CHIMES_EXPERIENCE = {'easy' : 1, 'medium' : .75, 'hard' : .5, 'marathon' : .25, 'impossible' : 0};
 var MEEPS_DAMAGE = {'easy' : 2, 'medium' : 2, 'hard' : 1, 'marathon' : 1, 'impossible' : .5};
 var EXPERIENCE_NEEDED = 1250;
 var MONSTER_HEALTH = 200;
-var MONSTER_EXPERIENCE = 75;
-var MONSTER_REWARD = 25;
-var POINT_BONUS = {'easy' : 1, 'medium' : 2, 'hard' : 4, 'marathon' : 8, 'impossible' : 16};
+var MONSTER_EXPERIENCE = 65;
+var MONSTER_REWARD = 20;
+var POINT_BONUS = {'easy' : 1, 'medium' : 3, 'hard' : 9, 'marathon' : 27, 'impossible' : 81};
 
 var DIFFICULTIES = ['easy', 'medium', 'hard', 'marathon', 'impossible'];
 
@@ -229,7 +229,7 @@ var SHORT_NUMBER_NAMES = ['m', 'b', 't', 'qd', 'qt', 'sx', 'sp', 'o', 'n', 'd']
 function prettyIntBig(num, fixed) {
   fixed = fixed || 2;
   var n = Math.pow(10, fixed);
-  
+
   var a = num;
   var b = -2;
   while (a >= 1000) {
@@ -349,91 +349,94 @@ function initializeButtons(game) {
 
 function initializeHotkeys(game) {
   // Spell hotkeys
-  $(document).bind('keydown', 'q', function() {game.spellClick(GHOST)});
-  $(document).bind('keydown', 'w', function() {game.spellClick(FLASH)});
-  $(document).bind('keydown', 'e', function() {game.spellClick(SMITE)});
-  $(document).bind('keydown', 'r', function() {game.spellClick(IGNITE)});
-  $(document).bind('keydown', 't', function() {game.spellClick(EXHAUST)});
-  $(document).bind('keydown', 'y', function() {game.spellClick(TELEPORT)});
+  $(document).bind('keydown.q', function() {game.spellClick(GHOST)});
+  $(document).bind('keydown.w', function() {game.spellClick(FLASH)});
+  $(document).bind('keydown.e', function() {game.spellClick(SMITE)});
+  $(document).bind('keydown.r', function() {game.spellClick(IGNITE)});
+  $(document).bind('keydown.t', function() {game.spellClick(EXHAUST)});
+  $(document).bind('keydown.y', function() {game.spellClick(TELEPORT)});
 
   // Monster hotkeys
-  $(document).bind('keydown', 'a', function() {game.selectMonster('left')});
-  $(document).bind('keydown', 's', function() {game.selectMonster('right')});
+  $(document).bind('keydown.a', function() {game.selectMonster('left')});
+  $(document).bind('keydown.s', function() {game.selectMonster('right')});
 
   // Dropdown hotkeys
-  $(document).bind('keydown', 'd', function() {$('#chimes-bar-dropdown .dropdown-button').click()});
-  $(document).bind('keydown', 'f', function() {$('#damage-bar-dropdown .dropdown-button').click()});
+  $(document).bind('keydown.d', function() {$('#chimes-bar-dropdown .dropdown-button').click()});
+  $(document).bind('keydown.f', function() {$('#damage-bar-dropdown .dropdown-button').click()});
+
+  // Dialog hotkeys
+  $(document).bind('keydown.esc', function() {hideModal();});  
 
   // Item hotkeys
-  $(document).bind('keydown', '1', function() {game.buyItem(RELIC_SHIELD)});
-  $(document).bind('keydown', '2', function() {game.buyItem(ANCIENT_COIN)});
-  $(document).bind('keydown', '3', function() {game.buyItem(SPELLTHIEFS_EDGE)});
-  $(document).bind('keydown', '4', function() {game.buyItem(BOOTS_OF_SPEED)});
-  $(document).bind('keydown', '5', function() {game.buyItem(RUBY_CRYSTAL)});
-  $(document).bind('keydown', '6', function() {game.buyItem(AMPLIFYING_TOME)});
-  $(document).bind('keydown', '7', function() {game.buyItem(DAGGER)});
+  $(document).bind('keydown.1', function() {game.buyItem(RELIC_SHIELD)});
+  $(document).bind('keydown.2', function() {game.buyItem(ANCIENT_COIN)});
+  $(document).bind('keydown.3', function() {game.buyItem(SPELLTHIEFS_EDGE)});
+  $(document).bind('keydown.4', function() {game.buyItem(BOOTS_OF_SPEED)});
+  $(document).bind('keydown.5', function() {game.buyItem(RUBY_CRYSTAL)});
+  $(document).bind('keydown.6', function() {game.buyItem(AMPLIFYING_TOME)});
+  $(document).bind('keydown.7', function() {game.buyItem(DAGGER)});
 
-  $(document).bind('keydown', 'ctrl+1', function() {game.buyItem(RELIC_SHIELD, 10); return false;});
-  $(document).bind('keydown', 'ctrl+2', function() {game.buyItem(ANCIENT_COIN, 10); return false;});
-  $(document).bind('keydown', 'ctrl+3', function() {game.buyItem(SPELLTHIEFS_EDGE, 10); return false;});
-  $(document).bind('keydown', 'ctrl+4', function() {game.buyItem(BOOTS_OF_SPEED, 10); return false;});
-  $(document).bind('keydown', 'ctrl+5', function() {game.buyItem(RUBY_CRYSTAL, 10); return false;});
-  $(document).bind('keydown', 'ctrl+6', function() {game.buyItem(AMPLIFYING_TOME, 10); return false;});
-  $(document).bind('keydown', 'ctrl+7', function() {game.buyItem(DAGGER, 10); return false;});
+  $(document).bind('keydown.ctrl_1', function() {game.buyItem(RELIC_SHIELD, 10); return false;});
+  $(document).bind('keydown.ctrl_2', function() {game.buyItem(ANCIENT_COIN, 10); return false;});
+  $(document).bind('keydown.ctrl_3', function() {game.buyItem(SPELLTHIEFS_EDGE, 10); return false;});
+  $(document).bind('keydown.ctrl_4', function() {game.buyItem(BOOTS_OF_SPEED, 10); return false;});
+  $(document).bind('keydown.ctrl_5', function() {game.buyItem(RUBY_CRYSTAL, 10); return false;});
+  $(document).bind('keydown.ctrl_6', function() {game.buyItem(AMPLIFYING_TOME, 10); return false;});
+  $(document).bind('keydown.ctrl_7', function() {game.buyItem(DAGGER, 10); return false;});
 
-  $(document).bind('keydown', 'shift+1', function() {game.buyItem(RELIC_SHIELD, 100)});
-  $(document).bind('keydown', 'shift+2', function() {game.buyItem(ANCIENT_COIN, 100)});
-  $(document).bind('keydown', 'shift+3', function() {game.buyItem(SPELLTHIEFS_EDGE, 100)});
-  $(document).bind('keydown', 'shift+4', function() {game.buyItem(BOOTS_OF_SPEED, 100)});
-  $(document).bind('keydown', 'shift+5', function() {game.buyItem(RUBY_CRYSTAL, 100)});
-  $(document).bind('keydown', 'shift+6', function() {game.buyItem(AMPLIFYING_TOME, 100)});
-  $(document).bind('keydown', 'shift+7', function() {game.buyItem(DAGGER, 100)});
+  $(document).bind('keydown.shift_1', function() {game.buyItem(RELIC_SHIELD, 100)});
+  $(document).bind('keydown.shift_2', function() {game.buyItem(ANCIENT_COIN, 100)});
+  $(document).bind('keydown.shift_3', function() {game.buyItem(SPELLTHIEFS_EDGE, 100)});
+  $(document).bind('keydown.shift_4', function() {game.buyItem(BOOTS_OF_SPEED, 100)});
+  $(document).bind('keydown.shift_5', function() {game.buyItem(RUBY_CRYSTAL, 100)});
+  $(document).bind('keydown.shift_6', function() {game.buyItem(AMPLIFYING_TOME, 100)});
+  $(document).bind('keydown.shift_7', function() {game.buyItem(DAGGER, 100)});
 
-  $(document).bind('keydown', 'ctrl+shift+1', function() {game.buyItem(RELIC_SHIELD, 1000)});
-  $(document).bind('keydown', 'ctrl+shift+2', function() {game.buyItem(ANCIENT_COIN, 1000)});
-  $(document).bind('keydown', 'ctrl+shift+3', function() {game.buyItem(SPELLTHIEFS_EDGE, 1000)});
-  $(document).bind('keydown', 'ctrl+shift+4', function() {game.buyItem(BOOTS_OF_SPEED, 1000)});
-  $(document).bind('keydown', 'ctrl+shift+5', function() {game.buyItem(RUBY_CRYSTAL, 1000)});
-  $(document).bind('keydown', 'ctrl+shift+6', function() {game.buyItem(AMPLIFYING_TOME, 1000)});
-  $(document).bind('keydown', 'ctrl+shift+7', function() {game.buyItem(DAGGER, 1000)});
+  $(document).bind('keydown.ctrl_shift_1', function() {game.buyItem(RELIC_SHIELD, 1000)});
+  $(document).bind('keydown.ctrl_shift_2', function() {game.buyItem(ANCIENT_COIN, 1000)});
+  $(document).bind('keydown.ctrl_shift_3', function() {game.buyItem(SPELLTHIEFS_EDGE, 1000)});
+  $(document).bind('keydown.ctrl_shift_4', function() {game.buyItem(BOOTS_OF_SPEED, 1000)});
+  $(document).bind('keydown.ctrl_shift_5', function() {game.buyItem(RUBY_CRYSTAL, 1000)});
+  $(document).bind('keydown.ctrl_shift_6', function() {game.buyItem(AMPLIFYING_TOME, 1000)});
+  $(document).bind('keydown.ctrl_shift_7', function() {game.buyItem(DAGGER, 1000)});
 
-  $(document).bind('keydown', 'alt+1',
+  $(document).bind('keydown.alt_1',
     function() {
       var upgrade = game.items[RELIC_SHIELD].upgradesAvailable[0];
       if (upgrade) {game.buyUpgrade(upgrade);}
     }
   );
-  $(document).bind('keydown', 'alt+2',
+  $(document).bind('keydown.alt_2',
     function() {
       var upgrade = game.items[ANCIENT_COIN].upgradesAvailable[0];
       if (upgrade) {game.buyUpgrade(upgrade);}
     }
   );
-  $(document).bind('keydown', 'alt+3',
+  $(document).bind('keydown.alt_3',
     function() {
       var upgrade = game.items[SPELLTHIEFS_EDGE].upgradesAvailable[0];
       if (upgrade) {game.buyUpgrade(upgrade);}
     }
   );
-  $(document).bind('keydown', 'alt+4',
+  $(document).bind('keydown.alt_4',
     function() {
       var upgrade = game.items[BOOTS_OF_SPEED].upgradesAvailable[0];
       if (upgrade) {game.buyUpgrade(upgrade);}
     }
   );
-  $(document).bind('keydown', 'alt+5',
+  $(document).bind('keydown.alt_5',
     function() {
       var upgrade = game.items[RUBY_CRYSTAL].upgradesAvailable[0];
       if (upgrade) {game.buyUpgrade(upgrade);}
     }
   );
-  $(document).bind('keydown', 'alt+6',
+  $(document).bind('keydown.alt_6',
     function() {
       var upgrade = game.items[AMPLIFYING_TOME].upgradesAvailable[0];
       if (upgrade) {game.buyUpgrade(upgrade);}
     }
   );
-  $(document).bind('keydown', 'alt+7',
+  $(document).bind('keydown.alt_7',
     function() {
       var upgrade = game.items[DAGGER].upgradesAvailable[0];
       if (upgrade) {game.buyUpgrade(upgrade);}

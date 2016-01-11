@@ -1,0 +1,138 @@
+body {
+  padding: 0;
+  margin: 0;
+  min-width: 950px;
+  font-family: "Rajdhani", "Trebuchet MS", sans-serif;
+  overflow-y: hidden; }
+
+#header {
+  position: relative;
+  z-index: 10;
+  min-width: 950px;
+  height: 36px;
+  margin-top: -36px;
+  color: white;
+  font-size: 20px;
+  line-height: 36px;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: #131313;
+  -webkit-box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.75); }
+  #header #header-home {
+    float: left;
+    color: white;
+    text-decoration: none; }
+  #header #header-icon {
+    float: left;
+    height: 24px;
+    padding: 6px 12px 6px 18px; }
+  #header #header-link-container {
+    float: right;
+    margin-right: 60px;
+    border-left: 1px solid black;
+    border-right: 1px solid #191919; }
+    #header #header-link-container .header-link {
+      float: right;
+      width: 90px;
+      height: 100%;
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.7);
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      border-left: 1px solid #191919;
+      border-right: 1px solid black; }
+    #header #header-link-container .header-link:hover {
+      background-color: #263238;
+      color: white;
+      border-left: 1px solid #263238; }
+    #header #header-link-container .header-link:active {
+      background-color: #1e272c;
+      border-left: 1px solid #1e272c; }
+
+#main-container {
+  float: left;
+  width: 100%;
+  min-width: 950px;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+.row {
+  float: left;
+  position: relative;
+  width: 100%; }
+
+.container {
+  font-size: 16px; }
+
+.wrapper {
+  padding: 36px 0 0 0; }
+  .wrapper #header {
+    min-width: 600px; }
+  .wrapper #main-container {
+    min-width: 600px;
+    overflow-x: auto; }
+  .wrapper .row {
+    color: white;
+    background-color: black;
+    height: calc(100vh - 36px);
+    overflow: auto; }
+
+#content {
+  width: calc(100% - 80px);
+  max-width: 850px;
+  height: calc(100% - 48px);
+  overflow-y: auto;
+  margin: auto;
+  padding: 24px 40px;
+  background-color: #171c1e; }
+  #content h4 {
+    color: #ffcc5f;
+    font-size: 18px;
+    margin-top: 4px;
+    margin-bottom: 4px; }
+  #content p {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    line-height: 22px;
+    font-size: 14px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
+  #content a {
+    text-decoration: none;
+    color: #3e9dff; }
+  #content ul {
+    list-style-type: none;
+    padding-left: 16px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 22px;
+    font-size: 14px;
+    margin-bottom: 0px; }
+  #content .tooltip {
+    font-weight: normal;
+    color: #3e9dff;
+    cursor: pointer; }
+
+#content::-webkit-scrollbar {
+  width: 6px;
+  height: 6px; }
+
+#content::-webkit-scrollbar-track {
+  background-color: #191919; }
+
+#content::-webkit-scrollbar-thumb {
+  background: rgba(245, 245, 245, 0.7); }
+
+#content::-webkit-scrollbar-thumb:hover {
+  background: whitesmoke; }
