@@ -1,16 +1,16 @@
-var Item = function(game, cost, level, discovery, swiftness, power, agility, income) {
-  this.Init(game, cost, level, discovery, swiftness, power, agility, income);
+var Item = function(game, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income) {
+  this.Init(game, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income);
 };
 
-Item.prototype.Init = function(game, cost, level, discovery, swiftness, power, agility, income) {
+Item.prototype.Init = function(game, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income) {
   this.game = game;
   this.cost = cost;
   this.level = level;
   this.startCost = cost;
-  this.discovery = discovery;
-  this.swiftness = swiftness;
-  this.power = power;
-  this.agility = agility;
+  this.defenseStat = defenseStat;
+  this.movespeedStat = movespeedStat;
+  this.damageStat = damageStat;
+  this.attackrateStat = attackrateStat;
   this.income = income;
 
   this.unlock = function(game) {
@@ -28,19 +28,19 @@ Item.prototype.isZero = function(stat) {
   return this[stat] ? '' : 'item-zero';
 };
 
-var Upgrade = function(game, item, cost, level, discovery, swiftness, power, agility, income, requirements) {
-  this.Init(game, item, cost, level, discovery, swiftness, power, agility, income, requirements);
+var Upgrade = function(game, item, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income, requirements) {
+  this.Init(game, item, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income, requirements);
 };
 
-Upgrade.prototype.Init = function(game, item, cost, level, discovery, swiftness, power, agility, income, requirements) {
+Upgrade.prototype.Init = function(game, item, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income, requirements) {
   this.game = game;
   this.item = item;
   this.cost = cost;
   this.level = level;
-  this.discovery = discovery;
-  this.swiftness = swiftness;
-  this.power = power;
-  this.agility = agility;
+  this.defenseStat = defenseStat;
+  this.movespeedStat = movespeedStat;
+  this.damageStat = damageStat;
+  this.attackrateStat = attackrateStat;
   this.income = income;
 
   this.unlock = function(game) {

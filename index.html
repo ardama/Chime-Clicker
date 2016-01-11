@@ -155,24 +155,24 @@
 								</div>
 							</div>
 							<div id="game-stats">
-								<div id="discovery-value" class="game-stat game-stat-top game-stat-left">
+								<div id="defenseStat-value" class="game-stat game-stat-top game-stat-left">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Chimes collected per click.">
-										<div class="game-stat-name">{{game.getStatNameVariable('Defense', 100)}}</div> {{game.prettyIntCompact(game.discovery)}}
+										<div class="game-stat-name">{{game.getStatNameVariable('Defense', 100)}}</div> {{game.prettyIntCompact(game.defenseStat)}}
 									</div>
 								</div>
-								<div id="power-value" class="game-stat game-stat-top game-stat-right">
+								<div id="damageStat-value" class="game-stat game-stat-top game-stat-right">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Damage dealt per click.">
-										<div class="game-stat-name">{{game.getStatNameVariable('Damage', 100)}}</div> {{game.prettyIntCompact(game.power)}}
+										<div class="game-stat-name">{{game.getStatNameVariable('Damage', 100)}}</div> {{game.prettyIntCompact(game.damageStat)}}
 									</div>
 								</div>
-								<div id="swiftness-value" class="game-stat game-stat-bottom game-stat-left">
+								<div id="movespeedStat-value" class="game-stat game-stat-bottom game-stat-left">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Chime clicks per second.">
-										<div class="game-stat-name">{{game.getStatNameVariable('Movespeed', 100)}}</div> {{game.prettyIntCompact(game.swiftness)}}
+										<div class="game-stat-name">{{game.getStatNameVariable('Move speed', 100)}}</div> {{game.prettyIntCompact(game.movespeedStat)}}
 									</div>
 								</div>
-								<div id="agility-value" class="game-stat game-stat-bottom game-stat-right">
+								<div id="attackrateStat-value" class="game-stat game-stat-bottom game-stat-right">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Damage clicks per second.">
-										<div class="game-stat-name">{{game.getStatNameVariable('Attackspeed', 100)}}</div> {{game.prettyIntCompact(game.agility)}}
+										<div class="game-stat-name">{{game.getStatNameVariable('Attack rate', 100)}}</div> {{game.prettyIntCompact(game.attackrateStat)}}
 									</div>
 								</div>
 							</div>
@@ -224,24 +224,24 @@
 						<!-- item content -->
 						<div class="item-middle">
 							<div class="item-stats">
-								<div class="item-stat {{game.items[item].isZero('discovery')}} discovery">Defense</div>
-								<div class="item-stat {{game.items[item].isZero('swiftness')}} swiftness">Movespeed</div>
-								<div class="item-stat {{game.items[item].isZero('power')}} power">Damage</div>
-								<div class="item-stat {{game.items[item].isZero('agility')}} agility">Attackspeed</div>
+								<div class="item-stat {{game.items[item].isZero('defenseStat')}} defenseStat">Defense</div>
+								<div class="item-stat {{game.items[item].isZero('movespeedStat')}} movespeedStat">Move speed</div>
+								<div class="item-stat {{game.items[item].isZero('damageStat')}} damageStat">Damage</div>
+								<div class="item-stat {{game.items[item].isZero('attackrateStat')}} attackrateStat">Attack rate</div>
 								<div class="item-stat {{game.items[item].isZero('income')}} income">Income</div>
 							</div>
 							<div class="item-stat-values">
-								<div class="item-stat-value {{game.items[item].isZero('discovery')}} discovery">
-									{{game.prettyIntCompact(game.items[item].discovery)}}
+								<div class="item-stat-value {{game.items[item].isZero('defenseStat')}} defenseStat">
+									{{game.prettyIntCompact(game.items[item].defenseStat)}}
 								</div>
-								<div class="item-stat-value {{game.items[item].isZero('swiftness')}} swiftness">
-									{{game.prettyIntCompact(game.items[item].swiftness)}}
+								<div class="item-stat-value {{game.items[item].isZero('movespeedStat')}} movespeedStat">
+									{{game.prettyIntCompact(game.items[item].movespeedStat)}}
 								</div>
-								<div class="item-stat-value {{game.items[item].isZero('power')}} power">
-									{{game.prettyIntCompact(game.items[item].power)}}
+								<div class="item-stat-value {{game.items[item].isZero('damageStat')}} damageStat">
+									{{game.prettyIntCompact(game.items[item].damageStat)}}
 								</div>
-								<div class="item-stat-value {{game.items[item].isZero('agility')}} agility">
-									{{game.prettyIntCompact(game.items[item].agility)}}
+								<div class="item-stat-value {{game.items[item].isZero('attackrateStat')}} attackrateStat">
+									{{game.prettyIntCompact(game.items[item].attackrateStat)}}
 								</div>
 								<div class="item-stat-value {{game.items[item].isZero('income')}} income">
 									{{game.prettyIntCompact(game.items[item].income)}}
@@ -254,17 +254,17 @@
 								<div class="upgrade-wrapper">
 									<div ng-repeat="upgradeAvailable in game.items[item].upgradesAvailable.slice(0, 1)" class="upgrade container touch-target" ng-click="game.buyUpgrade(upgradeAvailable)">
 										<div class="upgrade-stats">
-											<div class="upgrade-stat {{game.upgrades[upgradeAvailable].isZero('discovery')}}">
-													+{{game.upgrades[upgradeAvailable].discovery}}
+											<div class="upgrade-stat {{game.upgrades[upgradeAvailable].isZero('defenseStat')}}">
+													+{{game.upgrades[upgradeAvailable].defenseStat}}
 											</div>
-											<div class="upgrade-stat {{game.upgrades[upgradeAvailable].isZero('swiftness')}}">
-													+{{game.upgrades[upgradeAvailable].swiftness}}
+											<div class="upgrade-stat {{game.upgrades[upgradeAvailable].isZero('movespeedStat')}}">
+													+{{game.upgrades[upgradeAvailable].movespeedStat}}
 											</div>
-											<div class="upgrade-stat {{game.upgrades[upgradeAvailable].isZero('power')}}">
-													+{{game.upgrades[upgradeAvailable].power}}
+											<div class="upgrade-stat {{game.upgrades[upgradeAvailable].isZero('damageStat')}}">
+													+{{game.upgrades[upgradeAvailable].damageStat}}
 											</div>
-											<div class="upgrade-stat {{game.upgrades[upgradeAvailable].isZero('agility')}}">
-													+{{game.upgrades[upgradeAvailable].agility}}
+											<div class="upgrade-stat {{game.upgrades[upgradeAvailable].isZero('attackrateStat')}}">
+													+{{game.upgrades[upgradeAvailable].attackrateStat}}
 											</div>
 											<div class="upgrade-stat {{game.upgrades[upgradeAvailable].isZero('income')}}">
 													+{{game.upgrades[upgradeAvailable].income}}

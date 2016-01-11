@@ -53,10 +53,10 @@ Game.prototype.Init = function(scope, difficulty) {
   this.gold = STARTING_GOLD;
   this.goldRate = 0;
 
-  this.discovery = 1;
-  this.swiftness = 0;
-  this.power = 5;
-  this.agility = 0;
+  this.defenseStat = 1;
+  this.movespeedStat = 0;
+  this.damageStat = 5;
+  this.attackrateStat = 0;
   this.income = 0;
 
   this.damage = 0;
@@ -183,77 +183,77 @@ Game.prototype.createSpells = function() {
       function(game) {game.smiteBonus = .20;
                       game.addDamage(game.getSmiteDamage(), true);
                       game.smiteBonus = 0;},
-        function(game) {},
-        function(game) {return game.level >= 2},
-        function(game) {return game.spells[SMITE].status == game.LOCKED ? "":
-                        "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage instantly.  Damage scales with level.  Kills with smite grant +20% gold.  Does not work against champions.  </br></br>1 minute cooldown. <b>(E)</b>"}
+      function(game) {},
+      function(game) {return game.level >= 2},
+      function(game) {return game.spells[SMITE].status == game.LOCKED ? "":
+      "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage instantly.  Damage scales with level and DPS.  Kills with smite grant +20% gold.  Does not work against champions.  </br></br>1 minute cooldown. <b>(E)</b>"}
       );
 
 
     spells[IGNITE] = new Spell(this, 5, 120, SPELL_ACTIVE, MONSTER_CHAMPION,
-        function(game) {game.igniteDamageRate = game.igniteDamage / 5;},
-        function(game) {game.igniteDamageRate = 0},
-        function(game) {return game.level >= 16},
-        function(game) {return game.spells[IGNITE].status == game.LOCKED ? "":
-                        "Deal <b>" + game.prettyIntCompact(game.igniteDamage) + "</b> damage over 5 seconds.  Damage scales with level.  Only works against champions.  </br></br>2 minute cooldown. <b>(R)</b>"}
+      function(game) {game.igniteDamageRate = game.igniteDamage / 5;},
+      function(game) {game.igniteDamageRate = 0},
+      function(game) {return game.level >= 16},
+      function(game) {return game.spells[IGNITE].status == game.LOCKED ? "":
+      "Deal <b>" + game.prettyIntCompact(game.igniteDamage) + "</b> damage over 5 seconds.  Damage scales with level.  Only works against champions.  </br></br>2 minute cooldown. <b>(R)</b>"}
     );
 
     spells[EXHAUST] = new Spell(this, 10, 90, SPELL_ACTIVE, MONSTER_CHAMPION,
-        function(game) {game.exhaustBonus = 2.0;},
-        function(game) {game.exhaustBonus = 1.0},
-        function(game) {return game.level >= 17},
-        function(game) {return game.spells[EXHAUST].status == game.LOCKED ? "":
-                        "+100% damage dealt for 10 seconds.  Only works against champions.  </br></br>90 second cooldown. <b>(T)</b>"}
+      function(game) {game.exhaustBonus = 2.0;},
+      function(game) {game.exhaustBonus = 1.0},
+      function(game) {return game.level >= 17},
+      function(game) {return game.spells[EXHAUST].status == game.LOCKED ? "":
+      "+100% damage dealt for 10 seconds.  Only works against champions.  </br></br>90 second cooldown. <b>(T)</b>"}
     );
 
     spells[TELEPORT] = new Spell(this, 0, 300, SPELL_ACTIVE, MONSTER_ALL,
-        function(game) {},
-        function(game) {var cooldownSpells = game.getObjectsByStatus(game.spells, game.COOLDOWN);
-                        var len = cooldownSpells.length;
-                        for (var i = 0; i < len; i++) {
-                          var spell = game.spells[cooldownSpells[i]];
-                          spell.cooldownLeft = 0;
-                          spell.status = game.AVAILABLE;
-                        }
-                        var activeSpells = game.getObjectsByStatus(game.spells, game.ACTIVE);
-                        len = activeSpells.length;
-                        for (var i = 0; i < len; i++) {
-                          var spell = game.spells[activeSpells[i]];
-                          spell.durationLeft = spell.duration;
-                        }
-                       },
-        function(game) {return game.level >= 13},
-        function(game) {return game.spells[TELEPORT].status == game.LOCKED ? "":
-                        "Reset cooldowns of all spells.  </br></br>5 minute cooldown. <b>(Y)</b>"}
+      function(game) {},
+      function(game) {var cooldownSpells = game.getObjectsByStatus(game.spells, game.COOLDOWN);
+                      var len = cooldownSpells.length;
+                      for (var i = 0; i < len; i++) {
+                        var spell = game.spells[cooldownSpells[i]];
+                        spell.cooldownLeft = 0;
+                        spell.status = game.AVAILABLE;
+                      }
+                      var activeSpells = game.getObjectsByStatus(game.spells, game.ACTIVE);
+                      len = activeSpells.length;
+                      for (var i = 0; i < len; i++) {
+                        var spell = game.spells[activeSpells[i]];
+                        spell.durationLeft = spell.duration;
+                      }
+                     },
+      function(game) {return game.level >= 13},
+      function(game) {return game.spells[TELEPORT].status == game.LOCKED ? "":
+      "Reset cooldowns of all spells.  </br></br>5 minute cooldown. <b>(Y)</b>"}
     );
 
     spells[SPOILS_OF_WAR] = new Spell(this, 0, 45, SPELL_PASSIVE, MONSTER_JUNGLE,
-        function(game) {game.spoilsOfWarActive = 1;
-                        game.killMonster();
-                        game.spoilsOfWarActive = 0;},
-        function(game) {},
-        function(game) {return game.upgrades[FACE_OF_THE_MOUNTAIN].status == game.PURCHASED;},
-        function(game) {return game.spells[SPOILS_OF_WAR].status == game.LOCKED ? "":
-                        "Execute monsters below 30% max health on click, gaining <b>+" + (game.spoilsOfWarBonus * 100).toFixed(1) + "%</b> reward gold.  Gold scales with Relic Shields owned.  Does not work against champions. </br></br>45 second cooldown."}
+      function(game) {game.spoilsOfWarActive = 1;
+                      game.killMonster();
+                      game.spoilsOfWarActive = 0;},
+      function(game) {},
+      function(game) {return game.upgrades[FACE_OF_THE_MOUNTAIN].status == game.PURCHASED;},
+      function(game) {return game.spells[SPOILS_OF_WAR].status == game.LOCKED ? "":
+      "Execute monsters below 25% max health on click, gaining <b>+" + (game.spoilsOfWarBonus * 100).toFixed(1) + "%</b> reward gold.  Gold scales with Relic Shields owned.  Does not work against champions. </br></br>45 second cooldown."}
     );
 
     spells[FAVOR] = new Spell(this, 0, 0, SPELL_PASSIVE, MONSTER_ALL,
-        function(game) {},
-        function(game) {},
-        function(game) {return game.upgrades[TALISMAN_OF_ASCENSION].status == game.PURCHASED;},
-        function(game) {return game.spells[FAVOR].status == game.LOCKED ? "":
-                        "Passively gain <b>+" + (game.favorBonus * 100).toFixed(1) + "%</b> gold from monsters killed.  Gold scales with Ancient Coins owned."}
+      function(game) {},
+      function(game) {},
+      function(game) {return game.upgrades[TALISMAN_OF_ASCENSION].status == game.PURCHASED;},
+      function(game) {return game.spells[FAVOR].status == game.LOCKED ? "":
+      "Passively gain <b>+" + (game.favorBonus * 100).toFixed(1) + "%</b> gold from monsters killed.  Gold scales with Ancient Coins owned."}
     );
 
     spells[TRIBUTE] = new Spell(this, 0, 30, SPELL_PASSIVE, MONSTER_ALL,
-        function(game) {var gold = Math.ceil(game.monsters[game.monster].gold * game.tributeBonus);
-                        gold /= game.monster == TEEMO ? 10 : 1;
-                        game.gold += gold;
-                        game.progress.spells[TRIBUTE].goldGained += gold;},
-        function(game) {},
-        function(game) {return game.upgrades[FROST_QUEENS_CLAIM].status == game.PURCHASED;},
-        function(game) {return game.spells[TRIBUTE].status == game.LOCKED ? "":
-                        "Gain <b>" + (game.tributeBonus * 100).toFixed(1) + "%</b> of reward gold on monster click.  Gold scales with Spellthief's Edges owned. </br></br>30 second cooldown."}
+      function(game) {var gold = Math.ceil(game.monsters[game.monster].gold * game.tributeBonus);
+                      gold /= game.monster == TEEMO ? 10 : 1;
+                      game.gold += gold;
+                      game.progress.spells[TRIBUTE].goldGained += gold;},
+      function(game) {},
+      function(game) {return game.upgrades[FROST_QUEENS_CLAIM].status == game.PURCHASED;},
+      function(game) {return game.spells[TRIBUTE].status == game.LOCKED ? "":
+      "Gain <b>" + (game.tributeBonus * 100).toFixed(1) + "%</b> of reward gold on monster click.  Gold scales with Spellthief's Edges owned. </br></br>30 second cooldown."}
     );
 
     return spells;
@@ -299,8 +299,11 @@ Game.prototype.start = function() {
     thisRef.scope.$apply(function(scope) {
       thisRef.step(thisRef.stepSize);
     });
-    updateTooltips();
   }, thisRef.stepSize * 1000);
+
+  window.setInterval(function() {
+    updateTooltips();
+  }, 200);
 };
 
 
@@ -335,7 +338,7 @@ Game.prototype.addChimes = function(chimes) {
 
 Game.prototype.addDamage = function(damage, user) {
   var monster = this.monsters[this.monster];
-  var executeThreshold = .30 * monster.maxHealth;
+  var executeThreshold = .25 * monster.maxHealth;
   var currentHealth = monster.currentHealth;
   if (user && this.spells[SPOILS_OF_WAR].status == this.AVAILABLE && currentHealth - damage <= executeThreshold) {
     if (currentHealth > executeThreshold)
@@ -369,7 +372,7 @@ Game.prototype.addMeeps = function(meeps) {
   meeps = meeps || 1;
 
   this.meeps += meeps;
-  this.power += meeps * this.meepDamage;
+  this.damageStat += meeps * this.meepDamage;
   this.progress.general.totalMeeps += meeps;
 
   while (meeps--) {
@@ -425,13 +428,13 @@ Game.prototype.addSpellTime = function(time) {
 
 // Update Functions
 Game.prototype.updateStats = function() {
-  this.chimesRate = this.discovery * this.swiftness * this.ghostBonus;
-  // chimes collected equals base discovery + 2% of current cps
-  this.chimesPerClick = this.discovery * this.ghostBonus + .02 * this.chimesRate;
+  this.chimesRate = this.defenseStat * this.movespeedStat * this.ghostBonus;
+  // chimes collected equals base defenseStat + 2% of current cps
+  this.chimesPerClick = this.defenseStat * this.ghostBonus + .02 * this.chimesRate;
 
-  this.damageRate = this.power * this.agility * this.exhaustBonus + this.igniteDamageRate;
-  // damage dealt equals base power + 2% of current dps
-  this.damagePerClick = this.exhaustBonus * this.power + .02 * this.damageRate;
+  this.damageRate = this.damageStat * this.attackrateStat * this.exhaustBonus + this.igniteDamageRate;
+  // damage dealt equals base damageStat + 2% of current dps
+  this.damagePerClick = this.exhaustBonus * this.damageStat + .02 * this.damageRate;
 
   this.goldRate = this.income;
 };
@@ -576,10 +579,10 @@ Game.prototype.buyItem = function(name, count) {
     }
   }
 
-  this.discovery += bought * item.discovery;
-  this.swiftness += bought * item.swiftness;
-  this.power += bought * item.power;
-  this.agility += bought * item.agility;
+  this.defenseStat += bought * item.defenseStat;
+  this.movespeedStat += bought * item.movespeedStat;
+  this.damageStat += bought * item.damageStat;
+  this.attackrateStat += bought * item.attackrateStat;
   this.income += bought * item.income;
 
   this.progress.items[name].count += bought;
@@ -602,10 +605,10 @@ Game.prototype.buyUpgrade = function(name) {
 
     // Upgrade all future items
     var item = this.items[upgrade.item];
-    item.discovery += upgrade.discovery;
-    item.swiftness += upgrade.swiftness;
-    item.power += upgrade.power;
-    item.agility += upgrade.agility;
+    item.defenseStat += upgrade.defenseStat;
+    item.movespeedStat += upgrade.movespeedStat;
+    item.damageStat += upgrade.damageStat;
+    item.attackrateStat += upgrade.attackrateStat;
     item.income += upgrade.income;
 
     item.upgrades.push(name);
@@ -613,10 +616,10 @@ Game.prototype.buyUpgrade = function(name) {
 
     // Upgrade all previously bought items
     var count = item.count;
-    this.discovery += count * upgrade.discovery;
-    this.swiftness += count * upgrade.swiftness;
-    this.power += count * upgrade.power;
-    this.agility += count * upgrade.agility;
+    this.defenseStat += count * upgrade.defenseStat;
+    this.movespeedStat += count * upgrade.movespeedStat;
+    this.damageStat += count * upgrade.damageStat;
+    this.attackrateStat += count * upgrade.attackrateStat;
     this.income += count * upgrade.income;
 
     this.progress.general.goldSpent += upgrade.cost;
@@ -681,7 +684,7 @@ Game.prototype.levelUp = function(levels) {
     if (this.level == 19) {
       this.experienceNeeded = 999990000000000000;
       this.experience = 0;
-   }
+    }
     levels--;
   };
   this.igniteDamage = this.getIgniteDamage();
@@ -691,9 +694,6 @@ Game.prototype.levelUp = function(levels) {
   this.unlockUpgrades();
   this.updateMonsters();
   this.unlockSpells();
-
-//  this.updateButtons();
-//  this.updateTooltips();
 };
 
 Game.prototype.win = function() {
@@ -839,7 +839,7 @@ Game.prototype.getTributeBonus = function() {
 };
 
 Game.prototype.getSmiteDamage = function() {
-  return this.power * this.agility * 10 + MONSTER_HEALTH * Math.pow(this.scaleMonsterLevelHealth, this.level - 1) * .05;
+  return 150 + this.damageStat * this.attackrateStat * 10 + MONSTER_HEALTH * Math.pow(this.scaleMonsterLevelHealth, this.level - 1) * .05;
 };
 
 Game.prototype.getIgniteDamage = function() {
@@ -879,12 +879,12 @@ Game.prototype.getStatNameVariable = function(name, width) {
     switch (name) {
       case "Defense":
         return "Def";
-      case "Movespeed":
+      case "Move speed":
         return "MS";
       case "Damage":
         return "Dmg";
-      case "Attackspeed":
-        return "AS";
+      case "Attack rate":
+        return "AR";
     }
   }
   return name;
@@ -944,10 +944,10 @@ Game.prototype.saveStats = function() {
   obj['gold'] = this.gold;
   obj['goldRate'] = this.goldRate;
 
-  obj['discovery'] = this.discovery;
-  obj['swiftness'] = this.swiftness;
-  obj['power'] = this.power;
-  obj['agility'] = this.agility;
+  obj['defenseStat'] = this.defenseStat;
+  obj['movespeedStat'] = this.movespeedStat;
+  obj['damageStat'] = this.damageStat;
+  obj['attackrateStat'] = this.attackrateStat;
   obj['income'] = this.income;
 
   obj['damage'] = this.damage;
@@ -985,10 +985,10 @@ Game.prototype.saveItems = function() {
       var item = items[itemName];
       var itemData = {};
       itemData['cost'] = item.cost;
-      itemData['discovery'] = item.discovery;
-      itemData['swiftness'] = item.swiftness;
-      itemData['power'] = item.power;
-      itemData['agility'] = item.agility;
+      itemData['defenseStat'] = item.defenseStat;
+      itemData['movespeedStat'] = item.movespeedStat;
+      itemData['damageStat'] = item.damageStat;
+      itemData['attackrateStat'] = item.attackrateStat;
       itemData['income'] = item.income;
 
       itemData['status'] = item.status;
