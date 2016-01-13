@@ -637,31 +637,47 @@ body {
   -moz-box-shadow: inset 0px 1px 4px 1px rgba(0, 0, 0, 0.75);
   box-shadow: inset 0px 1px 4px 1px rgba(0, 0, 0, 0.75); }
 
-.click-button-holder .ring {
-  border: 30px solid #263238;
+.ring {
+  display: none;
+  border: 30px solid;
   -webkit-border-radius: 100%;
   height: 100%;
   width: 100%;
   position: absolute;
   left: -30px;
   top: -30px;
-  -webkit-animation: pulsate 1s ease-out;
+  -webkit-animation: ring-pulse .3s ease-out;
   -webkit-animation-iteration-count: infinite;
   opacity: 0.0; }
 
-@-webkit-keyframes pulsate {
+@-webkit-keyframes ring-pulse {
   0% {
     border-width: 0px;
     top: -0px;
     left: -0px;
     opacity: 0.0; }
   40% {
-    opacity: .20; }
+    opacity: .50; }
   100% {
     border-width: 30px;
     top: -30px;
     left: -30px;
     opacity: 0.0; } }
+#flash-ring {
+  border-color: rgba(224, 217, 135, 0.8); }
+
+#smite-ring {
+  border-color: rgba(255, 204, 95, 0.8); }
+
+#spoils-ring {
+  border-color: #0F8E78; }
+
+#tribute-ring {
+  border-color: #2382DD; }
+
+#teemo-ring {
+  border-color: rgba(38, 50, 56, 0.5); }
+
 #chimes-button {
   background-image: url(images/Chimes_2x.png); }
 

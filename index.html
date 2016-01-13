@@ -81,7 +81,9 @@
 							</div>
 						</div>
 						<div id="chimes-button-wrapper" class="click-button-wrapper">
-							<div id="chimes-button-holder" class="click-button-holder"></div>
+							<div id="chimes-button-holder" class="click-button-holder">
+								<div id="flash-ring" class="ring"></div>
+							</div>
 							<div id="chimes-button" class="click-button button touch-target"></div>
 						</div>
 					</div>
@@ -136,7 +138,10 @@
 						</div>
 						<div id="monster-button-wrapper" class="click-button-wrapper">
 							<div id="monster-button-holder" class="click-button-holder">
-								<div class="ring" ng-style="{display: game.monster == 'Teemo' && !game.won ? 'block' : 'none'}"></div>
+								<!-- <div id="teemo-ring" class="ring" ng-style="{display: game.monster == 'Teemo' && !game.won ? 'block' : 'none'}"></div> -->
+								<div id="spoils-ring" class="ring"></div>
+								<div id="tribute-ring" class="ring"></div>
+								<div id="smite-ring" class="ring"></div>
 							</div>
 							<div id="monster-button" class="click-button button touch-target" ng-style="{'background-image':'url(' + game.getMonsterImageUrl(game.monster) +')'}"></div>
 						</div>

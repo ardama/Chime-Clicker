@@ -135,6 +135,8 @@ var COOLDOWN = 5;
 
 
 ///// STYLING ////////////////////
+var RING_DURATION = 300;
+
 // update this if style changes
 var buttonYMargin = 35;
 var buttonXMargin = 45;
@@ -300,6 +302,30 @@ function createFloatingText(parent, text, event) {
   });
 };
 
+function showRing(spellName, duration) {
+  var id;
+  switch (spellName) {
+    case SPOILS_OF_WAR:
+      id = '#spoils-ring';
+      break;
+    case TRIBUTE:
+      id = '#tribute-ring';
+      break;
+    case SMITE:
+      id = '#smite-ring';
+      break;
+    case FLASH:
+      id = '#flash-ring';
+      break;
+    default:
+      break;
+  }
+  if (id) {
+    $(id).css('display', 'block');
+    window.setTimeout(function() {$(id).css('display', 'none');}, duration);
+  }
+};
+
 jQuery.fn.hasHScrollBar = function() {
   return $(window).width() < $('body').width();
 };
@@ -399,6 +425,14 @@ function initializeHotkeys(game) {
   $(document).bind('keydown.ctrl_shift_5', function() {game.buyItem(RUBY_CRYSTAL, 1000)});
   $(document).bind('keydown.ctrl_shift_6', function() {game.buyItem(AMPLIFYING_TOME, 1000)});
   $(document).bind('keydown.ctrl_shift_7', function() {game.buyItem(DAGGER, 1000)});
+
+  $(document).bind('keydown.alt_ctrl_shift_1', function() {game.buyItem(RELIC_SHIELD, 10000)});
+  $(document).bind('keydown.alt_ctrl_shift_2', function() {game.buyItem(ANCIENT_COIN, 10000)});
+  $(document).bind('keydown.alt_ctrl_shift_3', function() {game.buyItem(SPELLTHIEFS_EDGE, 10000)});
+  $(document).bind('keydown.alt_ctrl_shift_4', function() {game.buyItem(BOOTS_OF_SPEED, 10000)});
+  $(document).bind('keydown.alt_ctrl_shift_5', function() {game.buyItem(RUBY_CRYSTAL, 10000)});
+  $(document).bind('keydown.alt_ctrl_shift_6', function() {game.buyItem(AMPLIFYING_TOME, 10000)});
+  $(document).bind('keydown.alt_ctrl_shift_7', function() {game.buyItem(DAGGER, 10000)});
 
   $(document).bind('keydown.alt_1',
     function() {

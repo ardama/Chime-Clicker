@@ -155,7 +155,8 @@ Game.prototype.createSpells = function() {
     );
 
     spells[FLASH] = new Spell(this, 0, 120, SPELL_ACTIVE, MONSTER_ALL,
-      function(game) {game.addMeeps(Math.ceil(game.meeps * game.flashBonus));},
+      function(game) {game.addMeeps(Math.ceil(game.meeps * game.flashBonus));
+                      showRing(FLASH, RING_DURATION)},
       function(game) {},
       function(game) {return game.level >= 6},
       function(game) {return game.spells[FLASH].status == game.LOCKED ? "":
@@ -165,7 +166,8 @@ Game.prototype.createSpells = function() {
     spells[SMITE] = new Spell(this, 0, 60, SPELL_ACTIVE, MONSTER_JUNGLE,
       function(game) {game.smiteBonus = .20;
                       game.addDamage(game.getSmiteDamage(), true);
-                      game.smiteBonus = 0;},
+                      game.smiteBonus = 0;
+                      showRing(SMITE, RING_DURATION)},
       function(game) {},
       function(game) {return game.level >= 2},
       function(game) {return game.spells[SMITE].status == game.LOCKED ? "":
@@ -213,7 +215,8 @@ Game.prototype.createSpells = function() {
     spells[SPOILS_OF_WAR] = new Spell(this, 0, 45, SPELL_PASSIVE, MONSTER_JUNGLE,
       function(game) {game.spoilsOfWarActive = 1;
                       game.killMonster();
-                      game.spoilsOfWarActive = 0;},
+                      game.spoilsOfWarActive = 0;
+                      showRing(SPOILS_OF_WAR, RING_DURATION)},
       function(game) {},
       function(game) {return game.upgrades[FACE_OF_THE_MOUNTAIN].status == game.PURCHASED;},
       function(game) {return game.spells[SPOILS_OF_WAR].status == game.LOCKED ? "":
@@ -236,7 +239,8 @@ Game.prototype.createSpells = function() {
                       game.progress.spells[TRIBUTE].goldGained += gold;
                       if (monster.type == MONSTER_CHAMPION) {
                         game.addDamage(game.damageStat * game.attackrateStat * game.exhaustBonus * 5);
-                      }},
+                      }
+                      showRing(TRIBUTE, RING_DURATION)},
       function(game) {},
       function(game) {return game.upgrades[FROST_QUEENS_CLAIM].status == game.PURCHASED;},
       function(game) {return game.spells[TRIBUTE].status == game.LOCKED ? "":

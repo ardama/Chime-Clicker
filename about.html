@@ -49,7 +49,7 @@
         <h4>Bugs</h4>
         <p>When reporting bugs, try to include [Bug] in the subject line/title of any email/reddit post along with any information you think might be relevant, most notably which browser you are using (I mostly tested using Chrome, so I expect a lot of formatting/layout issues across other browsers and on mobile).  Screenshots and steps to reproduce will go a long way in helping me fix any issues you guys encounter.  Thanks in advance!</p>
         <br/>
-        <p>A list of known issues and planned features can be found <a href="issues.html">here</a>.</p>
+        <p>A list of known issues and planned features can be found on the <a href="issues.html">Issues</a> page.</p>
         <br/>
 
         <h4>Tools and Technologies</h4>
@@ -57,7 +57,15 @@
         <br/>
 
         <h4>Donations</h4>
-        <div id="paypal-button"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" alt="PayPal"/></div>
+        <div>
+          <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+            <input type="hidden" name="cmd" value="_s-xclick">
+            <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+            ">
+            <input id="paypal-button" type="image" src="images/paypal.png" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+          </form>
+        </div>
         <br/>
 
         <h4>Disclaimer</h4>

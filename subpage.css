@@ -1,3 +1,7 @@
+#paypal-button {
+  margin: 8px 0 0 0;
+  border-radius: 7px; }
+
 body {
   padding: 0;
   margin: 0;
@@ -36,7 +40,7 @@ body {
   #header #header-link-container {
     float: right;
     margin-right: 60px;
-    border-left: 1px solid black;
+    border-left: 1px solid #000000;
     border-right: 1px solid #191919; }
     #header #header-link-container .header-link {
       float: right;
@@ -48,14 +52,14 @@ body {
       text-decoration: none;
       cursor: pointer;
       border-left: 1px solid #191919;
-      border-right: 1px solid black; }
+      border-right: 1px solid #000000; }
     #header #header-link-container .header-link:hover {
       background-color: #263238;
       color: white;
       border-left: 1px solid #263238; }
     #header #header-link-container .header-link:active {
-      background-color: #1e272c;
-      border-left: 1px solid #1e272c; }
+      background-color: #1E272C;
+      border-left: 1px solid #1E272C; }
 
 #main-container {
   float: left;
@@ -86,7 +90,7 @@ body {
     overflow-x: auto; }
   .wrapper .row {
     color: white;
-    background-color: black;
+    background-color: #000000;
     height: calc(100vh - 36px);
     overflow: auto; }
 
@@ -97,9 +101,9 @@ body {
   overflow-y: auto;
   margin: auto;
   padding: 24px 40px;
-  background-color: #171c1e; }
+  background-color: #171C1E; }
   #content h4 {
-    color: #ffcc5f;
+    color: #FFCC5F;
     font-size: 18px;
     margin-top: 4px;
     margin-bottom: 4px; }
@@ -111,7 +115,7 @@ body {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
   #content a {
     text-decoration: none;
-    color: #3e9dff; }
+    color: #3E9DFF; }
   #content ul {
     list-style-type: none;
     padding-left: 16px;
@@ -121,7 +125,7 @@ body {
     margin-bottom: 0px; }
   #content .tooltip {
     font-weight: normal;
-    color: #3e9dff;
+    color: #3E9DFF;
     cursor: pointer; }
 
 #content::-webkit-scrollbar {
@@ -136,3 +140,5 @@ body {
 
 #content::-webkit-scrollbar-thumb:hover {
   background: whitesmoke; }
+
+/*# sourceMappingURL=subpage.css.map */
