@@ -1,43 +1,35 @@
 var Game = function (scope, difficulty) {
   this.Init(scope, difficulty);
-  this.loadGame();
-  this.loadProgress();
+  // this.loadGame();
+  // this.loadProgress();
 };
 
 Game.prototype.Init = function(scope, difficulty) {
   this.scope = scope;
-  this.difficulty = difficulty;
-  this.won = false;
-  this.level = 1;
 
-  // Status Values
   this.LOCKED = LOCKED;
   this.AVAILABLE = AVAILABLE;
   this.UNAVAILABLE = UNAVAILABLE;
   this.PURCHASED = PURCHASED
   this.ACTIVE = ACTIVE;
   this.COOLDOWN = COOLDOWN;
-
   this.DIFFICULTIES = DIFFICULTIES;
 
+  this.difficulty = difficulty;
   this.fps = 18;
   this.stepSize = 1 / this.fps;
   this.steps = 0;
 
-  this.scaleMonsterLevelHealth = SCALE_MONSTER_LEVEL_HEALTH[difficulty];
+  this.won = false;
+  this.level = 1;
 
-  this.items = this.createItems();
-  this.spellsUnlocked = [];
-  this.spells = this.createSpells();
-  this.upgradesAvailable = [];
-  this.upgrades = this.createUpgrades();
-  this.monstersAvailable = [];
-  this.monsters = this.createMonsters();
+  this.gold = STARTING_GOLD;
 
-  this.unlockItems();
-  this.unlockSpells();
-  this.unlockUpgrades();
-  this.updateMonsters();
+  this.experience = 0;
+  this.experienceNeeded = EXPERIENCE_NEEDED;
+
+  this.meeps = 0;
+  this.meepDamage = MEEPS_DAMAGE[difficulty];
 
   this.chimes = 0;
   this.chimesRate = 0;
@@ -47,12 +39,9 @@ Game.prototype.Init = function(scope, difficulty) {
   this.chimesExperience = CHIMES_EXPERIENCE[difficulty];
   this.chimesCollected = 0;
 
-  this.meeps = 0;
-  this.meepGold = 0;
-  this.meepDamage = MEEPS_DAMAGE[difficulty];
-
-  this.gold = STARTING_GOLD;
-  this.goldRate = 0;
+  this.damageRate = 0;
+  this.damagePerClick = 0;
+  this.scaleMonsterLevelHealth = SCALE_MONSTER_LEVEL_HEALTH[difficulty];
 
   this.defenseStat = 1;
   this.movespeedStat = 0;
@@ -60,14 +49,6 @@ Game.prototype.Init = function(scope, difficulty) {
   this.attackrateStat = 0;
   this.income = 0;
 
-  this.damageRate = 0;
-  this.damagePerClick = 0;
-
-  this.experience = 0;
-  this.experienceRate = 0;
-  this.experienceNeeded = EXPERIENCE_NEEDED;
-
-  // spell variables
   this.favorBonus = 0;
   this.spoilsOfWarBonus = 0;
   this.spoilsOfWarActive = 0;
@@ -80,8 +61,19 @@ Game.prototype.Init = function(scope, difficulty) {
   this.igniteDamage = 0;
   this.igniteDamageRate = 0;
 
+  this.items = this.createItems();
+  this.spells = this.createSpells();
+  this.upgrades = this.createUpgrades();
+  this.monstersAvailable = [];
+  this.monsters = this.createMonsters();
+
+  this.load();
+
+  this.unlockItems();
+  this.unlockSpells();
+  this.unlockUpgrades();
+  this.unlockMonsters();
   this.updateStats();
-  this.initProgress();
 };
 
 Game.prototype.createItems = function() {
@@ -114,7 +106,7 @@ Game.prototype.createUpgrades = function() {
 
   // Spellthief's Edge
   upgrades[FROSTFANG] = new Upgrade(this, SPELLTHIEFS_EDGE,               50000, 5, 0, 0, 20, 0, 12, []);
-  upgrades[FROST_QUEENS_CLAIM] = new Upgrade(this, SPELLTHIEFS_EDGE,      5000000, 8, 0, 0, 70, 2, 85, [FROSTFANG]);
+  upgrades[FROST_QUEENS_CLAIM] = new Upgrade(this, SPELLTHIEFS_EDGE,      5000000, 8, 0, 0, 75, 2, 85, [FROSTFANG]);
 
   // Relic Shield
   upgrades[TARGONS_BRACE] = new Upgrade(this, RELIC_SHIELD,               50000, 5, 7, 0, 0, 0, 9, []);
@@ -122,7 +114,7 @@ Game.prototype.createUpgrades = function() {
 
   // Ruby Crystal
   upgrades[KINDLEGEM] = new Upgrade(this, RUBY_CRYSTAL,                   90000, 5, 10, 0, 0, 1, 0, []);
-  upgrades[CRYSTALLINE_BRACER] = new Upgrade(this, RUBY_CRYSTAL,          1000000, 7, 25, 0, 0, 0, 0, []);
+  upgrades[CRYSTALLINE_BRACER] = new Upgrade(this, RUBY_CRYSTAL,          1000000, 7, 20, 0, 0, 0, 0, []);
   upgrades[GIANTS_BELT] = new Upgrade(this, RUBY_CRYSTAL,                 35000000, 9, 40, 0, 0, 0, 0, []);
   upgrades[WARMOGS_ARMOR] = new Upgrade(this, RUBY_CRYSTAL,               750000000, 11, 70, 0, 0, 0, 0, [GIANTS_BELT]);
   upgrades[RIGHTEOUS_GLORY] = new Upgrade(this, RUBY_CRYSTAL,             18000000000, 13, 70, 5, 0, 0, 0, [CRYSTALLINE_BRACER]);
@@ -177,7 +169,7 @@ Game.prototype.createSpells = function() {
       function(game) {},
       function(game) {return game.level >= 2},
       function(game) {return game.spells[SMITE].status == game.LOCKED ? "":
-      "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage instantly.  Damage scales with level and experience.  Kills with smite grant +20% gold.  Does not work against champions.  </br></br>60 second cooldown. <b>(E)</b>"}
+      "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage instantly.  Damage scales with level and experience.</br></br>Kills with smite grant +20% gold.  Does not work against champions.  </br></br>60 second cooldown. <b>(E)</b>"}
       );
 
 
@@ -248,7 +240,7 @@ Game.prototype.createSpells = function() {
       function(game) {},
       function(game) {return game.upgrades[FROST_QUEENS_CLAIM].status == game.PURCHASED;},
       function(game) {return game.spells[TRIBUTE].status == game.LOCKED ? "":
-      "Gain <b>" + (game.tributeBonus * 100).toFixed(1) + "%</b> of reward gold on next monster click.  Gold scales with Spellthief's Edges owned.</br>Deals <b>" + game.prettyIntCompact(game.damageStat * game.attackrateStat * game.exhaustBonus * 5, 1) + "</b> bonus damage to champions (scales with DPS).</br></br>30 second cooldown."}
+      "Gain <b>" + (game.tributeBonus * 100).toFixed(1) + "%</b> of reward gold on next monster click.  Gold scales with Spellthief's Edges owned.</br></br>Deals <b>" + game.prettyIntCompact(game.damageStat * game.attackrateStat * game.exhaustBonus * 5, 1) + "</b> bonus damage to champions (scales with DPS).</br></br>30 second cooldown."}
     );
 
     return spells;
@@ -306,8 +298,7 @@ Game.prototype.start = function() {
 Game.prototype.step = function(step) {
   this.addChimes(this.chimesRate * step);
   this.addDamage(this.damageRate * step);
-  this.addGold(this.goldRate * step);
-  this.addExperience(this.experienceRate * step);
+  this.addGold(this.income * step);
   this.addSpellTime(step);
 
   this.steps++;
@@ -430,8 +421,6 @@ Game.prototype.updateStats = function() {
   this.damageRate = this.damageStat * this.attackrateStat * this.exhaustBonus + this.igniteDamageRate;
   // damage dealt equals base damageStat + 2% of current dps
   this.damagePerClick = this.exhaustBonus * this.damageStat + .02 * this.damageRate;
-
-  this.goldRate = this.income;
 };
 
 Game.prototype.unlockItems = function() {
@@ -465,7 +454,6 @@ Game.prototype.unlockSpells = function() {
     var spell = this.spells[spells[i]];
     if (spell.unlock(this)) {
       spell.status = this.AVAILABLE;
-      this.spellsUnlocked.push(spells[i]);
     }
   }
 
@@ -493,7 +481,7 @@ Game.prototype.unlockSpells = function() {
 
 };
 
-Game.prototype.updateMonsters = function() {
+Game.prototype.unlockMonsters = function() {
   for (var monsterName in this.monsters) {
     if (this.monsters.hasOwnProperty(monsterName)) {
       var monster = this.monsters[monsterName];
@@ -648,8 +636,6 @@ Game.prototype.killMonster = function() {
 
   monster.maxHealth += monster.startHealth * SCALE_MONSTER_HEALTH;
   monster.currentHealth = monster.maxHealth;
-  monster.experience += monster.startExperience * SCALE_MONSTER_REWARD;
-  monster.gold += monster.startGold * SCALE_MONSTER_REWARD;
   monster.count++;
 
   this.progress.monsters[this.monster].count++;
@@ -682,7 +668,7 @@ Game.prototype.levelUp = function(levels) {
   this.updateStats();
   this.unlockItems();
   this.unlockUpgrades();
-  this.updateMonsters();
+  this.unlockMonsters();
   this.unlockSpells();
 };
 
@@ -885,8 +871,8 @@ Game.prototype.isZero = function(count) {
 };
 
 Game.prototype.save = function() {
-  this.saveGame();
   this.saveProgress();
+  this.saveGame();
 };
 
 Game.prototype.saveProgress = function() {
@@ -894,105 +880,65 @@ Game.prototype.saveProgress = function() {
 };
 
 Game.prototype.saveGame = function() {
-  var obj = {};
-  obj['stats'] = this.saveStats();
-  obj['items'] = this.saveItems();
-  obj['upgrades'] = this.saveUpgrades();
-  obj['spells'] = this.saveSpells();
-  obj['monsters'] = this.saveMonsters();
+  var save = {};
+  this.saveState(save);
+  this.saveItems(save);
+  this.saveUpgrades(save);
+  this.saveSpells(save);
+  this.saveMonsters(save);
 
-  localStorage.setItem('save', JSON.stringify(obj));
+  localStorage.setItem('save', JSON.stringify(save));
   localStorage.setItem('difficulty', DIFFICULTIES.indexOf(this.difficulty));
 };
 
-Game.prototype.saveStats = function() {
+Game.prototype.saveState = function(save) {
   var obj = {};
-  obj['difficulty'] = this.difficulty;
-  obj['won'] = this.won;
-  obj['fps'] = this.fps;
-  obj['stepSize'] = this.stepSize;
+
   obj['steps'] = this.steps;
-
-  obj['scaleMonsterLevelHealth'] = this.scaleMonsterLevelHealth;
-
-  obj['spellsUnlocked'] = this.spellsUnlocked;
-  obj['upgradesAvailable'] = this.upgradesAvailable;
-  obj['monstersAvailable'] = this.monstersAvailable;
-
-  obj['chimes'] = this.chimes;
-  obj['chimesRate'] = this.chimesRate;
-  obj['chimesPerClick'] = this.chimesPerClick;
-  obj['chimesPerMeep'] = this.chimesPerMeep;
-  obj['chimesPerMeepFloor'] = this.chimesPerMeepFloor;
-  obj['chimesExperience'] = this.chimesExperience;
-  obj['chimesCollected'] = this.chimesCollected;
-
-  obj['meeps'] = this.meeps;
-  obj['meepGold'] = this.meepGold;
-  obj['meepDamage'] = this.meepDamage;
+  obj['won'] = this.won;
+  obj['level'] = this.level;
 
   obj['gold'] = this.gold;
-  obj['goldRate'] = this.goldRate;
 
-  obj['defenseStat'] = this.defenseStat;
-  obj['movespeedStat'] = this.movespeedStat;
-  obj['damageStat'] = this.damageStat;
-  obj['attackrateStat'] = this.attackrateStat;
-  obj['income'] = this.income;
+  obj['experience'] = this.experience;
 
-  obj['damageRate'] = this.damageRate;
-  obj['damagePerClick'] = this.damagePerClick;
+  obj['meeps'] = this.meeps;
+
+  obj['chimes'] = this.chimes;
+  obj['chimesPerMeep'] = this.chimesPerMeep;
+  obj['chimesPerMeepFloor'] = this.chimesPerMeepFloor;
+  obj['chimesCollected'] = this.chimesCollected;
 
   obj['monster'] = this.monster;
 
-  obj['level'] = this.level;
-  obj['experience'] = this.experience;
-  obj['experienceRate'] = this.experienceRate;
-  obj['experienceNeeded'] = this.experienceNeeded;
-
-  // spell variables
-  obj['favorBonus'] = this.favorBonus;
-  obj['spoilsOfWarBonus'] = this.spoilsOfWarBonus;
   obj['spoilsOfWarActive'] = this.spoilsOfWarActive;
-  obj['tributeBonus'] = this.tributeBonus;
-
   obj['smiteBonus'] = this.smiteBonus;
   obj['ghostBonus'] = this.ghostBonus;
-  obj['flashBonus'] = this.flashBonus;
   obj['exhaustBonus'] = this.exhaustBonus;
-  obj['igniteDamage'] = this.igniteDamage;
   obj['igniteDamageRate'] = this.igniteDamageRate;
 
-  return obj;
+  save['state'] = obj;
 };
 
-Game.prototype.saveItems = function() {
+Game.prototype.saveItems = function(save) {
   var items = this.items;
   var obj = {};
   for (var itemName in items) {
     if (items.hasOwnProperty(itemName)) {
       var item = items[itemName];
       var itemData = {};
-      itemData['cost'] = item.cost;
-      itemData['defenseStat'] = item.defenseStat;
-      itemData['movespeedStat'] = item.movespeedStat;
-      itemData['damageStat'] = item.damageStat;
-      itemData['attackrateStat'] = item.attackrateStat;
-      itemData['income'] = item.income;
-
-      itemData['status'] = item.status;
       itemData['count'] = item.count;
-
       itemData['upgrades'] = item.upgrades;
       itemData['upgradesAvailable'] = item.upgradesAvailable;
 
       obj[itemName] = itemData;
     }
   }
-  return obj;
+
+  save['items'] = obj;
 };
 
-Game.prototype.saveUpgrades = function() {
+Game.prototype.saveUpgrades = function(save) {
   var upgrades = this.upgrades;
   var obj = {};
   for (var upgradeName in upgrades) {
@@ -1005,10 +951,10 @@ Game.prototype.saveUpgrades = function() {
       obj[upgradeName] = upgradeData;
     }
   }
-  return obj;
+  save['upgrades'] = obj;
 };
 
-Game.prototype.saveSpells = function() {
+Game.prototype.saveSpells = function(save) {
   var spells = this.spells;
   var obj = {};
   for (var spellName in spells) {
@@ -1023,90 +969,171 @@ Game.prototype.saveSpells = function() {
       obj[spellName] = spellData;
     }
   }
-  return obj;
+  save['spells'] = obj;
 };
 
-Game.prototype.saveMonsters = function() {
+Game.prototype.saveMonsters = function(save) {
   var monsters = this.monsters;
   var obj = {};
   for (var monsterName in monsters) {
     if (monsters.hasOwnProperty(monsterName)) {
       var monster = monsters[monsterName];
       var monsterData = {};
-      monsterData['maxHealth'] = monster.maxHealth;
       monsterData['currentHealth'] = monster.currentHealth;
-      monsterData['experience'] = monster.experience;
-      monsterData['gold'] = monster.gold;
-
-      monsterData['startHealth'] = monster.startHealth;
-      monsterData['startExperience'] = monster.startExperience;
-      monsterData['startGold'] = monster.startGold;
-
       monsterData['count'] = monster.count;
 
       obj[monsterName] = monsterData;
     }
   }
-  return obj;
+  save['monsters'] = obj;
 };
 
-
 Game.prototype.load = function() {
-  this.loadGame();
   this.loadProgress();
+  this.loadGame();
 };
 
 Game.prototype.loadProgress = function() {
-  var obj = localStorage.getItem('progress', obj);
-  if (obj) {
-    obj = JSON.parse(obj);
-    $.extend(this.progress, obj);
+  obj = {};
+
+  obj['general'] = {};
+  obj['general']['timePlayed'] = 0;
+  obj['general']['experienceEarned'] = 0;
+
+  obj['general']['totalChimes'] = 0;
+  obj['general']['clickChimes'] = 0;
+
+  obj['general']['totalDamage'] = 0;
+  obj['general']['clickDamage'] = 0;
+
+  obj['general']['totalClicks'] = 0;
+  obj['general']['chimeClicks'] = 0;
+  obj['general']['damageClicks'] = 0;
+
+  obj['general']['totalMeeps'] = 0;
+
+  obj['general']['goldEarned'] = 0;
+  obj['general']['goldSpent'] = 0;
+
+  // items purchased
+  var order = 0;
+  obj['items'] = {};
+  for (var item in this.items) {
+    obj['items'][item] = {'item': item, 'count': 0, 'goldSpent': 0, 'order': order};
+    order++;
   }
+
+  // monsters killed
+  order = 0;
+  obj['monsters'] = {};
+  for (var monster in this.monsters) {
+    obj['monsters'][monster] = {'monster': monster, 'count': 0, 'order': order};
+    order++;
+  }
+
+  // spells used
+  order = 0;
+  obj['spells'] = {};
+  for (var spell in this.spells) {
+    obj['spells'][spell] = {'spell': spell, 'count': 0, 'goldGained': 0, 'meepsGained': 0, 'order': order};
+    order++;
+  }
+
+  obj['wins'] = {};
+  obj['wins']['easy'] = {'difficulty': 'easy', 'count': 0, 'order': 0};
+  obj['wins']['medium'] = {'difficulty': 'medium', 'count': 0, 'order': 1};
+  obj['wins']['hard'] = {'difficulty': 'hard', 'count': 0, 'order': 2};
+  obj['wins']['marathon'] = {'difficulty': 'marathon', 'count': 0, 'order': 3};
+  obj['wins']['impossible'] = {'difficulty': 'impossible', 'count': 0, 'order': 4};
+
+
+  obj['times'] = {};
+  obj['times']['easy'] = {'difficulty': 'easy', 'count': null, 'order': 0};
+  obj['times']['medium'] = {'difficulty': 'medium', 'count': null, 'order': 1};
+  obj['times']['hard'] = {'difficulty': 'hard', 'count': null, 'order': 2};
+  obj['times']['marathon'] = {'difficulty': 'marathon', 'count': null, 'order': 3};
+  obj['times']['impossible'] = {'difficulty': 'impossible', 'count': null, 'order': 4};
+
+  obj['pointsEarned'] = 0;
+
+  var progress = JSON.parse(localStorage.getItem('progress'));
+  this.progress = progress ? $.extend(true, obj, progress) : obj;
 };
 
 Game.prototype.loadGame = function() {
-  var obj = localStorage.getItem('save', obj);
-  if (obj) {
-    obj = JSON.parse(obj);
-    this.loadStats(obj);
-    this.loadItems(obj);
-    this.loadUpgrades(obj);
-    this.loadSpells(obj);
-    this.loadMonsters(obj);
+  var save = JSON.parse(localStorage.getItem('save'));
+  if (save) {
+    this.loadState(save['state']);
+    this.loadItems(save['items']);
+    this.loadUpgrades(save['upgrades']);
+    this.loadSpells(save['spells']);
+    this.loadMonsters(save['monsters']);
+    this.recalculateState();
   }
-};
+}
 
-Game.prototype.loadStats = function(obj) {
-  var stats = obj['stats'];
-  for (var key in stats) {
-    if (stats.hasOwnProperty(key)) {
-      this[key] = stats[key];
-    }
-  }
+Game.prototype.loadState = function(obj) {
+  if (!obj) return;
+
+  this.steps = obj['steps'];
+  this.won = obj['won'];
+  this.level = obj['level'];
+
+  this.gold = obj['gold'];
+
+  this.experience = obj['experience'];
+
+  this.meeps = obj['meeps'];
+
+  this.chimes = obj['chimes'];
+  this.chimesPerMeep = obj['chimesPerMeep'];
+  this.chimesPerMeepFloor = obj['chimesPerMeepFloor'];
+  this.chimesCollected = obj['chimesCollected'];
+
+  this.monster = obj['monster'];
+
+  this.spoilsOfWarActive = obj['spoilsOfWarActive'];
+  this.smiteBonus = obj['smiteBonus'];
+  this.ghostBonus = obj['ghostBonus'];
+  this.exhaustBonus = obj['exhaustBonus'];
+  this.igniteDamageRate = obj['igniteDamageRate'];
 };
 
 Game.prototype.loadItems = function(obj) {
-  var items = obj['items'];
-  for (var itemName in items) {
-    if (items.hasOwnProperty(itemName)) {
-      var item = items[itemName];
-      for (var key in item) {
-        if (item.hasOwnProperty(key)) {
-          this.items[itemName][key] = item[key];
-        }
+  if (!obj) return;
+
+  for (var name in obj) {
+    if (obj.hasOwnProperty(name)) {
+      var data = obj[name];
+      var item = this.items[name];
+      if (data && item) {
+        item.count = data['count'];
+        item.upgrades = data['upgrades'];
+        item.upgradesAvailable = data['upgradesAvailable'];
+
+        item.cost = item.startCost + item.startCost * SCALE_ITEM_COST * item.count;
       }
     }
   }
 };
 
 Game.prototype.loadUpgrades = function(obj) {
-  var upgrades = obj['upgrades'];
-  for (var upgradeName in upgrades) {
-    if (upgrades.hasOwnProperty(upgradeName)) {
-      var upgrade = upgrades[upgradeName];
-      for (var key in upgrade) {
-        if (upgrade.hasOwnProperty(key)) {
-          this.upgrades[upgradeName][key] = upgrade[key];
+  if (!obj) return;
+
+  for (var name in obj) {
+    if (obj.hasOwnProperty(name)) {
+      var data = obj[name];
+      var upgrade = this.upgrades[name];
+      if (data && upgrade) {
+        upgrade.status = data['status'];
+
+        if (data['status'] == PURCHASED) {
+          var item = this.items[upgrade.item];
+          item.defenseStat += upgrade.defenseStat;
+          item.movespeedStat += upgrade.movespeedStat;
+          item.damageStat += upgrade.damageStat;
+          item.attackrateStat += upgrade.attackrateStat;
+          item.income += upgrade.income;
         }
       }
     }
@@ -1114,97 +1141,62 @@ Game.prototype.loadUpgrades = function(obj) {
 };
 
 Game.prototype.loadSpells = function(obj) {
-  var spells = obj['spells'];
-  for (var spellName in spells) {
-    if (spells.hasOwnProperty(spellName)) {
-      var spell = spells[spellName];
-      for (var key in spell) {
-        if (spell.hasOwnProperty(key)) {
-          this.spells[spellName][key] = spell[key];
-        }
+  if (!obj) return;
+
+  for (var name in obj) {
+    if (obj.hasOwnProperty(name)) {
+      var data = obj[name];
+      var spell = this.spells[name];
+      if (data && spell) {
+        spell.durationLeft = data['durationLeft'];
+        spell.cooldownLeft = data['cooldownLeft'];
+        spell.status = data['status'];
       }
     }
   }
 };
 
 Game.prototype.loadMonsters = function(obj) {
-  var monsters = obj['monsters'];
-  for (var monsterName in monsters) {
-    if (monsters.hasOwnProperty(monsterName)) {
-      var monster = monsters[monsterName];
-      for (var key in monster) {
-        if (monster.hasOwnProperty(key)) {
-          this.monsters[monsterName][key] = monster[key];
-        }
+  if (!obj) return;
+
+  for (var name in obj) {
+    if (obj.hasOwnProperty(name)) {
+      var data = obj[name];
+      var monster = this.monsters[name];
+      if (data && monster) {
+        monster.currentHealth = data['currentHealth'];
+        monster.count = data['count'];
+
+        monster.maxHealth = monster.startHealth + monster.startHealth * SCALE_MONSTER_HEALTH * monster.count;
       }
     }
   }
 };
 
-Game.prototype.initProgress = function() {
-  progress = {};
+Game.prototype.recalculateState = function() {
+  if (this.level == 19) this.experienceNeeded = 999990000000000000;
+  else this.experienceNeeded *= Math.pow(SCALE_EXPERIENCE_NEEDED, this.level - 1);
 
-  progress['general'] = {};
-  progress['general']['timePlayed'] = 0;
-  progress['general']['experienceEarned'] = 0;
 
-  progress['general']['totalChimes'] = 0;
-  progress['general']['clickChimes'] = 0;
+  this.chimesExperience *= Math.pow(SCALE_CHIMES_EXPERIENCE, this.level - 1);
 
-  progress['general']['totalDamage'] = 0;
-  progress['general']['clickDamage'] = 0;
-
-  progress['general']['totalClicks'] = 0;
-  progress['general']['chimeClicks'] = 0;
-  progress['general']['damageClicks'] = 0;
-
-  progress['general']['totalMeeps'] = 0;
-
-  progress['general']['goldEarned'] = 0;
-  progress['general']['goldSpent'] = 0;
-
-  // items purchased
-  var order = 0;
-  progress['items'] = {};
-  for (var item in this.items) {
-    progress['items'][item] = {'item': item, 'count': 0, 'goldSpent': 0, 'order': order};
-    order++;
+  var items = this.getObjectsByStatus(this.items);
+  for (var i = 0; i < items.length; i++) {
+    var item = this.items[items[i]];
+    this.defenseStat += item.count * item.defenseStat;
+    this.movespeedStat += item.count * item.movespeedStat;
+    this.damageStat += item.count * item.damageStat;
+    this.attackrateStat += item.count * item.attackrateStat;
+    this.income += item.count * item.income;
   }
 
-  // monsters killed
-  order = 0;
-  progress['monsters'] = {};
-  for (var monster in this.monsters) {
-    progress['monsters'][monster] = {'monster': monster, 'count': 0, 'order': order};
-    order++;
-  }
+  this.damageStat += this.meeps * this.meepDamage;
 
-  // spells used
-  order = 0;
-  progress['spells'] = {};
-  for (var spell in this.spells) {
-    progress['spells'][spell] = {'spell': spell, 'count': 0, 'goldGained': 0, 'meepsGained': 0, 'order': order};
-    order++;
-  }
-
-  progress['wins'] = {};
-  progress['wins']['easy'] = {'difficulty': 'easy', 'count': 0, 'order': 0};
-  progress['wins']['medium'] = {'difficulty': 'medium', 'count': 0, 'order': 1};
-  progress['wins']['hard'] = {'difficulty': 'hard', 'count': 0, 'order': 2};
-  progress['wins']['marathon'] = {'difficulty': 'marathon', 'count': 0, 'order': 3};
-  progress['wins']['impossible'] = {'difficulty': 'impossible', 'count': 0, 'order': 4};
-
-
-  progress['times'] = {};
-  progress['times']['easy'] = {'difficulty': 'easy', 'count': null, 'order': 0};
-  progress['times']['medium'] = {'difficulty': 'medium', 'count': null, 'order': 1};
-  progress['times']['hard'] = {'difficulty': 'hard', 'count': null, 'order': 2};
-  progress['times']['marathon'] = {'difficulty': 'marathon', 'count': null, 'order': 3};
-  progress['times']['impossible'] = {'difficulty': 'impossible', 'count': null, 'order': 4};
-
-  progress['pointsEarned'] = 0;
-  this.progress = progress;
-}
+  this.favorBonus = this.getFavorBonus();
+  this.spoilsOfWarBonus = this.getSpoilsOfWarBonus();
+  this.tributeBonus = this.getTributeBonus();
+  this.igniteDamage = this.getIgniteDamage();
+};
 
 Game.prototype.newGame = function(reset, difficulty) {
   var message = reset ? 'Reset all progress and start new game?' : 'Start new game' + (difficulty ? ' on ' + difficulty.capitalize() : '')+'?  Overall progress will be saved.';
