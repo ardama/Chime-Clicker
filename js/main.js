@@ -103,7 +103,7 @@ var SPECIAL_PLURALS = [ZHONYAS_HOURGLASS, LUDENS_ECHO, FIENDISH_CODEX, FLASH];
 
 // Default Values
 var STARTING_GOLD = 375;
-var CHIMES_PER_MEEP = 5;
+var CHIMES_PER_MEEP = 7;
 var CHIMES_EXPERIENCE = {'easy' : 1, 'medium' : .75, 'hard' : .5, 'marathon' : .25, 'impossible' : 0};
 var MEEPS_DAMAGE = {'easy' : 2, 'medium' : 2, 'hard' : 1, 'marathon' : 1, 'impossible' : .5};
 var EXPERIENCE_NEEDED = 1250;
@@ -365,7 +365,7 @@ function initializeHotkeys(game) {
   $(document).bind('keydown.f', function() {$('#damage-bar-dropdown .dropdown-button').click()});
 
   // Dialog hotkeys
-  $(document).bind('keydown.esc', function() {hideModal();});  
+  $(document).bind('keydown.esc', function() {hideModal();});
 
   // Item hotkeys
   $(document).bind('keydown.1', function() {game.buyItem(RELIC_SHIELD)});

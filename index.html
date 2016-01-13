@@ -135,7 +135,9 @@
 							</div>
 						</div>
 						<div id="monster-button-wrapper" class="click-button-wrapper">
-							<div id="monster-button-holder" class="click-button-holder"></div>
+							<div id="monster-button-holder" class="click-button-holder">
+								<div class="ring" ng-style="{display: game.monster == 'Teemo' && !game.won ? 'block' : 'none'}"></div>
+							</div>
 							<div id="monster-button" class="click-button button touch-target" ng-style="{'background-image':'url(' + game.getMonsterImageUrl(game.monster) +')'}"></div>
 						</div>
 					</div>
@@ -183,7 +185,7 @@
 						<div id="level" class="title {{game.getLevelText()}}" data-toggle="tooltip" data-title="Level up to unlock new items, spells, and monsters.">
 							{{game.getLevelText()}}
 						</div>
-						<div id="experience-bar" class="bar">
+						<div id="experience-bar" class="bar {{game.won ? 'won' : ''}}">
 							<div id="experience-bar-fill" class="bar-fill" style="width:{{game.getExperiencePercent()}}%"></div>
 
 							<div id="experience-progress" data-toggle="tooltip" data-title="Experience for next level." data-position="left">
