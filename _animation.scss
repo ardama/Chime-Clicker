@@ -8,7 +8,7 @@
 	width: 100%;
 	height: 0;
 
-	@include animation(pulse .5s 20 ease-out);
+	@include animation(pulse .625s 16 ease-out);
 }
 
 .pulse.active {
@@ -21,7 +21,7 @@
 
 #ignite-pulse {
 	background-color: $ignite2;
-	animation-iteration-count: 10;
+	animation-iteration-count: 8;
 }
 
 #exhaust-pulse {
@@ -31,24 +31,24 @@
 @-webkit-keyframes pulse {
 	0% {height: 0px; opacity: 0.9;}
 	30% {height: 0px; opacity: 0.9;}
-	100% {height: 20px; opacity: 0.0;}
+	100% {height: 12px; opacity: 0.0;}
 }
 
 @-moz-keyframes pulse {
 	0% {height: 0px; opacity: 0.9;}
 	30% {height: 0px; opacity: 0.9;}
-	100% {height: 20px; opacity: 0.0;}
+	100% {height: 12px; opacity: 0.0;}
 }
 @-o-keyframes pulse {
 	0% {height: 0px; opacity: 0.9;}
 	30% {height: 0px; opacity: 0.9;}
-	100% {height: 20px; opacity: 0.0;}
+	100% {height: 12px; opacity: 0.0;}
 }
 
 @keyframes pulse {
 	0% {height: 0px; opacity: 0.9;}
 	30% {height: 0px; opacity: 0.9;}
-	100% {height: 20px; opacity: 0.0;}
+	100% {height: 12px; opacity: 0.0;}
 }
 
 .ring {
