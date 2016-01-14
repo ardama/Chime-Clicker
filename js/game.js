@@ -234,7 +234,7 @@ Game.prototype.createSpells = function() {
     spells[TRIBUTE] = new Spell(this, 0, 30, SPELL_PASSIVE, MONSTER_ALL,
       function(game) {var monster = game.monsters[game.monster];
                       var gold = Math.ceil(monster.gold * game.tributeBonus);
-                      gold /= game.monster == TEEMO ? 15 : 1;
+                      gold /= game.monster == TEEMO ? 1500 : 100;
                       game.gold += gold;
                       game.progress.spells[TRIBUTE].goldGained += gold;
                       if (monster.type == MONSTER_CHAMPION) {
@@ -244,7 +244,7 @@ Game.prototype.createSpells = function() {
       function(game) {},
       function(game) {return game.upgrades[FROST_QUEENS_CLAIM].status == game.PURCHASED;},
       function(game) {return game.spells[TRIBUTE].status == game.LOCKED ? "":
-      "Gain <b>" + (game.tributeBonus * 100).toFixed(1) + "%</b> of reward gold on next monster click.  Gold scales with Spellthief's Edges owned.</br></br>Deals <b>" + game.prettyIntCompact(game.damageStat * game.attackrateStat * game.exhaustBonus * 5, 1) + "</b> bonus damage to champions (scales with DPS).</br></br>30 second cooldown."}
+      "Gain <b>" + (game.tributeBonus).toFixed(1) + "%</b> of reward gold on next monster click.  Gold scales with Spellthief's Edges owned.</br></br>Deals <b>" + game.prettyIntCompact(game.damageStat * game.attackrateStat * game.exhaustBonus * 5, 1) + "</b> bonus damage to champions (scales with DPS).</br></br>30 second cooldown."}
     );
 
     return spells;
@@ -710,9 +710,7 @@ Game.prototype.win = function() {
       default:
     }
 
-
-
-    console.log('You Win!');
+    showWinModal();
   }
 };
 
@@ -874,6 +872,12 @@ Game.prototype.isZero = function(count) {
   return count == 0 ? 'zero' : '';
 };
 
+Game.prototype.showNewGameModal = function(reset, difficulty) {
+  this.newGameDifficulty = difficulty;
+  this.newGameReset = reset;
+  return showNewGameModal(reset, difficulty);
+};
+
 Game.prototype.save = function() {
   this.saveProgress();
   this.saveGame();
@@ -1019,6 +1023,8 @@ Game.prototype.loadProgress = function() {
   obj['general']['goldEarned'] = 0;
   obj['general']['goldSpent'] = 0;
 
+  obj['general']['pointsEarned'] = 0;
+
   // items purchased
   var order = 0;
   obj['items'] = {};
@@ -1058,7 +1064,6 @@ Game.prototype.loadProgress = function() {
   obj['times']['marathon'] = {'difficulty': 'marathon', 'count': null, 'order': 3};
   obj['times']['impossible'] = {'difficulty': 'impossible', 'count': null, 'order': 4};
 
-  obj['pointsEarned'] = 0;
 
   var progress = JSON.parse(localStorage.getItem('progress'));
   this.progress = progress ? $.extend(true, obj, progress) : obj;
@@ -1203,19 +1208,15 @@ Game.prototype.recalculateState = function() {
 };
 
 Game.prototype.newGame = function(reset, difficulty) {
-  var message = reset ? 'Reset all progress and start new game?' : 'Start new game' + (difficulty ? ' on ' + difficulty.capitalize() : '')+'?  Overall progress will be saved.';
-  var confirm = window.confirm(message);
-  if (confirm) {
-    if (reset) {
-      localStorage.removeItem('progress');
-    }
-    else {
-      this.saveProgress();
-      if (this.monsters[TEEMO].count > 0)
-        this.progress.general.pointsEarned += (getBaseLog(20, this.monsters[TEEMO].count) + 1) * POINT_BONUS[this.difficulty];
-    }
-    localStorage.setItem('difficulty', difficulty ? DIFFICULTIES.indexOf(difficulty) : DIFFICULTIES.indexOf(this.difficulty));
-    localStorage.removeItem('save');
-    location.reload(true);
+  if (reset) {
+    localStorage.removeItem('progress');
   }
+  else {
+    this.saveProgress();
+    if (this.monsters[TEEMO].count > 0)
+      this.progress.general.pointsEarned += (getBaseLog(20, this.monsters[TEEMO].count) + 1) * POINT_BONUS[this.difficulty];
+  }
+  localStorage.setItem('difficulty', difficulty ? DIFFICULTIES.indexOf(difficulty) : DIFFICULTIES.indexOf(this.difficulty));
+  localStorage.removeItem('save');
+  location.reload(true);
 }

@@ -47,6 +47,7 @@
 			<div id="column-1" class="column">
 				<div id="meeps-row" class="row">
 					<div id="meeps-container" class="container">
+						<div id="ghost-pulse" class="pulse {{game.spells['Ghost'].status == game.ACTIVE ? 'active': ''}}"></div>
 						<div id="meeps-status" class="status {{game.spells['Flash'].status == game.ACTIVE ? 'flash-active' : '';}}">
 							<div id="meeps-wrapper" data-toggle="tooltip" data-title="Collect chimes to earn meeps.  Meeps grant {{game.meepDamage}} Damage." data-position="right">
 								<text>
@@ -91,7 +92,9 @@
 
 				<div id="monster-row" class="row">
 					<div id="damage-container" class="container">
-						<div id="damage-status" class="status {{game.spells['Smite'].status == game.ACTIVE ? 'smite-active' : '';}}">
+						<div id="exhaust-pulse" class="pulse {{game.spells['Exhaust'].status == game.ACTIVE ? 'active': ''}}"></div>
+						<div id="ignite-pulse" class="pulse {{game.spells['Ignite'].status == game.ACTIVE ? 'active': ''}}"></div>
+						<div id="damage-status" class="status {{game.spells['Smite'].status == game.ACTIVE ? 'smite-active' : ''}}">
 							<div id="monster-selector" class="selector {{game.isFirstMonster()}} {{game.isLastMonster()}}">
 								<div class="selector-button selector-left touch-target">
 									<i class="fa fa-angle-left"></i>
@@ -313,8 +316,8 @@
 			<!-- timer and spells -->
 			<div id="column-3" class="column">
 				<div id="restart-container">
-					<div id="restart-button" class="button touch-target" ng-click="game.newGame()">New Game</div>
-					<div id="reset-button" class="button touch-target" ng-click="game.newGame(true)">Reset <i class='fa fa-refresh'></i></div>
+					<div id="restart-button" class="button touch-target" ng-click="game.showNewGameModal(false, game.difficulty)">New Game</div>
+					<div id="reset-button" class="button touch-target" ng-click="game.showNewGameModal(true, game.difficulty)">Reset <i class='fa fa-refresh'></i></div>
 					<div id="time-container">
 						<div id="difficulty" class="touch-target">
 							{{game.difficulty.capitalize()}} <i class="fa fa-angle-down"></i>
@@ -344,15 +347,14 @@
 <div id="modal-holder" style="display:none;">
 	<div id="difficulty-modal" class="modal">
 		<div id="difficulty-modal-body">
-			<div ng-repeat="difficulty in game.DIFFICULTIES" class="{{difficulty == game.difficulty ? 'hide': ''}} difficulty-button" ng-click="game.newGame(false, difficulty)">{{difficulty.capitalize()}}</div>
+			<div ng-repeat="difficulty in game.DIFFICULTIES" class="{{difficulty == game.difficulty ? 'hide': ''}} difficulty-button" ng-click="game.showNewGameModal(false, difficulty)">{{difficulty.capitalize()}}</div>
 		</div>
 	</div>
 	<div id="progress-modal" class="modal">
-		<div id="progress-modal-header">Statistics
+		<div id="progress-modal-header" class="modal-header">Statistics
 			<div class="close-icon" onclick="hideModal()">&times;</div>
 		</div>
-
-		<div id="progress-modal-body">
+		<div id="progress-modal-body" class="modal-body">
 			<div id="progress-modal-body-container">
 				<div class="progress-modal-column">
 					<div class="progress-modal-title">General</div>
@@ -445,5 +447,35 @@
 			</div>
 		</div>
 	</div>
+
+	<div id="newgame-modal" class="modal">
+		<div id="newgame-modal-body" class="modal-body">
+			<div id="newgame-modal-body-container">
+				<div id="newgame-modal-text"></div>
+				<div id="newgame-modal-button-container" class="modal-button-container">
+					<div id="newgame-cancel" class="modal-button" onclick="hideModal()">Cancel</div>
+					<div ng-repeat="difficulty in game.DIFFICULTIES" class="{{difficulty != game.newGameDifficulty || game.newGameReset ? 'hide': ''}} newgame-confirm modal-button" ng-click="game.newGame(false, difficulty)">New Game</div>
+					<div class="{{!game.newGameReset ? 'hide': ''}} newgame-confirm modal-button" ng-click="game.newGame(true, game.difficulty)">Reset</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="win-modal" class="modal">
+		<div id="win-modal-header" class="modal-header">You Win!
+			<div class="close-icon" onclick="hideModal()">&times;</div>
+		</div>
+		<div id="win-modal-body" class="modal-body">
+			<div id="win-modal-body-container">
+				<div id="win-modal-text">Congratulations you killed Satan!<br/><br/> Feel free to rack up some more Teemo kills before restarting, or begin a new game now.  The more times Teemo dies before you end this game, the more Chime Points (CP) you&#8217;ll earn.  Right now CP&#8217;s don't do anything but I promise they will soon&trade;!</div>
+				<div id="win-modal-button-container" class="modal-button-container">
+					<div id="win-cancel" class="modal-button" onclick="hideModal()">Keep Killing Teemo</div>
+					<div class="win-confirm modal-button" ng-click="game.newGame(false, game.difficulty)">Start Over</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
 </body>
 </html>

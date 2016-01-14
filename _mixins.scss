@@ -36,3 +36,20 @@
   -o-transition: $params;
   transition: $params;
 }
+
+@mixin animation($animation1, $animation2:false, $animation3:false, $animation4:false, $animation5:false) {
+ $params: $animation1;
+  @if $animation2
+    { $params: $animation1, $animation2; }
+    @if $animation3 != false
+      { $params: $animation1, $animation2, $animation3; }
+      @if $animation4 != false
+        { $params: $animation1, $animation2, $animation3, $animation4; }
+        @if $animation5 != false
+          { $params: $animation1, $animation2, $animation3, $animation4, $animation5; }
+
+  -webkit-animation: $params;
+  -moz-animation: $params;
+  -o-animation: $params;
+  animation: $params;
+}

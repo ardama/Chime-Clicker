@@ -5,6 +5,8 @@
 @import 'about';
 @import 'issues';
 
+@import 'tooltips';
+
 html {
 
 }
@@ -167,7 +169,7 @@ body {
     margin-bottom: 4px;
     line-height: 22px;
     font-size: 14px;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+		font-family: "Noto","Helvetica Neue",Helvetica,Arial,sans-serif;
   }
 
   a {
@@ -178,7 +180,7 @@ body {
   ul {
     list-style-type: none;
     padding-left: 16px;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+		font-family: "Noto","Helvetica Neue",Helvetica,Arial,sans-serif;
     line-height: 22px;
     font-size: 14px;
     margin-bottom: 0px;

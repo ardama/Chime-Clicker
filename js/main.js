@@ -304,26 +304,16 @@ function createFloatingText(parent, text, event) {
 
 function showRing(spellName, duration) {
   var id;
-  switch (spellName) {
-    case SPOILS_OF_WAR:
-      id = '#spoils-ring';
-      break;
-    case TRIBUTE:
-      id = '#tribute-ring';
-      break;
-    case SMITE:
-      id = '#smite-ring';
-      break;
-    case FLASH:
-      id = '#flash-ring';
-      break;
-    default:
-      break;
-  }
+  if (spellName == SPOILS_OF_WAR) id = '#spoils-ring';
+  else if (spellName == TRIBUTE) id = '#tribute-ring';
+  else if (spellName == SMITE) id = '#smite-ring';
+  else if (spellName == FLASH) id = '#flash-ring';
   if (id) {
     $(id).css('display', 'block');
-    window.setTimeout(function() {$(id).css('display', 'none');}, duration);
+    if (duration)
+      window.setTimeout(function() {$(id).css('display', 'none');}, duration);
   }
+
 };
 
 jQuery.fn.hasHScrollBar = function() {
@@ -525,11 +515,6 @@ $(window).load(function() {
         dialog.overlay.fadeIn(200);
         dialog.container.fadeIn(200);
         dialog.data.fadeIn(200);
-      },
-      onClose: function (dialog) {
-        dialog.overlay.fadeOut(200);
-        dialog.container.fadeOut(200);
-        dialog.data.fadeOut(200, function() {$.modal.close();});
       }
     });
   })
@@ -553,11 +538,6 @@ $(window).load(function() {
       	dialog.overlay.slideDown(200);
         dialog.container.slideDown(200);
         dialog.data.slideDown(200);
-      },
-      onClose: function(dialog) {
-        dialog.overlay.slideUp(200);
-        dialog.container.slideUp(200);
-        dialog.data.slideUp(200, function() {$.modal.close();});
       },
       onShow: function () {
         modal = true;
@@ -586,6 +566,40 @@ String.prototype.capitalize = function() {
 };
 
 function hideModal() {
-  $.modal.close();
   modal = false;
+  $.modal.close();
+};
+
+function showNewGameModal(reset, difficulty) {
+  hideModal();
+  var message = reset ? 'Are you sure you want to reset your progress and start a new game?' : 'Are you sure you want to start a new game' + (difficulty ? ' on <b>' + difficulty.capitalize() + '</b>' : '')+'?  Your overall progress will be saved.';
+  $("#newgame-modal-text").html(message);
+  $("#newgame-modal").modal({
+    persist: true,
+    overlayClose: true,
+    modal: true,
+    overlayId: 'newgame-modal-overlay',
+    position: [72, null],
+    onOpen: function (dialog) {
+      dialog.overlay.fadeIn(200);
+      dialog.container.fadeIn(200);
+      dialog.data.fadeIn(200);
+    }
+  });
+};
+
+function showWinModal() {
+  hideModal();
+  $("#win-modal").modal({
+    persist: true,
+    overlayClose: false,
+    modal: true,
+    overlayId: 'win-modal-overlay',
+    position: [72, null],
+    onOpen: function (dialog) {
+      dialog.overlay.fadeIn(200);
+      dialog.container.fadeIn(200);
+      dialog.data.fadeIn(200);
+    }
+  });
 };

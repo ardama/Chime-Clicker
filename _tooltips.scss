@@ -1,0 +1,20 @@
+/* TOOLTIPS ///////////////////////////////////// */
+.tooltipster-custom {
+	border-radius: 3px;
+	background: $darkTextPrimary;
+	color: $lightTextSecondary;
+}
+.tooltipster-custom .tooltipster-content {
+	font-size: 13px;
+	line-height: 14px;
+	padding: 6px 8px;
+}
+
+.tooltipster-custom .tooltipster-content b {
+	color: $secondary500;
+}
+
+.tooltipster-custom .tooltip-image {
+//	width: 140px;
+	border-radius: 2px;
+}

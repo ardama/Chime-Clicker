@@ -1,0 +1,329 @@
+/* MODALS ///////////////////////////////////// */
+.modal {
+
+}
+
+.modal-header {
+	color: $lightTextSecondary;
+	background-color: $gray1100;
+
+	.close-icon {
+		float: right;
+
+		border-radius: 1px;
+		cursor: pointer;
+
+		@include transition(background-color 200ms);
+	}
+
+	.close-icon:hover {
+		background-color: $gray1000;
+	}
+}
+
+.modal-body {
+  position: relative;
+
+  padding: 8px 16px;
+	overflow-y: auto;
+
+	@include box-shadow(0 3px 3px -3px $boxShadow inset);
+}
+
+.modal-button-container {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+
+}
+
+.modal-button {
+  float: right;
+
+  height: 30px;
+
+  padding: 0 10px;
+  margin: 0 12px 12px 0;
+
+  line-height: 30px;
+  text-align: center;
+  border-radius: 2px;
+  font-family: "Rajdhani", "Trebuchet MS", sans-serif;
+
+  color: $lightTextSecondary;
+  background-color: $primary900;
+  @include transition(background-color 100ms, color 100ms, box-shadow 100ms);
+  @include box-shadow(0 0 1px 0px $boxShadow);
+
+  cursor: pointer;
+}
+
+.modal-button.hide {
+  display: none;
+}
+
+.modal-button:hover {
+	color: $lightTextPrimary;
+	background-color: $primary700;
+  @include box-shadow(0 0 3px 0px $boxShadow);
+}
+
+.modal-button:active {
+  @include box-shadow(0 0 2px 0px $boxShadow inset);
+}
+
+#progress-modal-overlay {
+	background-color: $boxShadow;
+}
+
+#progress-modal {
+	color: $lightTextPrimary;
+	background-color: $primary1000;
+	border-radius: 1px;
+	overflow: hidden;
+
+	cursor: default;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	@include box-shadow(0 0 6px 1px $boxShadow);
+}
+
+#progress-modal-header {
+  height: 32px;
+	padding: 8px 16px;
+
+  line-height: 32px;
+  font-size: 24px;
+
+  .close-icon {
+    padding: 0px 8px;
+    margin-right: -8px;
+    font-size: 32px;
+  }
+}
+
+#progress-modal-body {
+	width: 500px;
+	height: 500px;
+}
+
+#progress-modal-body-container {
+	display: table-row;
+}
+
+.progress-modal-column {
+	display: table-cell;
+	vertical-align: top;
+
+	width: 249px;
+
+	padding: 8px 0;
+
+	border-left: 1px solid $primary900;
+	border-right: 1px solid $primary1100;
+}
+
+.progress-modal-column:first-child {
+	border-left: none;
+}
+
+.progress-modal-column:last-child {
+	border-right: none;
+}
+
+.progress-stat-container {
+	float: left;
+
+	width: 100%;
+
+	padding: 2px 0;
+}
+
+// LOCKED
+.progress-stat-container.zero[data-status='0'] {
+	display: none;
+}
+
+.progress-stat {
+	float: left;
+
+	text-align: right;
+	color: $lightTextSecondary;
+
+	width: 130px;
+}
+
+.progress-stat-value {
+	float: left;
+
+	padding-left: 12px;
+
+	font-weight: bold;
+}
+
+.progress-modal-spacer {
+	float:left;
+
+	width: 100%;
+	height: 1px;
+
+  background-color: $primary1100;
+  border-bottom: solid 1px $primary900;
+
+	margin: 8px 0;
+}
+
+.progress-modal-title {
+	float: left;
+
+	width: 100%;
+
+	color: $smite;
+	text-align: center;
+}
+
+#progress-modal-body::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+#progress-modal-body::-webkit-scrollbar-track {
+	background-color: rgba($gray1000, 1);
+}
+
+#progress-modal-body::-webkit-scrollbar-thumb {
+  background: rgba($gray100, .7);
+}
+
+#progress-modal-body::-webkit-scrollbar-thumb:hover {
+  background: rgba($gray100, 1);
+}
+
+
+#newgame-modal {
+  color: $lightTextPrimary;
+	background-color: $primary1000;
+	border-radius: 1px;
+	overflow: hidden;
+
+	cursor: default;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	@include box-shadow(0 0 7px 0px $boxShadow);
+}
+
+#newgame-modal-overlay {
+}
+
+#newgame-modal-header {
+  height: 24px;
+	padding: 6px 12px;
+
+  line-height: 24px;
+  font-size: 16px;
+
+  .close-icon {
+    padding: 0px 6px;
+    margin-right: -6px;
+    font-size: 24px;
+  }
+}
+
+#newgame-modal-body {
+  width: 240px;
+	height: 120px;
+
+  padding: 8px 12px;
+  line-height: 22px;
+  font-size: 14px;
+  font-family: "Noto","Helvetica Neue",Helvetica,Arial,sans-serif;
+
+  b {
+    font-weight: normal;
+    color: $smite;
+  }
+}
+
+
+#win-modal {
+  color: $lightTextPrimary;
+	background-color: $primary1000;
+	border-radius: 1px;
+	overflow: hidden;
+
+	cursor: default;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	@include box-shadow(0 0 7px 0px $boxShadow);
+}
+
+#win-modal-overlay {
+
+}
+
+#win-modal-header {
+  height: 24px;
+	padding: 6px 12px;
+
+  line-height: 24px;
+  font-size: 16px;
+
+  .close-icon {
+    padding: 0px 6px;
+    margin-right: -6px;
+    font-size: 24px;
+  }
+}
+
+#win-modal-body {
+  width: 300px;
+	height: 250px;
+
+  padding: 8px 12px;
+  line-height: 22px;
+  font-size: 14px;
+  font-family: "Noto","Helvetica Neue",Helvetica,Arial,sans-serif;
+
+  b {
+    font-weight: normal;
+    color: $smite;
+  }
+}
+
+
+#difficulty-modal {
+	float: left;
+
+	width: 90px;
+}
+
+#difficulty-modal-body {
+	float: left;
+
+	width: calc(100% - 12px);
+
+	margin: 0 0 0 6px;
+
+	border-bottom-left-radius: 1px;
+	border-bottom-right-radius: 1px;
+	overflow: hidden;
+
+	@include box-shadow(0 0 5px 1px $boxShadow);
+}

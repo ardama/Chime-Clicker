@@ -2,6 +2,23 @@
   margin: 8px 0 0 0;
   border-radius: 7px; }
 
+/* TOOLTIPS ///////////////////////////////////// */
+.tooltipster-custom {
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.87);
+  color: rgba(255, 255, 255, 0.7); }
+
+.tooltipster-custom .tooltipster-content {
+  font-size: 13px;
+  line-height: 14px;
+  padding: 6px 8px; }
+
+.tooltipster-custom .tooltipster-content b {
+  color: #ffc107; }
+
+.tooltipster-custom .tooltip-image {
+  border-radius: 2px; }
+
 body {
   padding: 0;
   margin: 0;
@@ -40,7 +57,7 @@ body {
   #header #header-link-container {
     float: right;
     margin-right: 60px;
-    border-left: 1px solid #000000;
+    border-left: 1px solid black;
     border-right: 1px solid #191919; }
     #header #header-link-container .header-link {
       float: right;
@@ -52,14 +69,14 @@ body {
       text-decoration: none;
       cursor: pointer;
       border-left: 1px solid #191919;
-      border-right: 1px solid #000000; }
+      border-right: 1px solid black; }
     #header #header-link-container .header-link:hover {
       background-color: #263238;
       color: white;
       border-left: 1px solid #263238; }
     #header #header-link-container .header-link:active {
-      background-color: #1E272C;
-      border-left: 1px solid #1E272C; }
+      background-color: #1e272c;
+      border-left: 1px solid #1e272c; }
 
 #main-container {
   float: left;
@@ -90,7 +107,7 @@ body {
     overflow-x: auto; }
   .wrapper .row {
     color: white;
-    background-color: #000000;
+    background-color: black;
     height: calc(100vh - 36px);
     overflow: auto; }
 
@@ -101,9 +118,9 @@ body {
   overflow-y: auto;
   margin: auto;
   padding: 24px 40px;
-  background-color: #171C1E; }
+  background-color: #171c1e; }
   #content h4 {
-    color: #FFCC5F;
+    color: #ffcc5f;
     font-size: 18px;
     margin-top: 4px;
     margin-bottom: 4px; }
@@ -112,20 +129,20 @@ body {
     margin-bottom: 4px;
     line-height: 22px;
     font-size: 14px;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
+    font-family: "Noto","Helvetica Neue",Helvetica,Arial,sans-serif; }
   #content a {
     text-decoration: none;
-    color: #3E9DFF; }
+    color: #3e9dff; }
   #content ul {
     list-style-type: none;
     padding-left: 16px;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: "Noto","Helvetica Neue",Helvetica,Arial,sans-serif;
     line-height: 22px;
     font-size: 14px;
     margin-bottom: 0px; }
   #content .tooltip {
     font-weight: normal;
-    color: #3E9DFF;
+    color: #3e9dff;
     cursor: pointer; }
 
 #content::-webkit-scrollbar {
@@ -140,5 +157,3 @@ body {
 
 #content::-webkit-scrollbar-thumb:hover {
   background: whitesmoke; }
-
-/*# sourceMappingURL=subpage.css.map */
