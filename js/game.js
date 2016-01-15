@@ -420,11 +420,11 @@ Game.prototype.addSpellTime = function(time) {
 Game.prototype.updateStats = function() {
   this.chimesRate = this.defenseStat * this.movespeedStat * this.ghostBonus;
   // chimes collected equals base defenseStat + 2% of current cps
-  this.chimesPerClick = this.defenseStat * this.ghostBonus + .02 * this.chimesRate;
+  this.chimesPerClick = this.defenseStat * this.ghostBonus + .04 * this.chimesRate;
 
   this.damageRate = this.damageStat * this.attackrateStat * this.exhaustBonus + this.igniteDamageRate;
   // damage dealt equals base damageStat + 2% of current dps
-  this.damagePerClick = this.exhaustBonus * this.damageStat + .02 * this.damageRate;
+  this.damagePerClick = this.exhaustBonus * this.damageStat + .04 * this.damageRate;
 };
 
 Game.prototype.unlockItems = function() {
