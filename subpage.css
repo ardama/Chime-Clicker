@@ -1,34 +1,6 @@
-#paypal-button {
-  margin: 8px 0 0 0;
-  border-radius: 7px; }
-
-/* TOOLTIPS ///////////////////////////////////// */
-.tooltipster-custom {
-  border-radius: 3px;
-  background: rgba(0, 0, 0, 0.87);
-  color: rgba(255, 255, 255, 0.7); }
-
-.tooltipster-custom .tooltipster-content {
-  font-size: 13px;
-  line-height: 14px;
-  padding: 6px 8px; }
-
-.tooltipster-custom .tooltipster-content b {
-  color: #ffc107; }
-
-.tooltipster-custom .tooltip-image {
-  border-radius: 2px; }
-
-body {
-  padding: 0;
-  margin: 0;
-  min-width: 950px;
-  font-family: "Rajdhani", "Trebuchet MS", sans-serif;
-  overflow-y: hidden; }
-
 #header {
   position: relative;
-  z-index: 10;
+  z-index: 1000;
   min-width: 950px;
   height: 36px;
   margin-top: -36px;
@@ -57,31 +29,58 @@ body {
   #header #header-link-container {
     float: right;
     margin-right: 60px;
-    border-left: 1px solid black;
+    border-left: 1px solid #000000;
     border-right: 1px solid #191919; }
     #header #header-link-container .header-link {
       float: right;
       width: 90px;
       height: 100%;
-      font-size: 18px;
+      font-size: 16px;
       color: rgba(255, 255, 255, 0.7);
       text-align: center;
       text-decoration: none;
       cursor: pointer;
       border-left: 1px solid #191919;
-      border-right: 1px solid black; }
-    #header #header-link-container .header-link:hover {
+      border-right: 1px solid #000000; }
+    #header #header-link-container .header-link:hover, #header #header-link-container .header-link.subpage {
       background-color: #263238;
       color: white;
       border-left: 1px solid #263238; }
     #header #header-link-container .header-link:active {
-      background-color: #1e272c;
-      border-left: 1px solid #1e272c; }
+      background-color: #1E272C;
+      border-left: 1px solid #1E272C; }
+
+#paypal-button {
+  margin: 8px 0 0 0;
+  border-radius: 7px; }
+
+/* TOOLTIPS ///////////////////////////////////// */
+.tooltipster-custom {
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.87);
+  color: rgba(255, 255, 255, 0.7); }
+
+.tooltipster-custom .tooltipster-content {
+  font-size: 13px;
+  line-height: 14px;
+  padding: 6px 8px; }
+
+.tooltipster-custom .tooltipster-content b {
+  color: #FFC107; }
+
+.tooltipster-custom .tooltip-image {
+  border-radius: 2px; }
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Rajdhani", "Trebuchet MS", sans-serif;
+  overflow-y: hidden; }
 
 #main-container {
-  float: left;
+  float: right;
   width: 100%;
-  min-width: 950px;
+  height: 100vh;
   cursor: default;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -93,34 +92,15 @@ body {
 .row {
   float: left;
   position: relative;
-  width: 100%; }
-
-.container {
-  font-size: 16px; }
-
-.wrapper {
-  padding: 36px 0 0 0; }
-  .wrapper #header {
-    min-width: 600px; }
-  .wrapper #main-container {
-    min-width: 600px;
-    overflow-x: auto; }
-  .wrapper .row {
-    color: white;
-    background-color: black;
-    height: calc(100vh - 36px);
-    overflow: auto; }
+  color: white;
+  overflow: none; }
 
 #content {
-  width: calc(100% - 80px);
-  max-width: 850px;
-  height: calc(100% - 48px);
+  height: calc(100vh - 20px);
   overflow-y: auto;
-  margin: auto;
-  padding: 24px 40px;
-  background-color: #171c1e; }
+  padding: 20px 40px 0 40px; }
   #content h4 {
-    color: #ffcc5f;
+    color: #FFCC5F;
     font-size: 18px;
     margin-top: 4px;
     margin-bottom: 4px; }
@@ -132,7 +112,7 @@ body {
     font-family: "Noto","Helvetica Neue",Helvetica,Arial,sans-serif; }
   #content a {
     text-decoration: none;
-    color: #3e9dff; }
+    color: #3E9DFF; }
   #content ul {
     list-style-type: none;
     padding-left: 16px;
@@ -142,7 +122,7 @@ body {
     margin-bottom: 0px; }
   #content .tooltip {
     font-weight: normal;
-    color: #3e9dff;
+    color: #3E9DFF;
     cursor: pointer; }
 
 #content::-webkit-scrollbar {
@@ -157,3 +137,22 @@ body {
 
 #content::-webkit-scrollbar-thumb:hover {
   background: whitesmoke; }
+
+.subpage-close-button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 3px 12px;
+  font-size: 36px;
+  line-height: 36px;
+  color: rgba(255, 255, 255, 0.7);
+  -webkit-transition: color 100ms;
+  -moz-transition: color 100ms;
+  -o-transition: color 100ms;
+  transition: color 100ms;
+  cursor: pointer; }
+
+.subpage-close-button:hover {
+  color: white; }
+
+/*# sourceMappingURL=subpage.css.map */

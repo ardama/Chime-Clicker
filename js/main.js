@@ -381,7 +381,7 @@ function initializeHotkeys(game) {
   $(document).bind('keydown.f', function() {$('#damage-bar-dropdown .dropdown-button').click()});
 
   // Dialog hotkeys
-  $(document).bind('keydown.esc', function() {hideModal();});
+  $(document).bind('keydown.esc', function() {hideSubpage(); hideModal();});
 
   // Item hotkeys
   $(document).bind('keydown.1', function() {game.buyItem(RELIC_SHIELD)});
@@ -603,3 +603,42 @@ function showWinModal() {
     }
   });
 };
+
+var subpage;
+function showSubpage(page) {
+  if (subpage && subpage != page) {
+    hideSubpage(openSubpage, page);
+  }
+  else if (subpage == page) {
+    hideSubpage();
+  }
+  else {
+    openSubpage(page);
+  }
+}
+
+function openSubpage(page) {
+  $('#header-' + page).addClass('subpage');
+  $('#subpage-panel').html("<iframe src='" + page + ".html'></iframe>");
+  $('#subpage-panel iframe').load(function() {
+    $('#subpage-panel').css('display', 'block');
+    $('#subpage-panel iframe').animate({opacity: 1}, 300);
+    subpage = page;
+  });
+}
+
+function hideSubpage(onEnd, page) {
+  $('#header-' + subpage).removeClass('subpage');
+  $('#subpage-panel iframe').animate({opacity: 0}, 300,
+    function() {
+      $('#subpage-panel').css('display', 'none');
+      subpage = null;
+      if (onEnd) onEnd(page);
+    }
+  );
+
+  // add class immediately to avoid lag
+  if (onEnd == openSubpage)
+    $('#header-' + page).addClass('subpage');
+
+}

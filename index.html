@@ -28,15 +28,15 @@
 			Chime Clicker
 		</a>
 		<div id="header-link-container">
-			<a id="header-issues" class="header-link" href="issues.html">
+			<div id="header-issues" class="header-link" onclick="showSubpage('issues')">
 				Issues
-			</a>
-			<a id="header-about" class="header-link" href="about.html">
+			</div>
+			<div id="header-about" class="header-link" onclick="showSubpage('about')">
 				About
-			</a>
-			<a id="header-help" class="header-link" href="help.html">
+			</div>
+			<div id="header-help" class="header-link" onclick="showSubpage('help')">
 				Help
-			</a>
+			</div>
 			<a id="header-stats" class="header-link">
 				Stats
 			</a>
@@ -340,6 +340,10 @@
 					</div>
 				</div>
 			</div>
+
+			// Subpage
+			<div id="subpage-panel">
+			</div>
 		</div>
 	</div>
 </div>
@@ -479,7 +483,7 @@
 			</div>
 		</div>
 	</div>
-
 </div>
+
 </body>
 </html>

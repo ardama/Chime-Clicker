@@ -1,109 +1,27 @@
 @import 'variables';
 @import 'mixins';
 
+@import 'header';
 @import 'help';
 @import 'about';
 @import 'issues';
 
 @import 'tooltips';
 
-html {
-
-}
-
 body {
 	padding: 0;
 	margin: 0;
-	min-width: 950px;
-
 
 	font-family: "Rajdhani", "Trebuchet MS", sans-serif;
 	overflow-y: hidden;
 }
 
-#header {
-	position: relative;
-	z-index: 10;
-
-	min-width: 950px;
-	height: 36px;
-
-	margin-top: -36px;
-
-	color: $lightTextPrimary;
-	font-size: 20px;
-	line-height: 36px;
-
-	cursor: default;
-		-webkit-touch-callout: none;
-		-webkit-user-select: none;
-		-khtml-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		user-select: none;
-
-	background-color: $gray1100;
-	@include box-shadow(0px 0px 12px 2px $boxShadow);
-
-	#header-home {
-		float: left;
-
-		color: $lightTextPrimary;
-		text-decoration: none;
-	}
-	#header-icon {
-		float: left;
-
-		height: 24px;
-
-		padding: 6px 12px 6px 18px;
-	}
-
-	#header-link-container {
-		float: right;
-
-		margin-right: 60px;
-
-		border-left: 1px solid $black;
-		border-right: 1px solid $gray1000;
-
-		.header-link {
-			float: right;
-
-			width: 90px;
-			height: 100%;
-
-
-			font-size: 18px;
-			color: $lightTextSecondary;
-			text-align: center;
-			text-decoration: none;
-
-			cursor: pointer;
-
-			border-left: 1px solid $gray1000;
-			border-right: 1px solid $black;
-		}
-
-		.header-link:hover {
-			background-color: $primary900;
-
-			color: $lightTextPrimary;
-
-			border-left: 1px solid $primary900;
-		}
-		.header-link:active {
-			background-color: $primary1000;
-			border-left: 1px solid $primary1000;
-		}
-	}
-}
-
 #main-container {
-	float: left;
+	float: right;
 
 	width: 100%;
-	min-width: 950px;
+	height: 100vh;
+;
 
 	// TODO mixin
 	cursor: default;
@@ -119,43 +37,15 @@ body {
 	float: left;
 	position: relative;
 
-	width: 100%;
-}
-
-.container {
-	font-size: 16px;
-}
-
-.wrapper {
-	padding: 36px 0 0 0;
-
-  #header {
-    min-width: 600px;
-  }
-
-  #main-container {
-    min-width: 600px;
-    overflow-x: auto;
-  }
-
-  .row {
-    color: $lightTextPrimary;
-    background-color: $black;
-    height: calc(100vh - 36px);
-
-    overflow: auto;
-  }
+	color: $lightTextPrimary;
+	overflow: none;
 }
 
 #content {
-  width: calc(100% - 80px);
-  max-width: 850px;
-	height: calc(100% - 48px);
+	height: calc(100vh - 20px);
 	overflow-y: auto;
 
-  margin: auto;
-  padding: 24px 40px;
-  background-color: $primary1100;
+  padding: 20px 40px 0 40px;
 
   h4 {
     color: $smite;
@@ -208,4 +98,23 @@ body {
 
 #content::-webkit-scrollbar-thumb:hover {
 	background: rgba($gray100, 1);
+}
+
+.subpage-close-button {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+
+	padding: 3px 12px;
+	font-size: 36px;
+	line-height: 36px;
+
+	color: $lightTextSecondary;
+	@include transition(color 100ms);
+
+	cursor: pointer;
+}
+
+.subpage-close-button:hover {
+	color: $lightTextPrimary;
 }

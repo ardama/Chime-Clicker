@@ -13,10 +13,11 @@
 		border-radius: 1px;
 		cursor: pointer;
 
-		@include transition(background-color 200ms);
+		@include transition(background-color 100ms, color 100ms);
 	}
 
 	.close-icon:hover {
+		color: $lightTextPrimary;
 		background-color: $gray1000;
 	}
 }
@@ -96,16 +97,16 @@
 }
 
 #progress-modal-header {
-  height: 32px;
-	padding: 8px 16px;
+  height: 36px;
+	padding: 6px 16px;
 
-  line-height: 32px;
+  line-height: 36px;
   font-size: 24px;
 
   .close-icon {
-    padding: 0px 8px;
+    padding: 0px 9px;
     margin-right: -8px;
-    font-size: 32px;
+    font-size: 36px;
   }
 }
 
