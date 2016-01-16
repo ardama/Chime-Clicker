@@ -947,6 +947,7 @@ Game.prototype.saveItems = function(save) {
       itemData['count'] = item.count;
       itemData['upgrades'] = item.upgrades;
       itemData['upgradesAvailable'] = item.upgradesAvailable;
+      itemData['cost'] = item.cost;
 
       obj[itemName] = itemData;
     }
@@ -1130,6 +1131,7 @@ Game.prototype.loadItems = function(obj) {
         item.count = data['count'];
         item.upgrades = data['upgrades'];
         item.upgradesAvailable = data['upgradesAvailable'];
+        item.cost = data['cost'];
 
         item.cost = item.startCost + item.startCost * SCALE_ITEM_COST * item.count;
       }
