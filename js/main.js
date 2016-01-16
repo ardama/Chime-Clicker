@@ -286,8 +286,20 @@ function getBaseLog(x, y) {
 };
 
 function createFloatingText(parent, text, event) {
-  var posX = event.pageX - parent.offset().left - 10;
-  var posY = event.pageY - parent.offset().top - 30;
+  var posX
+  var posY;
+  if (!event.pageX && !event.pageY) {
+    var bounds = event.currentTarget.getBoundingClientRect();
+    posX = bounds.left + bounds.width / 2 + 40 * Math.random() - 20;
+    posY = bounds.top + bounds.height / 2 + 40 * Math.random() - 20;
+  }
+  else {
+    posX = event.pageX;
+    posY = event.pageY;
+  }
+  posX -= parent.offset().left + 10;
+  posY -= parent.offset().top + 30;
+
   var $obj = $("<div>", {class:'counter'});
   $obj.html(text);
   $obj.css({left: posX + 'px', top: posY + 'px'});
