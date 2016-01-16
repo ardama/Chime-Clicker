@@ -1131,9 +1131,7 @@ Game.prototype.loadItems = function(obj) {
         item.count = data['count'];
         item.upgrades = data['upgrades'];
         item.upgradesAvailable = data['upgradesAvailable'];
-        item.cost = data['cost'];
-
-        item.cost = item.startCost + item.startCost * SCALE_ITEM_COST * item.count;
+        item.cost = item.startCost + item.startCost * SCALE_ITEM_COST * item.count * (item.count + 1) / 2;
       }
     }
   }
