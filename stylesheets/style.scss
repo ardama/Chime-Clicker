@@ -90,10 +90,6 @@ body {
 	color: $lightTextPrimary;
 	text-align: center;
 
-	// background-repeat: no-repeat;
-	// background-size: cover;
-	// background-image: url(images/backgrounds/screenshot1_U.png);
-
 	@include box-shadow(0px 0px 8px 1px $boxShadow);
 
 }
@@ -108,7 +104,6 @@ body {
 
 	color: $lightTextPrimary;
 
-	// background-image: url(images/backgrounds/patterns/dark-cardboard.png);
 	background-color: $primary1100;
 }
 
@@ -168,7 +163,7 @@ body {
 
 	background-repeat: no-repeat;
 	background-size: cover;
-	background-image: url(images/backgrounds/Summoners_Rift_Top.png);
+	background-image: url(../images/backgrounds/Summoners_Rift_Top.png);
 	background-color: #ffffff;
 }
 
@@ -185,7 +180,7 @@ body {
 
 	background-repeat: no-repeat;
 	background-size: cover;
-	background-image: url(images/backgrounds/valley_1.png);
+	background-image: url(../images/backgrounds/valley_1.png);
 	background-color: #ffffff;
 }
 
@@ -502,7 +497,7 @@ body {
 }
 
 #chimes-button {
-	background-image: url(images/Chimes_2x.png);
+	background-image: url(../images/Chimes_2x.png);
 
 }
 
@@ -1075,6 +1070,8 @@ body {
 
 	background-color: $black;
 }
+
+#save-button,
 #restart-button,
 #reset-button {
 	float: left;
@@ -1095,15 +1092,18 @@ body {
 
 	i {
 		font-size: 12px;
+		margin-right: 4px;
 	}
 }
 
+#save-button:hover,
 #restart-button:hover,
 #reset-button:hover {
 	background-color: $primary700;
 	color: $lightTextPrimary;
 }
 
+#save-button:active,
 #restart-button:active,
 #reset-button:active {
 	background-color: $primary700;
@@ -1151,7 +1151,7 @@ body {
 
 
 .gold-icon {
-	background-image: url(images/Gold.gif);
+	background-image: url(../images/Gold.gif);
 	background-size: contain;
 	background-repeat: no-repeat;
 }

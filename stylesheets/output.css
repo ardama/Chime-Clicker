@@ -1488,6 +1488,7 @@ body {
   width: 100%;
   background-color: black; }
 
+#save-button,
 #restart-button,
 #reset-button {
   float: left;
@@ -1504,15 +1505,19 @@ body {
   -moz-transition: background-color 100ms, margin 100ms, color 100ms;
   -o-transition: background-color 100ms, margin 100ms, color 100ms;
   transition: background-color 100ms, margin 100ms, color 100ms; }
+  #save-button i,
   #restart-button i,
   #reset-button i {
-    font-size: 12px; }
+    font-size: 12px;
+    margin-right: 4px; }
 
+#save-button:hover,
 #restart-button:hover,
 #reset-button:hover {
   background-color: #455a64;
   color: white; }
 
+#save-button:active,
 #restart-button:active,
 #reset-button:active {
   background-color: #455a64;

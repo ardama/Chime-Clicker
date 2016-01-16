@@ -1032,6 +1032,7 @@ Game.prototype.loadProgress = function() {
   obj['general']['goldEarned'] = 0;
   obj['general']['goldSpent'] = 0;
 
+  obj['general']['points'] = 0;
   obj['general']['pointsEarned'] = 0;
 
   // items purchased
@@ -1229,7 +1230,9 @@ Game.prototype.newGame = function(reset, difficulty) {
   else {
     this.saveProgress();
     if (this.monsters[TEEMO].count > 0)
-      this.progress.general.pointsEarned += (getBaseLog(20, this.monsters[TEEMO].count) + 1) * POINT_BONUS[this.difficulty];
+      var points = (getBaseLog(20, this.monsters[TEEMO].count) + 1) * POINT_BONUS[this.difficulty];
+      this.progress.general.points += points;
+      this.progress.general.pointsEarned += points;
   }
   localStorage.setItem('difficulty', difficulty ? DIFFICULTIES.indexOf(difficulty) : DIFFICULTIES.indexOf(this.difficulty));
   localStorage.removeItem('save');

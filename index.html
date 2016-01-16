@@ -316,8 +316,9 @@
 			<!-- timer and spells -->
 			<div id="column-3" class="column">
 				<div id="restart-container">
-					<div id="restart-button" class="button touch-target" ng-click="game.showNewGameModal(false, game.difficulty)">New Game</div>
-					<div id="reset-button" class="button touch-target" ng-click="game.showNewGameModal(true, game.difficulty)">Reset <i class='fa fa-refresh'></i></div>
+					<div id="save-button" class="button touch-target" ng-click="game.save()"><i class='fa fa-save'></i> Save</div>
+					<div id="restart-button" class="button touch-target" ng-click="game.showNewGameModal(false, game.difficulty)"><i class='fa fa-undo'></i> New</div>
+					<div id="reset-button" class="button touch-target" ng-click="game.showNewGameModal(true, game.difficulty)"><i class='fa fa-trash'></i> Reset</div>
 					<div id="time-container">
 						<div id="difficulty" class="touch-target">
 							{{game.difficulty.capitalize()}} <i class="fa fa-angle-down"></i>

@@ -572,7 +572,7 @@ function hideModal() {
 
 function showNewGameModal(reset, difficulty) {
   hideModal();
-  var message = reset ? 'Are you sure you want to reset your progress and start a new game?' : 'Are you sure you want to start a new game' + (difficulty ? ' on <b>' + difficulty.capitalize() + '</b>' : '')+'?  Your overall progress will be saved.';
+  var message = reset ? 'Are you sure you want to reset and start a new game?  All progress will be permanently discarded.' : 'Are you sure you want to start a new game' + (difficulty ? ' on <b>' + difficulty.capitalize() + '</b>' : '')+'?  Your overall progress will be saved.';
   $("#newgame-modal-text").html(message);
   $("#newgame-modal").modal({
     persist: true,
