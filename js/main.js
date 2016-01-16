@@ -642,3 +642,11 @@ function hideSubpage(onEnd, page) {
     $('#header-' + page).addClass('subpage');
 
 }
+
+var savingTimeout;
+function showSave() {
+  if (savingTimeout) window.clearTimeout(savingTimeout);
+
+  $('#save-button').addClass('saving');
+  savingTimeout = window.setTimeout(function() {$('#save-button').removeClass('saving'); savingTimeout = null;}, 200);
+}

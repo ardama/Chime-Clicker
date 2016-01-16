@@ -889,6 +889,7 @@ Game.prototype.showNewGameModal = function(reset, difficulty) {
 Game.prototype.save = function() {
   this.saveProgress();
   this.saveGame();
+  showSave();
 };
 
 Game.prototype.saveProgress = function() {
