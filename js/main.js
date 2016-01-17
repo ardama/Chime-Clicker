@@ -194,7 +194,7 @@ function updateButtons(force) {
 };
 
 function updateTooltips(scroll) {
-  $('.spell-wrapper').each(function() {
+  $('.spell-wrapper, .item-buy').each(function() {
     // TODO: figure out how to position off-screen tooltips properly
     if (scroll) {
       return;
@@ -267,15 +267,15 @@ function prettyInt(num) {
 };
 
 function prettyTime(seconds) {
-  var s = seconds % 60;
+  var s = Math.floor(seconds % 60);
   var m = Math.floor(seconds / 60) % 60;
   var h = Math.floor(seconds / 3600);
 
   var str = "";
   if (h)
-    str = h + "h " + m + "m " + s + "s";
+    str = h + "h" + m + "m" + s + "s";
   else if (m)
-    str = m + "m " + s + "s";
+    str = m + "m" + s + "s";
   else
     str = s + "s";
   return str;
@@ -283,6 +283,22 @@ function prettyTime(seconds) {
 
 function getBaseLog(x, y) {
   return Math.log(y) / Math.log(x);
+};
+
+function getFactorialRange(n, m) {
+  var result = 1;
+  n = n || 0;
+  m = m || 0;
+
+  while (n > m) {
+    result *= n;
+    n--;
+  }
+  return result;
+};
+
+function stirlingApproximation(n) {
+  return (n + 0.5) * Math.log(n) - n + Math.log(2 * Math.PI) / 2;
 };
 
 function createFloatingText(parent, text, event) {

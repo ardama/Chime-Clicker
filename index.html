@@ -228,13 +228,13 @@ ga('send', 'pageview');
 						</div>
 						<!-- item header -->
 						<div class="item-header">
-							<div class="item-buy item-buy-5 touch-target" ng-click="game.buyItem(item, 10)">
+							<div class="item-buy item-buy-5 touch-target" ng-click="game.buyItem(item, 10)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{game.prettyIntCompact(game.items[item].cost10)}}" data-position="top">
 								+10
 							</div>
-							<div class="item-buy item-buy-20 touch-target" ng-click="game.buyItem(item, 100)">
+							<div class="item-buy item-buy-20 touch-target" ng-click="game.buyItem(item, 100)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{game.prettyIntCompact(game.items[item].cost100)}}" data-position="top">
 								+100
 							</div>
-							<div class="item-buy item-buy-100 touch-target" ng-click="game.buyItem(item, 1000)">
+							<div class="item-buy item-buy-100 touch-target" ng-click="game.buyItem(item, 1000)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{game.prettyIntCompact(game.items[item].cost1000)}}" data-position="top">
 								+1000
 							</div>
 							<div class="item-name">
@@ -335,7 +335,7 @@ ga('send', 'pageview');
 						</div>
 						<br/>
 						<div id="time">
-							{{game.getRoundedTime()}}
+							{{game.prettyTime(game.getTime())}}
 						</div>
 					</div>
 				</div>
@@ -415,7 +415,7 @@ ga('send', 'pageview');
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Time Played </div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.timePlayed)}}</div>
+						<div class="progress-stat-value">{{game.prettyTime(game.progress.general.timePlayed)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Total Clicks </div>
@@ -437,7 +437,7 @@ ga('send', 'pageview');
 					<div class="progress-modal-title">Fastest Times</div>
 					<div ng-repeat="object in game.progress.times | orderObjectBy: 'order'" class="progress-stat-container progress-time">
 						<div class="progress-stat">{{object.difficulty.capitalize()}}</div>
-						<div class="progress-stat-value">{{object.count > 0 ? game.prettyIntCompact(object.count) : '--'}}</div>
+						<div class="progress-stat-value">{{object.count > 0 ? game.prettyTime(object.count) : '--'}}</div>
 					</div>
 				</div>
 

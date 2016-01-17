@@ -264,7 +264,7 @@ Game.prototype.createMonsters = function() {
     scaleReward = Math.pow(SCALE_MONSTER_LEVEL_REWARD, i);
     if (i == len - 1) {
       var health = MONSTER_HEALTH * scaleHealth * 15;
-      var healthPower = Math.floor(Math.log10(health));
+      var healthPower = Math.floor(getBaseLog(10, health));
       var newHealth = Math.pow(10, healthPower) * 1.11111.toFixed(2 + healthPower % 3);
       newHealth = Math.ceil(health / newHealth) * newHealth;
 
@@ -359,14 +359,21 @@ Game.prototype.addExperience = function(experience) {
 Game.prototype.addMeeps = function(meeps) {
   meeps = meeps || 1;
 
-  this.meeps += meeps;
-  this.damageStat += meeps * this.meepDamage;
-  this.progress.general.totalMeeps += meeps;
 
-  while (meeps--) {
-    this.chimesPerMeep += Math.log2(this.meeps);
+  var oldMeeps = this.meeps || 1;
+  var newMeeps = this.meeps + meeps;
+
+  if (newMeeps - oldMeeps < 10) {
+    this.chimesPerMeep += Math.log(getFactorialRange(newMeeps, oldMeeps)) / Math.log(2);
+  }
+  else {
+    this.chimesPerMeep += stirlingApproximation(newMeeps) / Math.log(2) - stirlingApproximation(oldMeeps) / Math.log(2);
   }
   this.chimesPerMeepFloor = Math.floor(this.chimesPerMeep);
+
+  this.meeps = newMeeps;
+  this.damageStat += meeps * this.meepDamage;
+  this.progress.general.totalMeeps += meeps;
 
   this.updateStats();
 };
@@ -567,6 +574,10 @@ Game.prototype.buyItem = function(name, count) {
   this.attackrateStat += bought * item.attackrateStat;
   this.income += bought * item.income;
 
+  item.cost10 = item.calculatePurchaseCost(10);
+  item.cost100 = item.calculatePurchaseCost(100);
+  item.cost1000 = item.calculatePurchaseCost(1000);
+
   this.progress.items[name].count += bought;
 
   if (this.spells[FAVOR].status != this.LOCKED && name == ANCIENT_COIN)
@@ -728,7 +739,7 @@ Game.prototype.getTime = function() {
 };
 
 Game.prototype.getRoundedTime = function() {
-  return Math.floor(this.steps / this.fps);
+  return Math.floor(this.getTime());
 };
 
 Game.prototype.getImageUrl = function(name, folder) {
@@ -1132,6 +1143,9 @@ Game.prototype.loadItems = function(obj) {
         item.upgrades = data['upgrades'];
         item.upgradesAvailable = data['upgradesAvailable'];
         item.cost = item.startCost + item.startCost * SCALE_ITEM_COST * item.count * (item.count + 1) / 2;
+        item.cost10 = item.calculatePurchaseCost(10);
+        item.cost100 = item.calculatePurchaseCost(100);
+        item.cost1000 = item.calculatePurchaseCost(1000);
       }
     }
   }

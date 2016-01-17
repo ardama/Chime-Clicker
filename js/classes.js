@@ -22,10 +22,22 @@ Item.prototype.Init = function(game, cost, level, defenseStat, movespeedStat, da
 
   this.upgrades = [];
   this.upgradesAvailable = [];
+
+  this.cost10 = this.calculatePurchaseCost(10);
+  this.cost100 = this.calculatePurchaseCost(100);
+  this.cost1000 = this.calculatePurchaseCost(1000);
 };
 
 Item.prototype.isZero = function(stat) {
   return this[stat] ? '' : 'item-zero';
+};
+
+Item.prototype.calculateTotalCost  = function(n) {
+  return this.startCost * SCALE_ITEM_COST * ((Math.pow(n, 3) - n) / 6) + n * this.startCost;
+};
+
+Item.prototype.calculatePurchaseCost  = function(n) {
+  return this.calculateTotalCost(n + this.count) - this.calculateTotalCost(this.count);
 };
 
 var Upgrade = function(game, item, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income, requirements) {
