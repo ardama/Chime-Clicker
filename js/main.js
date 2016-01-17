@@ -269,15 +269,18 @@ function prettyInt(num) {
 function prettyTime(seconds) {
   var s = Math.floor(seconds % 60);
   var m = Math.floor(seconds / 60) % 60;
-  var h = Math.floor(seconds / 3600);
+  var h = Math.floor(seconds / 3600) % 24;
+  var d = Math.floor(seconds / 86400);
 
   var str = "";
-  if (h)
-    str = h + "h " + m + "m " + s + "s";
+  if (d)
+    str = d + ":" + ("0" + h).slice(-2) + ":" + ("0" + m).slice(-2) + ":" + ("0" + s).slice(-2);
+  else if (h)
+    str = h + ":" + ("0" + m).slice(-2) + ":" + ("0" + s).slice(-2);
   else if (m)
-    str = m + "m " + s + "s";
+    str = m + ":" + ("0" + s).slice(-2);
   else
-    str = s + "s";
+    str = s;
   return str;
 };
 

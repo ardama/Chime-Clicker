@@ -17,6 +17,9 @@ Game.prototype.Init = function(scope, difficulty) {
   this.fps = 18;
   this.stepSize = 1 / this.fps;
   this.steps = 0;
+  this.timePlayed = 0;
+  this.stepStart;
+  this.stepEnd = new Date();
 
   this.won = false;
   this.level = 1;
@@ -283,33 +286,45 @@ Game.prototype.createMonsters = function() {
 };
 
 Game.prototype.start = function() {
-  var thisRef = this;
-  window.setInterval(function() {
-    thisRef.scope.$apply(function(scope) {
-      thisRef.step(thisRef.stepSize);
-    });
-  }, thisRef.stepSize * 1000);
+  var thisref = this;
+  this.step();
+  // window.setInterval(function() {
+  //   thisRef.scope.$apply(function(scope) {
+  //     thisRef.step(thisRef.stepSize);
+  //   });
+  // }, thisRef.stepSize * 1000);
 
   window.setInterval(function() {
     updateTooltips();
   }, 200);
+
+  window.setInterval(function() {
+    thisref.save();
+  }, 20000);
 };
 
 
 // Increment functions
 Game.prototype.step = function(step) {
-  this.addChimes(this.chimesRate * step);
-  this.addDamage(this.damageRate * step);
-  this.addGold(this.income * step);
-  this.addSpellTime(step);
+  this.stepStart = new Date();
+  var elapsedTime  = (this.stepStart - this.stepEnd) / 1000;
 
-  this.steps++;
-  this.progress.general.timePlayed += this.stepSize;
+  var thisref = this;
+  this.scope.$apply(function(scope) {
+    thisref.addChimes(thisref.chimesRate * elapsedTime);
+    thisref.addDamage(thisref.damageRate * elapsedTime);
+    thisref.addGold(thisref.income * elapsedTime);
+    thisref.addSpellTime(elapsedTime);
 
-  // autosave every 20th second
-  if (this.getTime() % 20 == 0) {
-    this.save();
-  }
+    thisref.timePlayed += elapsedTime;
+    thisref.progress.general.timePlayed += elapsedTime;
+  });
+
+  this.stepEnd = this.stepStart;
+
+  window.setTimeout(function() {
+    thisref.step();
+  }, thisref.stepSize * 1000)
 };
 
 Game.prototype.addChimes = function(chimes) {
@@ -923,6 +938,7 @@ Game.prototype.saveState = function(save) {
   var obj = {};
 
   obj['steps'] = this.steps;
+  obj['timePlayed'] = this.timePlayed;
   obj['won'] = this.won;
   obj['level'] = this.level;
 
@@ -1108,6 +1124,7 @@ Game.prototype.loadState = function(obj) {
   if (!obj) return;
 
   this.steps = obj['steps'];
+  this.timePlayed = obj['timePlayed'] || this.steps * this.stepSize;
   this.won = obj['won'];
   this.level = obj['level'];
 
@@ -1243,11 +1260,12 @@ Game.prototype.newGame = function(reset, difficulty) {
     localStorage.removeItem('progress');
   }
   else {
-    this.saveProgress();
-    if (this.monsters[TEEMO].count > 0)
+    if (this.monsters[TEEMO].count > 0) {
       var points = (getBaseLog(20, this.monsters[TEEMO].count) + 1) * POINT_BONUS[this.difficulty];
       this.progress.general.points += points;
       this.progress.general.pointsEarned += points;
+    }
+    this.saveProgress();
   }
   localStorage.setItem('difficulty', difficulty ? DIFFICULTIES.indexOf(difficulty) : DIFFICULTIES.indexOf(this.difficulty));
   localStorage.removeItem('save');
