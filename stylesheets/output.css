@@ -1086,6 +1086,9 @@ body {
   font-size: 14px;
   background-color: #171c1e; }
 
+.item[data-status='0'] {
+  display: none; }
+
 .item-divider {
   float: left;
   width: 100%;
@@ -1535,12 +1538,12 @@ body {
   float: left;
   width: 100%;
   padding: 4px 0 0;
+  font-size: 14px;
   line-height: 20px; }
   #time-container #difficulty {
     float: left;
     width: calc(100%);
     padding: 0;
-    font-size: 14px;
     color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
     -webkit-transition: color 200ms;

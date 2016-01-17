@@ -273,9 +273,9 @@ function prettyTime(seconds) {
 
   var str = "";
   if (h)
-    str = h + "h" + m + "m" + s + "s";
+    str = h + "h " + m + "m " + s + "s";
   else if (m)
-    str = m + "m" + s + "s";
+    str = m + "m " + s + "s";
   else
     str = s + "s";
   return str;

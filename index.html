@@ -214,7 +214,7 @@ ga('send', 'pageview');
 				</div>
 				<div id="items-container">
 					<!-- unlocked items -->
-					<div ng-repeat="item in game.getObjectsByStatus(game.items, game.AVAILABLE)" class="item container">
+					<div ng-repeat="item in game.getObjectsByStatus(game.items)" class="item container" data-status="{{game.items[item].status}}">
 						<!-- item image -->
 						<div class="item-left touch-target" ng-click="game.buyItem(item)">
 							<div class="item-cost">
