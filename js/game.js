@@ -391,7 +391,7 @@ Game.prototype.addMeeps = function(meeps) {
   var oldMeeps = this.meeps || 1;
   var newMeeps = this.meeps + meeps;
 
-  if (newMeeps - oldMeeps < 10) {
+  if (oldMeeps < 15 && newMeeps < 30) {
     this.chimesPerMeep += Math.log(getFactorialRange(newMeeps, oldMeeps)) / Math.log(2);
   }
   else {
