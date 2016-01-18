@@ -1152,7 +1152,7 @@ body {
     display: none; }
 
 #level.won {
-  font-size: 32px;
+  font-size: 28px;
   line-height: 50px; }
   #level.won #chime-points {
     display: block;
