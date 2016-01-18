@@ -442,7 +442,7 @@ Game.prototype.addSpellTime = function(time) {
   for (var i = 0; i < len; i++) {
     var unavailableSpell = this.spells[unavailableSpells[i]];
     if (unavailableSpell.durationLeft > 0) {
-      unavailabelSpell.durationLeft = 0;
+      unavailableSpell.durationLeft = 0;
       unavailableSpell.end(this);
       unavailableSpell.status = this.COOLDOWN;
       unavailableSpell.cooldownLeft = unavailableSpell.cooldown;
