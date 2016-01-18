@@ -1,6 +1,6 @@
 #header {
 	position: relative;
-	z-index: 1000;
+	z-index: 1003;
 
 	min-width: 950px;
 	height: 36px;
@@ -60,6 +60,7 @@
 
 			border-left: 1px solid $gray1000;
 			border-right: 1px solid $black;
+			@include transition(border-left 100ms, border-right 100ms, color 100ms, background-color 100ms);
 		}
 
 		.header-link:hover, .header-link.subpage {
@@ -74,5 +75,25 @@
 		}
 
 
+		#header-save {
+			width: 55px;
+			font-size: 14px;
+			@include transition(border-left 100ms, border-right 100ms, color 100ms, background-color 100ms);
+		}
+
+		#header-save.saving {
+			color: $lightTextPrimary;
+			background-color: $primary500;
+		}
+
+		#header-save.saving:hover {
+			color: $lightTextPrimary;
+			background-color: $primary500;
+		}
+
+		#header-menu {
+			width: 55px;
+			font-size: 14px;
+		}
 	}
 }

@@ -110,7 +110,9 @@ var EXPERIENCE_NEEDED = 1250;
 var MONSTER_HEALTH = 200;
 var MONSTER_EXPERIENCE = 65;
 var MONSTER_REWARD = 20;
-var POINT_BONUS = {'easy' : 1, 'medium' : 3, 'hard' : 9, 'marathon' : 27, 'impossible' : 81};
+var POINT_BONUS = {'easy' : 1, 'medium' : 4, 'hard' : 16, 'marathon' : 64, 'impossible' : 256};
+var IGNITE_PERCENT = {'easy' : .30, 'medium' : .24, 'hard' : .18, 'marathon' : .12, 'impossible' : .06};
+
 
 var DIFFICULTIES = ['easy', 'medium', 'hard', 'marathon', 'impossible'];
 
@@ -227,7 +229,7 @@ function updateLastItem() {
 
 ///// UTILITY ////////////////////
 var LONG_NUMBER_NAMES = ['million', 'billion', 'trillion', 'quadrillion', 'quintillion', 'sextillion', 'septillion', 'octillion', 'nontillion', 'decillion']
-var SHORT_NUMBER_NAMES = ['m', 'b', 't', 'qd', 'qt', 'sx', 'sp', 'o', 'n', 'd']
+var SHORT_NUMBER_NAMES = ['m', 'b', 't', 'qd', 'qt', 'sx', 'sp', 'o', 'n', 'dc']
 function prettyIntBig(num, fixed) {
   fixed = fixed || 2;
   var n = Math.pow(10, fixed);
@@ -364,6 +366,10 @@ GameApp.controller('GameController', function($scope) {
 
     initializeHotkeys($scope.game);
     initializeButtons($scope.game);
+
+    window.importGame = function() {
+      $scope.game.importGame($('#import-modal-text').val());
+    }
 });
 
 
@@ -550,6 +556,32 @@ $(window).load(function() {
     });
   })
 
+  $('#header-menu').click(function(event) {
+    if (modal) {
+      hideModal();
+      return;
+    }
+
+    event.stopPropagation();
+    var posX = $(this).offset().left - $('body').scrollLeft() - 57;
+    var posY = $(this).offset().top + $(this).outerHeight();
+
+    $('#menu-modal').modal({
+      persist: true,
+      overlayClose: true,
+      position: [posY, posX],
+      modal: false,
+      onOpen: function(dialog) {
+      	dialog.overlay.fadeIn(200);
+        dialog.container.fadeIn(200);
+        dialog.data.fadeIn(200);
+      },
+      onShow: function () {
+        modal = true;
+      }
+    });
+  });
+
   $('#difficulty').click(function(event) {
     if (modal) {
       hideModal();
@@ -566,9 +598,9 @@ $(window).load(function() {
       position: [posY, posX],
       modal: false,
       onOpen: function(dialog) {
-      	dialog.overlay.slideDown(200);
-        dialog.container.slideDown(200);
-        dialog.data.slideDown(200);
+      	dialog.overlay.fadeIn(200);
+        dialog.container.fadeIn(200);
+        dialog.data.fadeIn(200);
       },
       onShow: function () {
         modal = true;
@@ -601,9 +633,19 @@ function hideModal() {
   $.modal.close();
 };
 
-function showNewGameModal(reset, difficulty) {
+function showNewGameModal(reset, difficulty, points) {
   hideModal();
-  var message = reset ? 'Are you sure you want to reset and start a new game?  All progress will be permanently discarded.' : 'Are you sure you want to start a new game' + (difficulty ? ' on <b>' + difficulty.capitalize() + '</b>' : '')+'?  Your overall progress will be saved.';
+  var message;
+  if (reset)
+    message = 'Are you sure you want to reset everything and start a new game?  All progress will be permanently discarded.'
+  else {
+    message = 'Are you sure you want to start a new game' + (difficulty ? ' on <b>' + difficulty.capitalize() + '</b>' : '')+'?  Your overall progress will be saved';
+    if (points > 0)
+      message += ' and you will be credited with <b>' + points.toFixed(1) + '</b> chime points.';
+    else
+      message += '.';
+  }
+
   $("#newgame-modal-text").html(message);
   $("#newgame-modal").modal({
     persist: true,
@@ -635,6 +677,39 @@ function showWinModal() {
   });
 };
 
+function showExportModal(text) {
+  hideModal();
+  $("#export-modal-text").html(text);
+  $("#export-modal").modal({
+    persist: true,
+    overlayClose: false,
+    modal: false,
+    overlayId: 'export-modal-overlay',
+    position: [72, null],
+    onOpen: function (dialog) {
+      dialog.overlay.fadeIn(200);
+      dialog.container.fadeIn(200);
+      dialog.data.fadeIn(200);
+    }
+  });
+};
+
+function showImportModal() {
+  hideModal();
+  $("#import-modal").modal({
+    persist: true,
+    overlayClose: false,
+    modal: false,
+    overlayId: 'import-modal-overlay',
+    position: [72, null],
+    onOpen: function (dialog) {
+      dialog.overlay.fadeIn(200);
+      dialog.container.fadeIn(200);
+      dialog.data.fadeIn(200);
+    }
+  });
+};
+
 var subpage;
 function showSubpage(page) {
   if (subpage && subpage != page) {
@@ -646,7 +721,7 @@ function showSubpage(page) {
   else {
     openSubpage(page);
   }
-}
+};
 
 function openSubpage(page) {
   $('#header-' + page).addClass('subpage');
@@ -656,7 +731,7 @@ function openSubpage(page) {
     $('#subpage-panel iframe').animate({opacity: 1}, 300);
     subpage = page;
   });
-}
+};
 
 function hideSubpage(onEnd, page) {
   $('#header-' + subpage).removeClass('subpage');
@@ -672,12 +747,65 @@ function hideSubpage(onEnd, page) {
   if (onEnd == openSubpage)
     $('#header-' + page).addClass('subpage');
 
-}
+};
 
 var savingTimeout;
 function showSave() {
   if (savingTimeout) window.clearTimeout(savingTimeout);
 
-  $('#save-button').addClass('saving');
-  savingTimeout = window.setTimeout(function() {$('#save-button').removeClass('saving'); savingTimeout = null;}, 200);
-}
+  $('#header-save').addClass('saving');
+  savingTimeout = window.setTimeout(function() {$('#header-save').removeClass('saving'); savingTimeout = null;}, 200);
+};
+
+// LZW-compress a string
+function lzw_encode(s) {
+    var dict = {};
+    var data = (s + "").split("");
+    var out = [];
+    var currChar;
+    var phrase = data[0];
+    var code = 256;
+    for (var i=1; i<data.length; i++) {
+        currChar=data[i];
+        if (dict[phrase + currChar] != null) {
+            phrase += currChar;
+        }
+        else {
+            out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
+            dict[phrase + currChar] = code;
+            code++;
+            phrase=currChar;
+        }
+    }
+    out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
+    for (var i=0; i<out.length; i++) {
+        out[i] = String.fromCharCode(out[i]);
+    }
+    return out.join("");
+};
+
+// Decompress an LZW-encoded string
+function lzw_decode(s) {
+    var dict = {};
+    var data = (s + "").split("");
+    var currChar = data[0];
+    var oldPhrase = currChar;
+    var out = [currChar];
+    var code = 256;
+    var phrase;
+    for (var i=1; i<data.length; i++) {
+        var currCode = data[i].charCodeAt(0);
+        if (currCode < 256) {
+            phrase = data[i];
+        }
+        else {
+           phrase = dict[currCode] ? dict[currCode] : (oldPhrase + currChar);
+        }
+        out.push(phrase);
+        currChar = phrase.charAt(0);
+        dict[code] = oldPhrase + currChar;
+        code++;
+        oldPhrase = phrase;
+    }
+    return out.join("");
+};

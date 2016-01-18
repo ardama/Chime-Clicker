@@ -9,6 +9,8 @@
 <script src="js/jquery.simplemodal.1.4.4.min.js"></script>
 <script src="js/angular.min.js"></script>
 <script src="js/ng-order-object-by.js"></script>
+<script src="js/jsonh.js"></script>
+<script src="js/lz-string.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/game.js"></script>
 <script src="js/classes.js"></script>
@@ -38,6 +40,12 @@ ga('send', 'pageview');
 			Chime Clicker
 		</a>
 		<div id="header-link-container">
+			<div id="header-menu" class="header-link">
+				<i class="fa fa-bars"></i>
+			</div>
+			<div id="header-save" class="header-link" ng-click="game.save()">
+				<i class='fa fa-save'></i>
+			</div>
 			<div id="header-issues" class="header-link" onclick="showSubpage('issues')">
 				Issues
 			</div>
@@ -200,8 +208,9 @@ ga('send', 'pageview');
 								</div>
 							</div>
 						</div>
-						<div id="level" class="title {{game.getLevelText()}}" data-toggle="tooltip" data-title="Level up to unlock new items, spells, and monsters.">
+						<div id="level" class="title {{game.getLevelText()}} {{game.won ? 'won' : ''}}" data-toggle="tooltip" data-title="Level up to unlock new items, spells, and monsters.">
 							{{game.getLevelText()}}
+							<div id="chime-points">Chime<br/>Points</div>
 						</div>
 						<div id="experience-bar" class="bar {{game.won ? 'won' : ''}}">
 							<div id="experience-bar-fill" class="bar-fill" style="width:{{game.getExperiencePercent()}}%"></div>
@@ -326,9 +335,6 @@ ga('send', 'pageview');
 			<!-- timer and spells -->
 			<div id="column-3" class="column">
 				<div id="restart-container">
-					<div id="save-button" class="button touch-target" ng-click="game.save()"><i class='fa fa-save'></i> Save</div>
-					<div id="restart-button" class="button touch-target" ng-click="game.showNewGameModal(false, game.difficulty)"><i class='fa fa-undo'></i> New</div>
-					<div id="reset-button" class="button touch-target" ng-click="game.showNewGameModal(true, game.difficulty)"><i class='fa fa-trash'></i> Reset</div>
 					<div id="time-container">
 						<div id="difficulty" class="touch-target">
 							{{game.difficulty.capitalize()}} <i class="fa fa-angle-down"></i>
@@ -365,6 +371,18 @@ ga('send', 'pageview');
 			<div ng-repeat="difficulty in game.DIFFICULTIES" class="{{difficulty == game.difficulty ? 'hide': ''}} difficulty-button" ng-click="game.showNewGameModal(false, difficulty)">{{difficulty.capitalize()}}</div>
 		</div>
 	</div>
+
+	<div id="menu-modal" class="modal">
+		<div id="menu-modal-body">
+			<div class="menu-button button touch-target" ng-click="game.showNewGameModal(false)"><i class='fa fa-undo'></i> New Game</div>
+			<div class="menu-button button touch-target" ng-click="game.exportGame()"><i class="fa fa-upload"></i> Export Save</div>
+			<div class="menu-button button touch-target" onclick="showImportModal()"><i class="fa fa-download"></i> Import Save</div>
+			<div class="menu-button button touch-target" ng-click="game.showNewGameModal(true)"><i class='fa fa-trash'></i> Hard Reset</div>
+		</div>
+	</div>
+
+
+
 	<div id="progress-modal" class="modal">
 		<div id="progress-modal-header" class="modal-header">Statistics
 			<div class="close-icon" onclick="hideModal()">&times;</div>
@@ -423,7 +441,7 @@ ga('send', 'pageview');
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Chime Points</div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.points)}}</div>
+						<div class="progress-stat-value">{{game.progress.general.points.toFixed(1)}}</div>
 					</div>
 					<div class="progress-modal-spacer"></div>
 
@@ -494,6 +512,34 @@ ga('send', 'pageview');
 			</div>
 		</div>
 	</div>
+
+	<div id="export-modal" class="modal">
+		<div id="export-modal-header" class="modal-header">Export Save
+			<div class="close-icon" onclick="hideModal()">&times;</div>
+		</div>
+		<div id="export-modal-body" class="modal-body">
+			<div id="export-modal-body-container">
+				<div id="export-modal-text"></div>
+				<div id="export-modal-button-container" class="modal-button-container">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="import-modal" class="modal">
+		<div id="import-modal-header" class="modal-header">Import Save
+			<div class="close-icon" onclick="hideModal()">&times;</div>
+		</div>
+		<div id="import-modal-body" class="modal-body">
+			<div id="import-modal-body-container">
+				<textarea id="import-modal-text"></textarea>
+				<div id="import-modal-button-container" class="modal-button-container">
+					<div class="import-confirm modal-button" onclick="importGame()">Import</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </div>
 
 </body>

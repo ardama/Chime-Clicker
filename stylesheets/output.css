@@ -1,6 +1,6 @@
 #header {
   position: relative;
-  z-index: 1000;
+  z-index: 1003;
   min-width: 950px;
   height: 36px;
   margin-top: -36px;
@@ -41,7 +41,11 @@
       text-decoration: none;
       cursor: pointer;
       border-left: 1px solid #191919;
-      border-right: 1px solid black; }
+      border-right: 1px solid black;
+      -webkit-transition: border-left 100ms, border-right 100ms, color 100ms, background-color 100ms;
+      -moz-transition: border-left 100ms, border-right 100ms, color 100ms, background-color 100ms;
+      -o-transition: border-left 100ms, border-right 100ms, color 100ms, background-color 100ms;
+      transition: border-left 100ms, border-right 100ms, color 100ms, background-color 100ms; }
     #header #header-link-container .header-link:hover, #header #header-link-container .header-link.subpage {
       background-color: #263238;
       color: white;
@@ -49,6 +53,22 @@
     #header #header-link-container .header-link:active {
       background-color: #1e272c;
       border-left: 1px solid #1e272c; }
+    #header #header-link-container #header-save {
+      width: 55px;
+      font-size: 14px;
+      -webkit-transition: border-left 100ms, border-right 100ms, color 100ms, background-color 100ms;
+      -moz-transition: border-left 100ms, border-right 100ms, color 100ms, background-color 100ms;
+      -o-transition: border-left 100ms, border-right 100ms, color 100ms, background-color 100ms;
+      transition: border-left 100ms, border-right 100ms, color 100ms, background-color 100ms; }
+    #header #header-link-container #header-save.saving {
+      color: white;
+      background-color: #607d8b; }
+    #header #header-link-container #header-save.saving:hover {
+      color: white;
+      background-color: #607d8b; }
+    #header #header-link-container #header-menu {
+      width: 55px;
+      font-size: 14px; }
 
 .bar {
   float: left;
@@ -467,7 +487,7 @@
 
 #newgame-modal-body {
   width: 240px;
-  height: 120px;
+  height: 140px;
   padding: 8px 12px;
   line-height: 22px;
   font-size: 14px;
@@ -515,18 +535,163 @@
 
 #difficulty-modal {
   float: left;
-  width: 90px; }
+  width: 90px;
+  -webkit-box-shadow: 0 6px 5px -5px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 6px 5px -5px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 6px 5px -5px rgba(0, 0, 0, 0.75); }
 
 #difficulty-modal-body {
   float: left;
-  width: calc(100% - 12px);
-  margin: 0 0 0 6px;
+  width: 100%;
+  border-bottom-left-radius: 1px;
+  border-bottom-right-radius: 1px;
+  overflow: hidden; }
+
+.difficulty-button {
+  float: left;
+  width: 100%;
+  height: 28px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 28px;
+  font-size: 14px;
+  text-align: center;
+  background-color: #263238;
+  border-bottom: 1px solid #171c1e;
+  cursor: pointer;
+  -webkit-transition: color 100ms, background-color 100ms;
+  -moz-transition: color 100ms, background-color 100ms;
+  -o-transition: color 100ms, background-color 100ms;
+  transition: color 100ms, background-color 100ms; }
+
+.difficulty-button:hover {
+  background-color: #455a64;
+  color: white; }
+
+.difficulty-button:first-child {
+  border-top: none; }
+
+.difficulty-button:last-child {
+  border-bottom: none; }
+
+#menu-modal {
+  width: 114px; }
+
+#menu-modal-body {
+  float: left;
+  width: 100%;
   border-bottom-left-radius: 1px;
   border-bottom-right-radius: 1px;
   overflow: hidden;
   -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
   box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75); }
+
+.menu-button {
+  float: left;
+  width: 100%;
+  height: 36px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 36px;
+  font-size: 14px;
+  text-align: center;
+  background-color: #131313;
+  border-top: 1px solid #191919;
+  border-bottom: 1px solid black;
+  cursor: pointer;
+  -webkit-transition: color 100ms, background-color 100ms border-top 100ms, border-bottom 100ms;
+  -moz-transition: color 100ms, background-color 100ms border-top 100ms, border-bottom 100ms;
+  -o-transition: color 100ms, background-color 100ms border-top 100ms, border-bottom 100ms;
+  transition: color 100ms, background-color 100ms border-top 100ms, border-bottom 100ms; }
+
+.menu-button:hover {
+  border-top: 1px solid #455a64;
+  background-color: #455a64;
+  color: white; }
+
+.menu-button:first-child {
+  border-top: none; }
+
+.menu-button:last-child {
+  border-bottom: none; }
+
+.menu-button i {
+  font-size: 12px;
+  margin-right: 4px; }
+
+#export-modal {
+  color: white;
+  background-color: #1e272c;
+  border-radius: 1px;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  cursor: default;
+  -webkit-box-shadow: 0 0 7px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 7px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 7px 0px rgba(0, 0, 0, 0.75); }
+
+#export-modal-header {
+  height: 24px;
+  padding: 6px 12px;
+  line-height: 24px;
+  font-size: 16px;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+  #export-modal-header .close-icon {
+    padding: 0px 6px;
+    margin-right: -6px;
+    font-size: 24px; }
+
+#export-modal-body {
+  width: 500px;
+  height: 500px;
+  padding: 8px 12px;
+  line-height: 17px;
+  font-size: 11px;
+  font-family: "Noto","Helvetica Neue",Helvetica,Arial,sans-serif; }
+
+#import-modal {
+  color: white;
+  background-color: #1e272c;
+  border-radius: 1px;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  cursor: default;
+  -webkit-box-shadow: 0 0 7px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 7px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 7px 0px rgba(0, 0, 0, 0.75); }
+
+#import-modal-header {
+  height: 24px;
+  padding: 6px 12px;
+  line-height: 24px;
+  font-size: 16px;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+  #import-modal-header .close-icon {
+    padding: 0px 6px;
+    margin-right: -6px;
+    font-size: 24px; }
+
+#import-modal-body {
+  width: 400px;
+  height: 400px;
+  padding: 12px 12px;
+  line-height: 22px;
+  font-size: 12px;
+  font-family: "Noto","Helvetica Neue",Helvetica,Arial,sans-serif; }
+  #import-modal-body textarea {
+    width: 394px;
+    height: 300px; }
 
 .pulse {
   display: none;
@@ -983,6 +1148,21 @@ body {
   -webkit-box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.75);
   box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.75); }
+  #level #chime-points {
+    display: none; }
+
+#level.won {
+  font-size: 32px;
+  line-height: 50px; }
+  #level.won #chime-points {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 34px;
+    font-size: 14px;
+    line-height: 16px; }
 
 #game-stats {
   float: right;
@@ -1477,7 +1657,7 @@ body {
   color: rgba(255, 255, 255, 0.35); }
 
 .spell[data-status='4'] .spell-image-overlay {
-  background-color: rgba(255, 255, 255, 0.2); }
+  background-color: rgba(255, 255, 255, 0.35); }
 
 .spell[data-status='5'] .spell-image-overlay {
   background-color: rgba(0, 0, 0, 0.87); }
@@ -1496,9 +1676,9 @@ body {
 #reset-button {
   float: left;
   width: 100%;
-  height: 26px;
+  height: 27px;
   font-size: 14px;
-  line-height: 25px;
+  line-height: 27px;
   text-align: center;
   color: rgba(255, 255, 255, 0.7);
   background-color: #263238;
@@ -1539,17 +1719,17 @@ body {
   width: 100%;
   padding: 4px 0 0;
   font-size: 14px;
-  line-height: 20px; }
+  line-height: 22px; }
   #time-container #difficulty {
     float: left;
     width: calc(100%);
     padding: 0;
     color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
-    -webkit-transition: color 200ms;
-    -moz-transition: color 200ms;
-    -o-transition: color 200ms;
-    transition: color 200ms; }
+    -webkit-transition: color 100ms;
+    -moz-transition: color 100ms;
+    -o-transition: color 100ms;
+    transition: color 100ms; }
   #time-container #difficulty:hover {
     color: white; }
   #time-container #time {
@@ -1570,24 +1750,6 @@ body {
 
 .button {
   cursor: pointer; }
-
-.difficulty-button {
-  float: left;
-  width: 100%;
-  height: 25px;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 25px;
-  font-size: 14px;
-  text-align: center;
-  background-color: #263238;
-  cursor: pointer; }
-
-.difficulty-button:hover {
-  background-color: #455a64;
-  color: white; }
-
-.difficulty-button.hide {
-  display: none; }
 
 #subpage-panel {
   display: none;

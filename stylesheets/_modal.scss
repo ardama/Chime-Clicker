@@ -244,7 +244,7 @@
 
 #newgame-modal-body {
   width: 240px;
-	height: 120px;
+	height: 140px;
 
   padding: 8px 12px;
   line-height: 22px;
@@ -313,18 +313,201 @@
 	float: left;
 
 	width: 90px;
+	@include box-shadow(0 6px 5px -5px $boxShadow);
 }
 
 #difficulty-modal-body {
 	float: left;
 
-	width: calc(100% - 12px);
+	width: 100%;
 
-	margin: 0 0 0 6px;
+	border-bottom-left-radius: 1px;
+	border-bottom-right-radius: 1px;
+	overflow: hidden;
+
+}
+
+.difficulty-button {
+	float: left;
+
+	width: 100%;
+	height: 28px;
+
+
+	color: $lightTextSecondary;
+	line-height: 28px;
+	font-size: 14px;
+	text-align: center;
+	background-color: $primary900;
+
+	border-bottom: 1px solid $primary1100;
+
+	cursor: pointer;
+	@include transition(color 100ms, background-color 100ms);
+}
+
+.difficulty-button:hover {
+	background-color: $primary700;
+	color: $lightTextPrimary;
+}
+
+// .difficulty-button.hide {
+// 	display: none;
+// }
+
+.difficulty-button:first-child {
+	border-top: none;
+}
+
+.difficulty-button:last-child {
+	border-bottom: none;
+}
+
+#menu-modal {
+	width: 114px;
+}
+
+#menu-modal-body {
+	float: left;
+
+	width: 100%;
 
 	border-bottom-left-radius: 1px;
 	border-bottom-right-radius: 1px;
 	overflow: hidden;
 
 	@include box-shadow(0 0 5px 1px $boxShadow);
+}
+
+.menu-button {
+	float: left;
+
+	width: 100%;
+	height: 36px;
+
+
+	color: $lightTextSecondary;
+	line-height: 36px;
+	font-size: 14px;
+	text-align: center;
+	background-color: $gray1100;
+
+	border-top: 1px solid $gray1000;
+	border-bottom: 1px solid $black;
+
+	cursor: pointer;
+	@include transition(color 100ms, background-color 100ms border-top 100ms, border-bottom 100ms);
+}
+
+.menu-button:hover {
+	border-top: 1px solid $primary700;
+
+	background-color: $primary700;
+	color: $lightTextPrimary;
+}
+
+.menu-button:first-child {
+	border-top: none;
+}
+
+.menu-button:last-child {
+	border-bottom: none;
+}
+
+.menu-button i {
+	font-size: 12px;
+	margin-right: 4px;
+}
+
+#export-modal {
+  color: $lightTextPrimary;
+	background-color: $primary1000;
+	border-radius: 1px;
+	overflow-x: hidden;
+	word-wrap: break-word;
+	cursor: default;
+	@include box-shadow(0 0 7px 0px $boxShadow);
+}
+
+
+#export-modal-header {
+  height: 24px;
+	padding: 6px 12px;
+
+  line-height: 24px;
+  font-size: 16px;
+
+	cursor: default;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+  .close-icon {
+    padding: 0px 6px;
+    margin-right: -6px;
+    font-size: 24px;
+  }
+
+}
+
+#export-modal-body {
+  width: 500px;
+	height: 500px;
+
+  padding: 8px 12px;
+  line-height: 17px;
+  font-size: 11px;
+  font-family: "Noto","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+#import-modal {
+  color: $lightTextPrimary;
+	background-color: $primary1000;
+	border-radius: 1px;
+	overflow-x: hidden;
+	word-wrap: break-word;
+	cursor: default;
+	@include box-shadow(0 0 7px 0px $boxShadow);
+}
+
+
+#import-modal-header {
+  height: 24px;
+	padding: 6px 12px;
+
+  line-height: 24px;
+  font-size: 16px;
+
+	cursor: default;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+  .close-icon {
+    padding: 0px 6px;
+    margin-right: -6px;
+    font-size: 24px;
+  }
+
+}
+
+#import-modal-body {
+  width: 400px;
+	height: 400px;
+
+  padding: 12px 12px;
+  line-height: 22px;
+  font-size: 12px;
+  font-family: "Noto","Helvetica Neue",Helvetica,Arial,sans-serif;
+
+	textarea {
+		width: 394px;
+		height: 300px;
+	}
 }
