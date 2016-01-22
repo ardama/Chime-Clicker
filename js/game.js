@@ -1441,7 +1441,7 @@ Game.prototype.loadSpells = function(obj) {
       if (data && spell) {
         spell.durationLeft = data['durationLeft'];
         spell.cooldownLeft = data['cooldownLeft'];
-        if (data['duration']) spellData.duration = data['duration'];
+        if (data['duration']) spell.duration = data['duration'];
         spell.status = data['status'];
       }
     }
