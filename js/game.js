@@ -20,6 +20,7 @@ Game.prototype.Init = function(scope, difficulty) {
   this.timePlayed = 0;
   this.stepStart;
   this.stepEnd = new Date();
+  this.paused = false;
 
   this.won = false;
   this.points = 0;
@@ -31,6 +32,7 @@ Game.prototype.Init = function(scope, difficulty) {
   this.experienceNeeded = EXPERIENCE_NEEDED;
 
   this.meeps = 0;
+  this.meepsEarned = 0;
   this.meepDamage = MEEPS_DAMAGE[difficulty];
 
   this.chimes = 0;
@@ -47,7 +49,8 @@ Game.prototype.Init = function(scope, difficulty) {
 
   this.defenseStat = 1;
   this.movespeedStat = 0;
-  this.damageStat = 5;
+  this.damageStat = 0;
+  this.damageBought = 5;
   this.attackrateStat = 0;
   this.income = 0;
 
@@ -57,11 +60,11 @@ Game.prototype.Init = function(scope, difficulty) {
   this.tributeBonus = 0;
 
   this.smiteBonus = 0;
-  this.ghostBonus = 1.0;
+  this.smiteDamageRate = 0;
+  this.ghostBonus = 1;
   this.flashBonus = .03;
-  this.exhaustBonus = 1.0;
-  this.igniteDamage = 0;
-  this.igniteDamageRate = 0;
+  this.exhaustBonus = 1;
+  this.igniteBonus = 1;
 
   this.items = this.createItems();
   this.spells = this.createSpells();
@@ -156,42 +159,52 @@ Game.prototype.createSpells = function() {
       "+100% chime gathering for 10 seconds.  </br></br>90 second cooldown. <b>(Q)</b>"}
     );
 
-    spells[FLASH] = new Spell(this, 0, 120, SPELL_ACTIVE, MONSTER_ALL,
-      function(game) {game.addMeeps(Math.ceil(game.meeps * game.flashBonus));
+    spells[FLASH] = new Spell(this, 0, 180, SPELL_ACTIVE, MONSTER_ALL,
+      function(game) {game.addMeeps(Math.ceil(game.meepsEarned * game.flashBonus), true);
                       showRing(FLASH, RING_DURATION)},
       function(game) {},
       function(game) {return game.level >= 6},
       function(game) {return game.spells[FLASH].status == game.LOCKED ? "":
-      "+3% total meeps.</br>(<b>" + game.prettyIntCompact(Math.ceil(game.meeps * game.flashBonus)) + "</b>)</br></br>120 second cooldown. <b>(W)</b>"}
+      "+3% meeps earned from chimes.</br>(<b>" + game.prettyIntCompact(Math.ceil(game.meepsEarned * game.flashBonus)) + "</b>)</br></br>150 second cooldown. <b>(W)</b>"}
     );
 
-    spells[SMITE] = new Spell(this, 0, 60, SPELL_ACTIVE, MONSTER_JUNGLE,
-      function(game) {game.smiteBonus = .20;
-                      game.addDamage(game.getSmiteDamage(), true);
-                      game.smiteBonus = 0;
-                      showRing(SMITE, RING_DURATION)},
-      function(game) {},
+    spells[SMITE] = new Spell(this, 0, 60, SPELL_ACTIVE, MONSTER_ALL,
+      function(game) {if (!game.isMonsterChampion(game.monster)) {
+                        game.smiteBonus = .20;
+                        game.addDamage(game.getSmiteDamage(), true);
+                        showRing(SMITE, RING_DURATION);
+                        game.smiteBonus = 0;
+                        this.duration = 0;
+                      }
+                      else {
+                        game.smiteDamageRate = game.getSmiteDamage() / 5;
+                        showRing(CHALLENGING_SMITE, RING_DURATION);
+                        this.duration = 5;
+                      }},
+      function(game) {game.smiteDamageRate = 0},
       function(game) {return game.level >= 2},
       function(game) {return game.spells[SMITE].status == game.LOCKED ? "":
-      "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage instantly.  Damage scales with level and experience.</br></br>Kills with smite grant +20% gold.  Does not work against champions.  </br></br>60 second cooldown. <b>(E)</b>"}
+      "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage " + (!game.isMonsterChampion(game.monster) ? "instantly" : "over 5 seconds") +".  Damage scales with level and experience.</br></br>Non-champion kills with smite grant +20% gold.</br></br>60 second cooldown. <b>(E)</b>"}
       );
-
-
-    spells[IGNITE] = new Spell(this, 5, 120, SPELL_ACTIVE, MONSTER_CHAMPION,
-      function(game) {game.igniteDamageRate = game.igniteDamage / 5;},
-      function(game) {game.igniteDamageRate = 0},
-      function(game) {return game.level >= 16},
-      function(game) {return game.spells[IGNITE].status == game.LOCKED ? "":
-      "Deal <b>" + game.prettyIntCompact(game.igniteDamage) + "</b> damage over 5 seconds.  Damage scales with level.  Only works against champions.  </br></br>120 second cooldown. <b>(R)</b>"}
-    );
 
     spells[EXHAUST] = new Spell(this, 10, 90, SPELL_ACTIVE, MONSTER_CHAMPION,
       function(game) {game.exhaustBonus = 2.0;},
       function(game) {game.exhaustBonus = 1.0},
-      function(game) {return game.level >= 17},
+      function(game) {return game.level >= 16},
       function(game) {return game.spells[EXHAUST].status == game.LOCKED ? "":
       "+100% damage dealt for 10 seconds.  Only works against champions.  </br></br>90 second cooldown. <b>(T)</b>"}
     );
+
+    spells[IGNITE] = new Spell(this, 0, 120, SPELL_ACTIVE, MONSTER_CHAMPION,
+      function(game) {game.igniteBonus += .04;
+                      showRing(IGNITE+'1', RING_DURATION);},
+      function(game) {showRing(IGNITE+'2', RING_DURATION);},
+      function(game) {return game.level >= 17},
+      function(game) {return game.spells[IGNITE].status == game.LOCKED ? "":
+      "+3% damage from items.</br>(<b>" + game.prettyIntCompact(Math.ceil(game.damageBought * .03)) + "</b>)</br></br>120 second cooldown. <b>(R)</b>"}
+      //"Deal <b>" + game.prettyIntCompact(game.igniteDamage) + "</b> damage over 5 seconds.  Damage scales with level.  Only works against champions.  </br></br>120 second cooldown. <b>(R)</b>"}
+    );
+
 
     spells[TELEPORT] = new Spell(this, 0, 300, SPELL_ACTIVE, MONSTER_ALL,
       function(game) {},
@@ -277,7 +290,7 @@ Game.prototype.createMonsters = function() {
       scaleReward = 999990000000000 / MONSTER_REWARD;
     }
 
-    type = CHAMPIONS.indexOf(monster) > -1 ? MONSTER_CHAMPION : MONSTER_JUNGLE;
+    type = this.isMonsterChampion(monster) ? MONSTER_CHAMPION : MONSTER_JUNGLE;
     monsters[monster] = new Monster(this, i + 1, Math.floor(MONSTER_HEALTH * scaleHealth),
                                                  MONSTER_EXPERIENCE * scaleExp + 10 * (i + 1),
                                                  MONSTER_REWARD * scaleReward + 10 * (i + 1),
@@ -304,18 +317,22 @@ Game.prototype.start = function() {
 Game.prototype.step = function(step) {
   this.stepStart = new Date();
   var elapsedTime  = (this.stepStart - this.stepEnd) / 1000;
-
   var thisref = this;
-  this.scope.$apply(function(scope) {
-    thisref.addChimes(thisref.chimesRate * elapsedTime);
-    thisref.addDamage(thisref.damageRate * elapsedTime);
-    thisref.addGold(thisref.income * elapsedTime);
-    thisref.addSpellTime(elapsedTime);
+  if (elapsedTime > 0 && !this.paused) {
+    this.scope.$apply(function(scope) {
+      thisref.addChimes(thisref.chimesRate * elapsedTime);
+      thisref.addDamage(thisref.damageRate * elapsedTime);
+      thisref.addGold(thisref.income * elapsedTime);
+      thisref.addSpellTime(elapsedTime);
 
-    thisref.timePlayed += elapsedTime;
-    thisref.progress.general.timePlayed += elapsedTime;
-  });
+      thisref.timePlayed += elapsedTime;
+      thisref.progress.general.timePlayed += elapsedTime;
+    });
 
+  }
+  else {
+    this.scope.$apply();
+  }
   this.stepEnd = this.stepStart;
 
   window.setTimeout(function() {
@@ -324,19 +341,36 @@ Game.prototype.step = function(step) {
 };
 
 Game.prototype.addChimes = function(chimes) {
-  this.chimes += chimes;
-  if (this.level < 19)
-    this.addExperience(this.chimesExperience * chimes);
-  while (this.chimes >= this.chimesPerMeepFloor) {
-    this.chimes -= this.chimesPerMeepFloor;
-    this.addMeeps(1);
-  }
   this.chimesCollected += chimes;
   this.progress.general.totalChimes += chimes;
+
+  if (this.level < 19)
+    this.addExperience(this.chimesExperience * chimes);
+
+  var chimesNeeded = this.chimesPerMeepFloor - this.chimes;
+  if (chimes >= chimesNeeded) {
+    chimes -= chimesNeeded;
+    this.addMeeps();
+    this.chimes = 0;
+  }
+
+  while(chimes >= this.chimesPerMeepFloor) {
+    var meepEstimate = Math.floor(chimes / this.chimesPerMeepFloor / 2) || 1;
+    var chimeEstimate = (stirlingSum(meepEstimate + this.meeps) - stirlingSum(this.meeps)) / LOG2 + CHIMES_PER_MEEP * meepEstimate;
+
+    while(chimeEstimate >= chimes) {
+      meepEstimate = Math.floor(meepEstimate / 2);
+      chimeEstimate = (stirlingSum(meepEstimate + this.meeps) - stirlingSum(this.meeps)) / LOG2 + CHIMES_PER_MEEP * meepEstimate;
+    }
+
+    chimes -= chimeEstimate;
+    this.addMeeps(meepEstimate);
+  }
+
+  this.chimes += chimes;
 };
 
 Game.prototype.addDamage = function(damage, user) {
-  damage = Math.floor(damage);
   this.progress.general.totalDamage += damage;
 
   var executeThreshold = .25 * this.monsters[this.monster].maxHealth;
@@ -384,23 +418,26 @@ Game.prototype.addExperience = function(experience) {
   }
 };
 
-Game.prototype.addMeeps = function(meeps) {
+Game.prototype.addMeeps = function(meeps, flash) {
   meeps = meeps || 1;
 
 
   var oldMeeps = this.meeps || 1;
-  var newMeeps = this.meeps + meeps;
+  var newMeeps = oldMeeps + meeps;
 
-  if (oldMeeps < 15 && newMeeps < 30) {
-    this.chimesPerMeep += Math.log(getFactorialRange(newMeeps, oldMeeps)) / Math.log(2);
+  // don't increase chimes needed if meeps granted via flash
+  if (!flash) {
+    this.meepsEarned += meeps;
+    if (oldMeeps < 15 && newMeeps < 30) {
+      this.chimesPerMeep += Math.log(getFactorialRange(newMeeps, oldMeeps)) / LOG2;
+    }
+    else {
+      this.chimesPerMeep = stirlingApproximation(newMeeps) / LOG2 + CHIMES_PER_MEEP;
+    }
+    this.chimesPerMeepFloor = Math.floor(this.chimesPerMeep);
   }
-  else {
-    this.chimesPerMeep += stirlingApproximation(newMeeps) / Math.log(2) - stirlingApproximation(oldMeeps) / Math.log(2);
-  }
-  this.chimesPerMeepFloor = Math.floor(this.chimesPerMeep);
 
   this.meeps = newMeeps;
-  this.damageStat += meeps * this.meepDamage;
   this.progress.general.totalMeeps += meeps;
 
   this.updateStats();
@@ -455,11 +492,12 @@ Game.prototype.addSpellTime = function(time) {
 Game.prototype.updateStats = function() {
   this.chimesRate = this.defenseStat * this.movespeedStat * this.ghostBonus;
   // chimes collected equals base defenseStat + 2% of current cps
-  this.chimesPerClick = this.defenseStat * this.ghostBonus + .04 * this.chimesRate;
+  this.chimesPerClick = this.defenseStat * this.ghostBonus + .03 * this.chimesRate;
 
-  this.damageRate = this.damageStat * this.attackrateStat * this.exhaustBonus + this.igniteDamageRate;
+  this.damageStat = this.damageBought * this.igniteBonus + this.meeps * this.meepDamage;
+  this.damageRate = this.damageStat * this.attackrateStat * this.exhaustBonus + this.smiteDamageRate;
   // damage dealt equals base damageStat + 2% of current dps
-  this.damagePerClick = this.exhaustBonus * this.damageStat + .04 * this.damageRate;
+  this.damagePerClick = this.exhaustBonus * this.damageStat + .03 * this.damageRate;
 };
 
 Game.prototype.unlockItems = function() {
@@ -566,6 +604,8 @@ Game.prototype.spellClick = function(name) {
 };
 
 Game.prototype.activateSpell = function(name) {
+  if (this.paused) return;
+
   var spell = this.spells[name];
   if (spell.status != this.AVAILABLE) {
     return;
@@ -580,6 +620,8 @@ Game.prototype.activateSpell = function(name) {
 };
 
 Game.prototype.buyItem = function(name, count) {
+  if (this.paused) return;
+
   count = count ? count : 1;
   var item = this.items[name];
   var bought = 0;
@@ -600,7 +642,7 @@ Game.prototype.buyItem = function(name, count) {
 
   this.defenseStat += bought * item.defenseStat;
   this.movespeedStat += bought * item.movespeedStat;
-  this.damageStat += bought * item.damageStat;
+  this.damageBought += bought * item.damageStat;
   this.attackrateStat += bought * item.attackrateStat;
   this.income += bought * item.income;
 
@@ -621,6 +663,8 @@ Game.prototype.buyItem = function(name, count) {
 };
 
 Game.prototype.buyUpgrade = function(name) {
+  if (this.paused) return;
+
   var upgrade = this.upgrades[name];
   if (upgrade.status == this.AVAILABLE && this.gold >= upgrade.cost) {
     this.gold -= upgrade.cost;
@@ -641,7 +685,7 @@ Game.prototype.buyUpgrade = function(name) {
     var count = item.count;
     this.defenseStat += count * upgrade.defenseStat;
     this.movespeedStat += count * upgrade.movespeedStat;
-    this.damageStat += count * upgrade.damageStat;
+    this.damageBought += count * upgrade.damageStat;
     this.attackrateStat += count * upgrade.attackrateStat;
     this.income += count * upgrade.income;
 
@@ -649,6 +693,7 @@ Game.prototype.buyUpgrade = function(name) {
 
     this.unlockUpgrades();
     this.unlockSpells();
+    this.updateStats();
 
     if (name == TALISMAN_OF_ASCENSION)
       this.favorBonus = this.getFavorBonus() / 100;
@@ -657,7 +702,6 @@ Game.prototype.buyUpgrade = function(name) {
     else if (name == FACE_OF_THE_MOUNTAIN)
       this.spoilsOfWarBonus = this.getSpoilsOfWarBonus() / 100;
 
-    this.updateStats();
   }
 };
 
@@ -737,27 +781,27 @@ Game.prototype.win = function() {
       case 'easy':
         this.progress.wins.easy.count++;
         time = this.progress.times.easy.count;
-        this.progress.times.easy.count = Math.min(this.getTime(), time ? time : Infinity);
+        this.progress.times.easy.count = Math.min(this.timePlayed, time ? time : Infinity);
         break;
       case 'medium':
         this.progress.wins.medium.count++;
         time = this.progress.times.medium.count;
-        this.progress.times.medium.count = Math.min(this.getTime(), time ? time : Infinity);
+        this.progress.times.medium.count = Math.min(this.timePlayed, time ? time : Infinity);
         break;
       case 'hard':
         this.progress.wins.hard.count++;
         time = this.progress.times.hard.count;
-        this.progress.times.hard.count = Math.min(this.getTime(), time ? time : Infinity);
+        this.progress.times.hard.count = Math.min(this.timePlayed, time ? time : Infinity);
         break;
       case 'marathon':
         this.progress.wins.marathon.count++;
         time = this.progress.times.marathon.count;
-        this.progress.times.marathon.count = Math.min(this.getTime(), time ? time : Infinity);
+        this.progress.times.marathon.count = Math.min(this.timePlayed, time ? time : Infinity);
         break;
       case 'impossible':
         this.progress.wins.impossible.count++;
         time = this.progress.times.impossible.count;
-        this.progress.times.impossible.count = Math.min(this.getTime(), time ? time : Infinity);
+        this.progress.times.impossible.count = Math.min(this.timePlayed, time ? time : Infinity);
         break;
       default:
     }
@@ -794,6 +838,8 @@ Game.prototype.getMonsterImageUrl = function(name) {
 };
 
 Game.prototype.getSpellImageUrl = function(name) {
+  if (name == SMITE && this.isMonsterChampion(this.monster))
+    name = CHALLENGING_SMITE;
   return this.getImageUrl(name, 'spells');
 };
 
@@ -860,7 +906,7 @@ Game.prototype.getSpellTimePercent = function(spellName) {
 };
 
 Game.prototype.getFavorBonus = function() {
-  return 2 + getBaseLog(4, this.items[ANCIENT_COIN].count + 1);
+  return getBaseLog(4, this.items[ANCIENT_COIN].count + 1);
 };
 
 Game.prototype.getSpoilsOfWarBonus = function() {
@@ -872,11 +918,11 @@ Game.prototype.getTributeBonus = function() {
 };
 
 Game.prototype.getSmiteDamage = function() {
-  return 20 * this.level + MONSTER_HEALTH * Math.pow(this.scaleMonsterLevelHealth, this.level - 1) * (.1 + .001 * this.getExperiencePercent());
+  return 20 * this.level + MONSTER_HEALTH * Math.pow(this.scaleMonsterLevelHealth, this.level - 1) * SMITE_PERCENT[this.difficulty] * (1 + this.getExperiencePercent() / 100);
 };
 
 Game.prototype.getIgniteDamage = function() {
-  return MONSTER_HEALTH * Math.pow(this.scaleMonsterLevelHealth, this.level - 1) * IGNITE_PERCENT[this.difficulty];
+  return 0;//MONSTER_HEALTH * Math.pow(this.scaleMonsterLevelHealth, this.level - 1) * IGNITE_PERCENT[this.difficulty];
 };
 
 Game.prototype.getPointsEarned = function() {
@@ -891,6 +937,10 @@ Game.prototype.isFirstMonster = function() {
 Game.prototype.isLastMonster = function() {
   var index = this.monstersAvailable.indexOf(this.monster);
   return index == this.monstersAvailable.length - 1 ? 'last' : '';
+};
+
+Game.prototype.isMonsterChampion = function(name) {
+  return CHAMPIONS.indexOf(name) != -1;
 };
 
 Game.prototype.getObjectsByStatus = function(objectMap, status) {
@@ -990,6 +1040,7 @@ Game.prototype.saveState = function(save) {
 
   obj['steps'] = this.steps;
   obj['timePlayed'] = Math.round(this.timePlayed);
+  obj['paused'] = this.paused;
   obj['won'] = this.won;
   obj['level'] = this.level;
 
@@ -998,6 +1049,7 @@ Game.prototype.saveState = function(save) {
   obj['experience'] = Math.ceil(this.experience);
 
   obj['meeps'] = this.meeps;
+  obj['meepsEarned'] = this.meepsEarned;
 
   obj['chimes'] = Math.ceil(this.chimes);
   obj['chimesPerMeep'] = this.chimesPerMeep;
@@ -1008,9 +1060,10 @@ Game.prototype.saveState = function(save) {
 
   obj['spoilsOfWarActive'] = this.spoilsOfWarActive;
   obj['smiteBonus'] = this.smiteBonus;
+  obj['smiteDamageRate'] = this.smiteDamageRate;
   obj['ghostBonus'] = this.ghostBonus;
   obj['exhaustBonus'] = this.exhaustBonus;
-  obj['igniteDamageRate'] = this.igniteDamageRate;
+  obj['igniteBonus'] = this.igniteBonus;
 
   save['state'] = obj;
 };
@@ -1113,8 +1166,8 @@ Game.prototype.loadProgress = function() {
   obj['general']['goldEarned'] = 0;
   obj['general']['goldSpent'] = 0;
 
-  obj['general']['points'] = 0;
-  obj['general']['pointsEarned'] = 0;
+  obj['general']['chimePoints'] = 0;
+  obj['general']['chimePointsEarned'] = 0;
 
   // items purchased
   var order = 0;
@@ -1165,6 +1218,14 @@ Game.prototype.loadProgress = function() {
     progress['spells'] = {};
     progress['wins'] = {};
     progress['times'] = {};
+
+    // update 16-01-22 - cap old points at 200
+    if (loadObj['general']['points'] > 0) {
+      progress['general']['chimePoints'] = Math.min(200, loadObj['general']['points']);
+      progress['general']['chimePointsEarned'] = Math.min(200, loadObj['general']['pointsEarned']);
+      progress['general']['points'] = 0;
+      progress['general']['pointsEarned'] = 0;
+    }
 
     var i;
     var o;
@@ -1251,6 +1312,7 @@ Game.prototype.loadState = function(obj) {
 
   this.steps = obj['steps'];
   this.timePlayed = obj['timePlayed'] || this.steps * this.stepSize;
+  this.paused = obj['paused'] || false;
   this.won = obj['won'];
   this.level = obj['level'];
 
@@ -1259,6 +1321,7 @@ Game.prototype.loadState = function(obj) {
   this.experience = obj['experience'];
 
   this.meeps = obj['meeps'];
+  this.meepsEarned = obj['meepsEarned'] || obj['meeps'];
 
   this.chimes = obj['chimes'];
   this.chimesPerMeep = obj['chimesPerMeep'];
@@ -1269,9 +1332,11 @@ Game.prototype.loadState = function(obj) {
 
   this.spoilsOfWarActive = obj['spoilsOfWarActive'];
   this.smiteBonus = obj['smiteBonus'];
+  this.smiteDamageRate = obj['smiteDamageRate'];
   this.ghostBonus = obj['ghostBonus'];
   this.exhaustBonus = obj['exhaustBonus'];
-  this.igniteDamageRate = obj['igniteDamageRate'];
+  this.igniteBonus = obj['igniteBonus'];
+
 };
 
 Game.prototype.loadItems = function(obj) {
@@ -1446,7 +1511,7 @@ Game.prototype.recalculateState = function() {
     var item = this.items[items[i]];
     this.defenseStat += item.count * item.defenseStat;
     this.movespeedStat += item.count * item.movespeedStat;
-    this.damageStat += item.count * item.damageStat;
+    this.damageBought += item.count * item.damageStat;
     this.attackrateStat += item.count * item.attackrateStat;
     this.income += item.count * item.income;
   }
@@ -1456,7 +1521,7 @@ Game.prototype.recalculateState = function() {
     this.monsters[monsters[i]].experience /= 5;
   }
 
-  this.damageStat += this.meeps * this.meepDamage;
+  this.damageStat += this.damageBought * this.igniteBonus + this.meeps * this.meepDamage;
 
   this.favorBonus = this.getFavorBonus() / 100;
   this.spoilsOfWarBonus = this.getSpoilsOfWarBonus() / 100;
@@ -1470,8 +1535,8 @@ Game.prototype.newGame = function(reset, difficulty) {
   }
   else {
     if (this.monsters[TEEMO].count > 0) {
-      this.progress.general.points += this.points;
-      this.progress.general.pointsEarned += this.points;
+      this.progress.general.chimePoints += this.points;
+      this.progress.general.chimePointsEarned += this.points;
     }
     this.saveProgress();
   }
@@ -1488,10 +1553,17 @@ Game.prototype.exportGame = function() {
 
 Game.prototype.importGame = function(text) {
   if (text && text.length > 0) {
-    var obj = JSON.parse(lzw_decode(text));
+    var obj = JSON.parse(lzw_decode(text.trim()));
     localStorage.setItem('progress', JSON.stringify(obj['progress']));
     localStorage.setItem('save', JSON.stringify(obj['save']));
     localStorage.setItem('difficulty', obj['difficulty']);
   }
   location.reload(true);
+};
+
+Game.prototype.pauseGame = function() {
+  if (this.paused)
+    this.paused = false;
+  else
+    this.paused = true;
 };

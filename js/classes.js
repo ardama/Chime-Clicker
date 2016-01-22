@@ -96,6 +96,16 @@ Spell.prototype.Init = function(game, duration, cooldown, type, target, start, e
   this.status = LOCKED;
 };
 
+Spell.prototype.getSpellTime = function() {
+  var time = 0;
+  if (this.status == ACTIVE)
+    time = this.durationLeft;
+  else if (this.status == COOLDOWN)
+    time = this.cooldownLeft;
+
+  return time > 0 ? time.toFixed(0): '';
+};
+
 var Monster = function(game, level, health, experience, gold, type) {
   this.Init(game, level, health, experience, gold, type);
 };

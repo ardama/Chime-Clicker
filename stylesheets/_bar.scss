@@ -74,12 +74,19 @@
 	}
 }
 
-#damage-bar.ignite-active {
-	color: $ignite3;
-	background-color: $ignite1;
+#damage-bar.challenging-active {
+	background-color: $challenging1;
 
 	#damage-bar-fill {
-		background-color: $ignite2;
+		background-color: $challenging2;
+	}
+}
+
+#damage-bar.smite-active {
+	background-color: $smite1;
+
+	#damage-bar-fill {
+		background-color: $smite2;
 	}
 }
 

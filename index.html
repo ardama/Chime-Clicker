@@ -111,8 +111,8 @@ ga('send', 'pageview');
 				<div id="monster-row" class="row">
 					<div id="damage-container" class="container">
 						<div id="exhaust-pulse" class="pulse {{game.spells['Exhaust'].status == game.ACTIVE ? 'active': ''}}"></div>
-						<div id="ignite-pulse" class="pulse {{game.spells['Ignite'].status == game.ACTIVE ? 'active': ''}}"></div>
-						<div id="damage-status" class="status {{game.spells['Smite'].status == game.ACTIVE ? 'smite-active' : ''}}">
+						<div id="smite-pulse" class="pulse {{game.spells['Smite'].status == game.ACTIVE ? 'active': ''}}"></div>
+						<div id="damage-status" class="status">
 							<div id="monster-selector" class="selector {{game.isFirstMonster()}} {{game.isLastMonster()}}">
 								<div class="selector-button selector-left touch-target">
 									<i class="fa fa-angle-left"></i>
@@ -136,7 +136,7 @@ ga('send', 'pageview');
 						</div>
 						<div id="damage-bar-dropdown" class="dropdown">
 							<div class="dropdown-content">
-								<div id="damage-bar" class="bar {{game.spells['Ignite'].status == game.ACTIVE ? 'ignite-active' : '';}} {{game.spells['Exhaust'].status == game.ACTIVE ? 'exhaust-active' : '';}}">
+								<div id="damage-bar" class="bar {{game.spells['Smite'].status != game.ACTIVE ? '' : game.isMonsterChampion(game.monster) ? 'challenging-active' : 'smite-active'}} {{game.spells['Exhaust'].status == game.ACTIVE ? 'exhaust-active' : '';}}">
 									<div id="damage-bar-fill" class="bar-fill" style="width:{{game.getMonsterHealthPercent()}}%"></div>
 									<div id="damage-rate" data-toggle="tooltip" data-title="Damage dealt per second." data-position="right">
 										DPS {{game.prettyIntVariable(game.damageRate)}}
@@ -163,6 +163,8 @@ ga('send', 'pageview');
 								<div id="spoils-ring" class="ring"></div>
 								<div id="tribute-ring" class="ring"></div>
 								<div id="smite-ring" class="ring"></div>
+								<div id="ignite-ring-1" class="ring"></div>
+								<div id="ignite-ring-2" class="ring"></div>
 							</div>
 							<div id="monster-button" class="click-button button touch-target" ng-style="{'background-image':'url(' + game.getMonsterImageUrl(game.monster) +')'}"></div>
 						</div>
@@ -191,7 +193,7 @@ ga('send', 'pageview');
 										<div class="game-stat-name">{{game.getStatNameVariable('Defense', 100)}}</div> {{game.prettyIntCompact(game.defenseStat)}}
 									</div>
 								</div>
-								<div id="damageStat-value" class="game-stat game-stat-top game-stat-right">
+								<div id="damageStat-value" class="game-stat game-stat-top game-stat-right {{game.spells['Ignite'].status == game.ACTIVE ? 'ignite-active' : '';}}">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Damage dealt per click.">
 										<div class="game-stat-name">{{game.getStatNameVariable('Damage', 100)}}</div> {{game.prettyIntCompact(game.damageStat)}}
 									</div>
@@ -352,7 +354,10 @@ ga('send', 'pageview');
 							<div class="spell-image" ng-style="{'background-image':'url(' + game.getSpellImageUrl(spell) + ')'}"></div>
 							<div class="spell-image-overlay" style="height: {{game.getSpellTimePercent(spell)}}%"></div>
 							<div class="spell-locked-image"><i class="fa fa-2x fa-lock"></i></div>
-							<div class="spell-cooldown">{{game.spells[spell].cooldownLeft.toFixed(0)}}</div>
+							<div class="spell-time">{{game.spells[spell].getSpellTime()}}</div>
+							<div class="spell-text" ng-if="spell == 'Smite'" data-smite="{{game.isMonsterChampion(game.monster) ? 'challenging' : 'smite'}}">
+								{{game.prettyIntCompact(game.getSmiteDamage())}}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -375,6 +380,7 @@ ga('send', 'pageview');
 	<div id="menu-modal" class="modal">
 		<div id="menu-modal-body">
 			<div class="menu-button button touch-target" ng-click="game.showNewGameModal(false)"><i class='fa fa-undo'></i> New Game</div>
+			<div class="menu-button button touch-target" ng-click="game.pauseGame()"><i class='fa fa-pause'></i> {{game.paused ? 'Unpause' : 'Pause'}} Game</div>
 			<div class="menu-button button touch-target" ng-click="game.exportGame()"><i class="fa fa-upload"></i> Export Save</div>
 			<div class="menu-button button touch-target" onclick="showImportModal()"><i class="fa fa-download"></i> Import Save</div>
 			<div class="menu-button button touch-target" ng-click="game.showNewGameModal(true)"><i class='fa fa-trash'></i> Hard Reset</div>
@@ -441,7 +447,7 @@ ga('send', 'pageview');
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Chime Points</div>
-						<div class="progress-stat-value">{{game.progress.general.points.toFixed(1)}}</div>
+						<div class="progress-stat-value">{{game.progress.general.chimePoints.toFixed(1)}}</div>
 					</div>
 					<div class="progress-modal-spacer"></div>
 

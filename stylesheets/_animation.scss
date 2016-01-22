@@ -19,8 +19,8 @@
 	background-color: $ghost2;
 }
 
-#ignite-pulse {
-	background-color: $ignite2;
+#smite-pulse {
+	background-color: $challenging2;
 	animation-iteration-count: 8;
 }
 
@@ -77,6 +77,14 @@
 
 #tribute-ring {
 	border-color: $tribute;
+}
+
+#ignite-ring-1 {
+	border-color: rgba($ignite1, .8);
+}
+
+#ignite-ring-2 {
+	border-color: rgba($ignite2, .8);
 }
 
 #teemo-ring {

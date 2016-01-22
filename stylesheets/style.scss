@@ -245,10 +245,6 @@ body {
 	@include transition(background-color 175ms);
 }
 
-#damage-status.smite-active {
-	background-color: $smite;
-}
-
 #monster-gold {
 	position: absolute;
 	bottom: 0;
@@ -408,6 +404,10 @@ body {
 	font-size: 16px;
 	font-weight: bold;
 
+	color: $lightTextPrimary;
+
+	@include transition(color 175ms);
+
 	.game-stat-name {
 		float: left;
 
@@ -416,8 +416,16 @@ body {
 		color: $lightTextSecondary;
 		font-weight: normal;
 	}
+
 }
 
+.game-stat.ignite-active {
+	color: $ignite2;
+
+	.game-stat-name {
+		color: $ignite2;
+	}
+}
 
 .game-stat-top {
 	height: 50%;
@@ -1041,7 +1049,7 @@ body {
 	@include transition(color 150ms, opacity 150ms);
 }
 
-.spell-cooldown {
+.spell-time {
 	display: none;
 	position: absolute;
 
@@ -1051,10 +1059,8 @@ body {
 	height: 100%;
 
 	font-size: 24px;
-  color: $lightTextSecondary;
 	line-height: 60px;
 	border-radius: 1px;
-	background-color: $darkTextDisabled;
 }
 
 // LOCKED
@@ -1079,14 +1085,58 @@ body {
 	background-color: $lightTextTertiary;
 }
 
+// ACTIVE
+.spell[data-status='4'] .spell-time {
+	display: block;
+
+	color: $lightTextPrimary;
+	text-shadow: 0 0 2px $lightTextDisabled;
+}
+
 // COOLDOWN
 .spell[data-status='5'] .spell-image-overlay {
 	background-color: $darkTextPrimary;
 }
 
 // COOLDOWN
-.spell[data-status='5'] .spell-cooldown {
+.spell[data-status='5'] .spell-time {
 	display: block;
+
+	color: $lightTextSecondary;
+	background-color: $darkTextDisabled;
+}
+
+.spell-text {
+	display: none;
+	position: absolute;
+
+	bottom: 0px;
+	right: 0px;
+	width: calc(100% - 4px);
+	height: 16px;
+	padding: 24px 4px 4px 0;
+
+	color: $smite3;
+	font-size: 16px;
+	line-height: 16px;
+	text-align: right;
+	font-weight: bold;
+	@include box-shadow(0 -40px 24px -24px rgba(0,0,0,.85) inset);
+
+	@include transition(color 100ms, padding-bottom 200ms, padding-right 200ms);
+}
+
+.spell[data-status='1'] .spell-text {
+	display: block;
+}
+
+.spell:active .spell-text {
+	padding: 16px 2px 2px 0;
+
+}
+
+.spell-text[data-smite='challenging'] {
+	color: $challenging3;
 }
 
 /* OTHER ///////////////////////////////////// */

@@ -52,6 +52,7 @@ var GHOST = "Ghost";
 var BARRIER = "Barrier";
 var HEAL = "Heal";
 var SMITE = "Smite";
+var CHALLENGING_SMITE = "Challenging Smite";
 var IGNITE = "Ignite";
 var EXHAUST = "Exhaust";
 var CLEANSE = "Cleanse";
@@ -110,8 +111,8 @@ var EXPERIENCE_NEEDED = 1250;
 var MONSTER_HEALTH = 200;
 var MONSTER_EXPERIENCE = 65;
 var MONSTER_REWARD = 20;
-var POINT_BONUS = {'easy' : 1, 'medium' : 4, 'hard' : 16, 'marathon' : 64, 'impossible' : 256};
-var IGNITE_PERCENT = {'easy' : .30, 'medium' : .24, 'hard' : .18, 'marathon' : .12, 'impossible' : .06};
+var POINT_BONUS = {'easy' : 1, 'medium' : 4, 'hard' : 10, 'marathon' : 30, 'impossible' : 100};
+var SMITE_PERCENT = {'easy' : .12, 'medium' : .10, 'hard' : .09, 'marathon' : .08, 'impossible' : .06};
 
 
 var DIFFICULTIES = ['easy', 'medium', 'hard', 'marathon', 'impossible'];
@@ -135,6 +136,9 @@ var PURCHASED = 3;
 var ACTIVE = 4;
 var COOLDOWN = 5;
 
+// Calculation Values
+var LOG2 = Math.log(2);
+var STIRLING_CONST =  Math.log(2 * Math.PI) / 2
 
 ///// STYLING ////////////////////
 var RING_DURATION = 300;
@@ -303,8 +307,23 @@ function getFactorialRange(n, m) {
 };
 
 function stirlingApproximation(n) {
-  return (n + 0.5) * Math.log(n) - n + Math.log(2 * Math.PI) / 2;
+  return (n + 0.5) * Math.log(n) - n + STIRLING_CONST;
 };
+
+// Leaving this here, but it needs to be way more efficient for revised addChimes to work
+function stirlingSum2(n, m) {
+  var sum = 0;
+  while (n-- > m)
+    sum += stirlingApproximation(n);
+
+  return sum;
+
+};
+
+function stirlingSum(n) {
+  return -.75 * Math.pow(n,2) + 1.41894 * n + (.5 * n - .5) * n * Math.log(n);
+};
+
 
 function createFloatingText(parent, text, event) {
   var posX
@@ -340,7 +359,10 @@ function showRing(spellName, duration) {
   if (spellName == SPOILS_OF_WAR) id = '#spoils-ring';
   else if (spellName == TRIBUTE) id = '#tribute-ring';
   else if (spellName == SMITE) id = '#smite-ring';
+  else if (spellName == CHALLENGING_SMITE) id = '#challenging-smite-ring';
   else if (spellName == FLASH) id = '#flash-ring';
+  else if (spellName == IGNITE+'1') id = '#ignite-ring-1';
+  else if (spellName == IGNITE+'2') id = '#ignite-ring-2';
   if (id) {
     $(id).css('display', 'block');
     if (duration)
@@ -375,12 +397,16 @@ GameApp.controller('GameController', function($scope) {
 
 function initializeButtons(game) {
   $('#chimes-button').click(function(e) {
+    if (game.paused) return;
+
     game.chimesClick();
     var text = "+" + game.prettyIntCompact(game.chimesPerClick);
     createFloatingText($(this), text, e);
   });
 
   $('#monster-button').click(function(e) {
+    if (game.paused) return;
+
     game.damageClick();
     var text = "-" + game.prettyIntCompact(game.damagePerClick);
     createFloatingText($(this), text, e);
@@ -419,6 +445,9 @@ function initializeHotkeys(game) {
 
   // Dialog hotkeys
   $(document).bind('keydown.esc', function() {hideSubpage(); hideModal();});
+  $(document).bind('keydown.alt_s', function() {game.save();});
+  $(document).bind('keydown.alt_n', function() {game.showNewGameModal(false);});
+  $(document).bind('keydown.p', function() {game.pauseGame();});
 
   // Item hotkeys
   $(document).bind('keydown.1', function() {game.buyItem(RELIC_SHIELD)});
