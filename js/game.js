@@ -195,7 +195,7 @@ Game.prototype.createSpells = function() {
       "+100% damage dealt for 10 seconds.  Only works against champions.  </br></br>90 second cooldown. <b>(T)</b>"}
     );
 
-    spells[IGNITE] = new Spell(this, 0, 120, SPELL_ACTIVE, MONSTER_CHAMPION,
+    spells[IGNITE] = new Spell(this, 0, 120, SPELL_ACTIVE, MONSTER_ALL,
       function(game) {game.igniteBonus += .04;
                       showRing(IGNITE+'1', RING_DURATION);},
       function(game) {showRing(IGNITE+'2', RING_DURATION);},
