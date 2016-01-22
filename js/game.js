@@ -1113,6 +1113,7 @@ Game.prototype.saveSpells = function(save) {
       spellData['name'] = spellName;
       spellData['durationLeft'] = Math.ceil(spell.durationLeft);
       spellData['cooldownLeft'] = Math.floor(spell.cooldownLeft);
+      spellData['duration'] = spell.duration;
       spellData['status'] = spell.status;
 
       obj.push(spellData);
@@ -1335,7 +1336,7 @@ Game.prototype.loadState = function(obj) {
   this.smiteDamageRate = obj['smiteDamageRate'];
   this.ghostBonus = obj['ghostBonus'];
   this.exhaustBonus = obj['exhaustBonus'];
-  this.igniteBonus = obj['igniteBonus'];
+  this.igniteBonus = obj['igniteBonus'] || 1;
 
 };
 
@@ -1440,6 +1441,7 @@ Game.prototype.loadSpells = function(obj) {
       if (data && spell) {
         spell.durationLeft = data['durationLeft'];
         spell.cooldownLeft = data['cooldownLeft'];
+        if (data['duration']) spellData.duration = data['duration'];
         spell.status = data['status'];
       }
     }
@@ -1471,7 +1473,7 @@ Game.prototype.loadMonsters = function(obj) {
       var data = obj[i];
       var monster = this.monsters[data['name']];
       if (data && monster) {
-        monster.currentHealth = data['currentHealth'];
+        if (data['currentHealth']) monster.currentHealth = data['currentHealth'];
         monster.count = data['count'];
         monster.status = data['status'];
 
@@ -1521,7 +1523,7 @@ Game.prototype.recalculateState = function() {
     this.monsters[monsters[i]].experience /= 5;
   }
 
-  this.damageStat += this.damageBought * this.igniteBonus + this.meeps * this.meepDamage;
+  this.damageStat = this.damageBought * this.igniteBonus + this.meeps * this.meepDamage;
 
   this.favorBonus = this.getFavorBonus() / 100;
   this.spoilsOfWarBonus = this.getSpoilsOfWarBonus() / 100;
