@@ -357,11 +357,11 @@ Game.prototype.addChimes = function(chimes) {
 
   while(chimes >= this.chimesPerMeepFloor) {
     var meepEstimate = Math.max(Math.floor(chimes / this.chimesPerMeepFloor / 2), 1);
-    var chimeEstimate = (stirlingSum(meepEstimate + this.meeps) - stirlingSum(this.meeps)) / LOG2 + CHIMES_PER_MEEP * meepEstimate;
+    var chimeEstimate = (stirlingSum(meepEstimate + this.meepsEarned) - stirlingSum(this.meepsEarned)) / LOG2 + CHIMES_PER_MEEP * meepEstimate;
 
     while(chimeEstimate >= chimes) {
       meepEstimate = Math.max(Math.floor(meepEstimate / 2), 1);
-      chimeEstimate = (stirlingSum(meepEstimate + this.meeps) - stirlingSum(this.meeps)) / LOG2 + CHIMES_PER_MEEP * meepEstimate;
+      chimeEstimate = (stirlingSum(meepEstimate + this.meepsEarned) - stirlingSum(this.meepsEarned)) / LOG2 + CHIMES_PER_MEEP * meepEstimate;
     }
 
     chimes -= chimeEstimate;
