@@ -428,17 +428,19 @@ Game.prototype.addMeeps = function(meeps, flash) {
 
   // don't increase chimes needed if meeps granted via flash
   if (!flash) {
-    this.meepsEarned += meeps;
-    if (oldMeeps < 15 && newMeeps < 30) {
-      this.chimesPerMeep += Math.log(getFactorialRange(newMeeps, oldMeeps)) / LOG2;
+    var oldMeepsEarned = this.meepsEarned || 1;
+    var newMeepsEarned = oldMeepsEarned + meeps;
+    if (oldMeepsEarned < 15 && newMeepsEarned < 30) {
+      this.chimesPerMeep += Math.log(getFactorialRange(newMeepsEarned, oldMeepsEarned)) / LOG2;
     }
     else {
-      this.chimesPerMeep = stirlingApproximation(newMeeps) / LOG2 + CHIMES_PER_MEEP;
+      this.chimesPerMeep = stirlingApproximation(newMeepsEarned) / LOG2 + CHIMES_PER_MEEP;
     }
     this.chimesPerMeepFloor = Math.floor(this.chimesPerMeep);
   }
 
   this.meeps = newMeeps;
+  this.meepsEarned = newMeepsEarned;
   this.progress.general.totalMeeps += meeps;
 
   this.updateStats();
