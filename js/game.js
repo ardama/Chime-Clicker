@@ -165,7 +165,7 @@ Game.prototype.createSpells = function() {
       function(game) {},
       function(game) {return game.level >= 6},
       function(game) {return game.spells[FLASH].status == game.LOCKED ? "":
-      "+3% meeps earned from chimes.</br>(<b>" + game.prettyIntCompact(Math.ceil(game.meepsEarned * game.flashBonus)) + "</b>)</br></br>150 second cooldown. <b>(W)</b>"}
+      "+3% meeps earned from chimes.</br>(<b>" + game.prettyIntCompact(Math.ceil(game.meepsEarned * game.flashBonus)) + "</b>)</br></br>180 second cooldown. <b>(W)</b>"}
     );
 
     spells[SMITE] = new Spell(this, 0, 60, SPELL_ACTIVE, MONSTER_ALL,
@@ -197,6 +197,7 @@ Game.prototype.createSpells = function() {
 
     spells[IGNITE] = new Spell(this, 0, 120, SPELL_ACTIVE, MONSTER_ALL,
       function(game) {game.igniteBonus += .04;
+                      game.updateStats();
                       showRing(IGNITE+'1', RING_DURATION);},
       function(game) {showRing(IGNITE+'2', RING_DURATION);},
       function(game) {return game.level >= 17},
