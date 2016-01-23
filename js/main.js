@@ -1,3 +1,6 @@
+var version = "0.3.6"
+
+
 ///// CONSTANTS ////////////////////
 // Items
 var BOOTS_OF_SPEED = "Boots of Speed";
@@ -429,6 +432,7 @@ jQuery.fn.hasHScrollBar = function() {
 ///// INITIALIZE ////////////////////
 var GameApp = angular.module('GameApp', ['ngOrderObjectBy']);
 GameApp.controller('GameController', function($scope) {
+    $scope.version = version;
     window.SCOPE = $scope;
     var difficulty = localStorage.getItem('difficulty');
     if (difficulty && difficulty > -1)

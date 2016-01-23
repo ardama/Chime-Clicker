@@ -348,6 +348,7 @@ ga('send', 'pageview');
 					</div>
 				</div>
 				<div id="spells-container">
+					<div id="version-container">v {{version}}</div>
 					<div ng-repeat="spell in game.getObjectsByStatus(game.spells)" class="spell container {{game.getClassName(spell)}}"
 							 data-status="{{game.spells[spell].status}}" data-type="{{game.spells[spell].type}}">
 						<div class="spell-wrapper touch-target" data-toggle="tooltip" data-title="{{game.spells[spell].tooltip(game)}}" ng-click="game.spellClick(spell)">
@@ -362,8 +363,6 @@ ga('send', 'pageview');
 					</div>
 				</div>
 			</div>
-
-			// Subpage
 			<div id="subpage-panel">
 			</div>
 		</div>
