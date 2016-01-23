@@ -356,11 +356,11 @@ Game.prototype.addChimes = function(chimes) {
   }
 
   while(chimes >= this.chimesPerMeepFloor) {
-    var meepEstimate = Math.floor(chimes / this.chimesPerMeepFloor / 2) || 1;
+    var meepEstimate = Math.max(Math.floor(chimes / this.chimesPerMeepFloor / 2), 1);
     var chimeEstimate = (stirlingSum(meepEstimate + this.meeps) - stirlingSum(this.meeps)) / LOG2 + CHIMES_PER_MEEP * meepEstimate;
 
     while(chimeEstimate >= chimes) {
-      meepEstimate = Math.floor(meepEstimate / 2);
+      meepEstimate = Math.max(Math.floor(meepEstimate / 2), 1);
       chimeEstimate = (stirlingSum(meepEstimate + this.meeps) - stirlingSum(this.meeps)) / LOG2 + CHIMES_PER_MEEP * meepEstimate;
     }
 
@@ -390,11 +390,11 @@ Game.prototype.addDamage = function(damage, user) {
   while (damage >= this.monsters[this.monster].maxHealth) {
     var maxHealth = this.monsters[this.monster].maxHealth;
     var startHealth = this.monsters[this.monster].startHealth;
-    var killEstimate = Math.floor(damage / maxHealth / 2) || 1;
+    var killEstimate = Math.max(Math.floor(damage / maxHealth / 2), 1);
     var killEstimateDamage = (killEstimate * (killEstimate - 1) / 2) * startHealth * SCALE_MONSTER_HEALTH + killEstimate * maxHealth;
 
     while (killEstimateDamage > damage) {
-      killEstimate = Math.floor(killEstimate / 2);
+      killEstimate = Math.max(Math.floor(killEstimate / 2), 1);
       killEstimateDamage = (killEstimate * (killEstimate - 1) / 2) * startHealth * SCALE_MONSTER_HEALTH + killEstimate * maxHealth;
     }
 
