@@ -1349,7 +1349,7 @@ Game.prototype.loadState = function(obj) {
 
   this.spoilsOfWarActive = obj['spoilsOfWarActive'];
   this.smiteBonus = obj['smiteBonus'];
-  this.smiteDamageRate = obj['smiteDamageRate'];
+  this.smiteDamageRate = obj['smiteDamageRate'] || 0;
   this.ghostBonus = obj['ghostBonus'];
   this.exhaustBonus = obj['exhaustBonus'];
   this.igniteBonus = obj['igniteBonus'] || 1;
