@@ -359,7 +359,7 @@ Game.prototype.addChimes = function(chimes) {
     var meepEstimate = Math.max(Math.floor(chimes / this.chimesPerMeepFloor / 2), 1);
     var chimeEstimate = (stirlingSum(meepEstimate + this.meepsEarned) - stirlingSum(this.meepsEarned)) / LOG2 + CHIMES_PER_MEEP * meepEstimate;
 
-    while(chimeEstimate >= chimes) {
+    while(chimeEstimate >= chimes && meepEstimate > 1) {
       meepEstimate = Math.max(Math.floor(meepEstimate / 2), 1);
       chimeEstimate = (stirlingSum(meepEstimate + this.meepsEarned) - stirlingSum(this.meepsEarned)) / LOG2 + CHIMES_PER_MEEP * meepEstimate;
     }
@@ -437,10 +437,10 @@ Game.prototype.addMeeps = function(meeps, flash) {
       this.chimesPerMeep = stirlingApproximation(newMeepsEarned) / LOG2 + CHIMES_PER_MEEP;
     }
     this.chimesPerMeepFloor = Math.floor(this.chimesPerMeep);
+    this.meepsEarned = newMeepsEarned;
   }
 
   this.meeps = newMeeps;
-  this.meepsEarned = newMeepsEarned;
   this.progress.general.totalMeeps += meeps;
 
   this.updateStats();
