@@ -452,14 +452,14 @@ ga('send', 'pageview');
 					<div class="progress-modal-spacer"></div>
 
 					<div class="progress-modal-title">Wins</div>
-					<div ng-repeat="object in game.progress.wins | orderObjectBy: 'order'" class="progress-stat-container progress-win">
+					<div ng-repeat="object in game.progress.wins | orderObjectBy: 'order' track by object.order" class="progress-stat-container progress-win">
 						<div class="progress-stat">{{object.difficulty.capitalize()}}</div>
 						<div class="progress-stat-value">{{object.count}}</div>
 					</div>
 					<div class="progress-modal-spacer"></div>
 
 					<div class="progress-modal-title">Fastest Times</div>
-					<div ng-repeat="object in game.progress.times | orderObjectBy: 'order'" class="progress-stat-container progress-time">
+					<div ng-repeat="object in game.progress.times | orderObjectBy: 'order' track by object.order" class="progress-stat-container progress-time">
 						<div class="progress-stat">{{object.difficulty.capitalize()}}</div>
 						<div class="progress-stat-value">{{object.count > 0 ? game.prettyTime(object.count) : '--'}}</div>
 					</div>
@@ -467,22 +467,22 @@ ga('send', 'pageview');
 
 				<div class="progress-modal-column">
 					<div class="progress-modal-title">Items Bought</div>
-					<div ng-repeat="object in game.progress.items | orderObjectBy: 'order'" data-status="{{game.items[object.item].status}}" class="{{game.isZero(object.count)}} progress-stat-container progress-item">
-						<div class="progress-stat">{{object.item + game.isPlural(2, object.item)}}</div>
+					<div ng-repeat="object in game.progress.items | orderObjectBy: 'order' track by object.order" data-status="{{game.items[indexToItem(object.item)].status}}" class="{{game.isZero(object.count)}} progress-stat-container progress-item">
+						<div class="progress-stat">{{indexToItem(object.item) + game.isPlural(2, indexToItem(object.item))}}</div>
 						<div class="progress-stat-value">{{game.prettyIntCompact(object.count)}}</div>
 					</div>
 					<div class="progress-modal-spacer"></div>
 
 					<div class="progress-modal-title">Monsters Killed</div>
-					<div ng-repeat="object in game.progress.monsters | orderObjectBy: 'order'" data-status="{{game.monsters[object.monster].status}}" class="{{game.isZero(object.count)}} progress-stat-container progress-monster">
-						<div class="progress-stat">{{object.monster + game.isPlural(2, object.monster)}}</div>
+					<div ng-repeat="object in game.progress.monsters | orderObjectBy: 'order' track by object.order" data-status="{{game.monsters[indexToMonster(object.monster)].status}}" class="{{game.isZero(object.count)}} progress-stat-container progress-monster">
+						<div class="progress-stat">{{indexToMonster(object.monster) + game.isPlural(2, indexToMonster(object.monster))}}</div>
 						<div class="progress-stat-value">{{game.prettyIntCompact(object.count)}}</div>
 					</div>
 					<div class="progress-modal-spacer"></div>
 
 					<div class="progress-modal-title">Spells Used</div>
-					<div ng-repeat="object in game.progress.spells | orderObjectBy: 'order'" data-status="{{game.spells[object.spell].status}}" class="{{game.isZero(object.count)}} progress-stat-container progress-spell">
-						<div class="progress-stat">{{object.spell}}</div>
+					<div ng-repeat="object in game.progress.spells | orderObjectBy: 'order' track by object.order" data-status="{{game.spells[indexToSpell(object.spell)].status}}" class="{{game.isZero(object.count)}} progress-stat-container progress-spell">
+						<div class="progress-stat">{{indexToSpell(object.spell)}}</div>
 						<div class="progress-stat-value">{{game.prettyIntCompact(object.count)}}</div>
 					</div>
 

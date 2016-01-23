@@ -997,20 +997,30 @@ Game.prototype.save = function() {
 
 Game.prototype.saveProgress = function() {
   var items = [];
-  for (var item in this.progress.items) items.push(this.progress.items[item]);
-
+  for (var item in this.progress.items) {
+    delete this.progress.items[item]['$$hashKey'];
+    items.push(this.progress.items[item]);
+  }
   var monsters = [];
-  for (var monster in this.progress.monsters) monsters.push(this.progress.monsters[monster]);
-
+  for (var monster in this.progress.monsters) {
+    delete this.progress.monsters[monster]['$$hashKey'];
+    monsters.push(this.progress.monsters[monster]);
+  }
   var spells = [];
-  for (var spell in this.progress.spells) spells.push(this.progress.spells[spell]);
-
+  for (var spell in this.progress.spells) {
+    delete this.progress.spells[spell]['$$hashKey'];
+    spells.push(this.progress.spells[spell]);
+  }
   var wins = [];
-  for (var win in this.progress.wins) wins.push(this.progress.wins[win]);
-
+  for (var win in this.progress.wins) {
+    delete this.progress.wins[win]['$$hashKey'];
+    wins.push(this.progress.wins[win]);
+  }
   var times = [];
-  for (var time in this.progress.times) times.push(this.progress.times[time]);
-
+  for (var time in this.progress.times) {
+    delete this.progress.times[time]['$$hashKey'];
+    times.push(this.progress.times[time]);
+  }
   var progress = {'general' : this.progress.general,
   'items' : jsonh.pack(items),
   'monsters' : jsonh.pack(monsters),
@@ -1075,10 +1085,10 @@ Game.prototype.saveItems = function(save) {
     if (items.hasOwnProperty(itemName)) {
       var item = items[itemName];
       var itemData = {};
-      itemData['name'] = itemName;
+      itemData['name'] = itemToIndex(itemName);
       itemData['count'] = item.count;
-      itemData['upgrades'] = item.upgrades;
-      itemData['upgradesAvailable'] = item.upgradesAvailable;
+      itemData['upgrades'] = Item.convertUpgradeToIndex(item.upgrades);
+      itemData['upgradesAvailable'] = Item.convertUpgradeToIndex(item.upgradesAvailable);
       itemData['cost'] = item.cost;
       obj.push(itemData);
     }
@@ -1094,7 +1104,7 @@ Game.prototype.saveUpgrades = function(save) {
     if (upgrades.hasOwnProperty(upgradeName)) {
       var upgrade = upgrades[upgradeName]
       var upgradeData = {};
-      upgradeData['name'] = upgradeName;
+      upgradeData['name'] = upgradeToIndex(upgradeName);
       upgradeData['status'] = upgrade.status;
 
       obj.push(upgradeData);
@@ -1110,7 +1120,7 @@ Game.prototype.saveSpells = function(save) {
     if (spells.hasOwnProperty(spellName)) {
       var spell = spells[spellName];
       var spellData = {};
-      spellData['name'] = spellName;
+      spellData['name'] = spellToIndex(spellName);
       spellData['durationLeft'] = Math.ceil(spell.durationLeft);
       spellData['cooldownLeft'] = Math.floor(spell.cooldownLeft);
       spellData['duration'] = spell.duration;
@@ -1129,7 +1139,7 @@ Game.prototype.saveMonsters = function(save) {
     if (monsters.hasOwnProperty(monsterName)) {
       var monster = monsters[monsterName];
       var monsterData = {};
-      monsterData['name'] = monsterName;
+      monsterData['name'] = monsterToIndex(monsterName);
       monsterData['currentHealth'] = Math.floor(monster.currentHealth);
       monsterData['count'] = monster.count;
       monsterData['status'] = monster.status;
@@ -1174,7 +1184,7 @@ Game.prototype.loadProgress = function() {
   var order = 0;
   obj['items'] = {};
   for (var item in this.items) {
-    obj['items'][item] = {'item': item, 'count': 0, 'goldSpent': 0, 'order': order};
+    obj['items'][item] = {'item': itemToIndex(item), 'count': 0, 'goldSpent': 0, 'order': order};
     order++;
   }
 
@@ -1182,7 +1192,7 @@ Game.prototype.loadProgress = function() {
   order = 0;
   obj['monsters'] = {};
   for (var monster in this.monsters) {
-    obj['monsters'][monster] = {'monster': monster, 'count': 0, 'order': order};
+    obj['monsters'][monster] = {'monster': monsterToIndex(monster), 'count': 0, 'order': order};
     order++;
   }
 
@@ -1190,7 +1200,7 @@ Game.prototype.loadProgress = function() {
   order = 0;
   obj['spells'] = {};
   for (var spell in this.spells) {
-    obj['spells'][spell] = {'spell': spell, 'count': 0, 'goldGained': 0, 'meepsGained': 0, 'order': order};
+    obj['spells'][spell] = {'spell': spellToIndex(spell), 'count': 0, 'goldGained': 0, 'meepsGained': 0, 'order': order};
     order++;
   }
 
@@ -1235,7 +1245,9 @@ Game.prototype.loadProgress = function() {
       i = o.length;
       while (i--) {
         var item = o[i];
-        progress['items'][item.item] = item;
+        // convert string to index
+        item.item = itemToIndex(item.item);
+        progress['items'][indexToItem(item.item)] = item;
       }
     }
     else {
@@ -1247,7 +1259,9 @@ Game.prototype.loadProgress = function() {
       i = o.length;
       while (i--) {
         var monster = o[i];
-        progress['monsters'][monster.monster] = monster;
+        // convert string to index
+        monster.monster = monsterToIndex(monster.monster);
+        progress['monsters'][indexToMonster(monster.monster)] = monster;
       }
     }
     else {
@@ -1259,7 +1273,9 @@ Game.prototype.loadProgress = function() {
       i = o.length;
       while (i--) {
         var spell = o[i];
-        progress['spells'][spell.spell] = spell;
+        // convert string to index
+        spell.spell = spellToIndex(spell.spell);
+        progress['spells'][indexToSpell(spell.spell)] = spell;
       }
     }
     else {
@@ -1348,11 +1364,11 @@ Game.prototype.loadItems = function(obj) {
     var i = obj.length;
     while (i--) {
       var data = obj[i];
-      var item = this.items[data['name']];
+      var item = this.items[indexToItem(data['name'])];
       if (data && item) {
         item.count = data['count'];
-        item.upgrades = data['upgrades'];
-        item.upgradesAvailable = data['upgradesAvailable'];
+        item.upgrades = Item.convertIndexToUpgrade(data['upgrades']);
+        item.upgradesAvailable = Item.convertIndexToUpgrade(data['upgradesAvailable']);
         item.cost = item.startCost + item.startCost * SCALE_ITEM_COST * item.count * (item.count + 1) / 2;
         item.cost10 = item.calculatePurchaseCost(10);
         item.cost100 = item.calculatePurchaseCost(100);
@@ -1389,7 +1405,7 @@ Game.prototype.loadUpgrades = function(obj) {
     var i = obj.length;
     while (i--) {
       var data = obj[i];
-      var upgrade = this.upgrades[data['name']];
+      var upgrade = this.upgrades[indexToUpgrade(data['name'])];
       if (data && upgrade) {
         upgrade.status = data['status'];
         if (data['status'] == PURCHASED) {
@@ -1401,8 +1417,6 @@ Game.prototype.loadUpgrades = function(obj) {
           item.income += upgrade.income;
         }
       }
-
-
     }
   }
 
@@ -1437,7 +1451,7 @@ Game.prototype.loadSpells = function(obj) {
     var i = obj.length;
     while (i--) {
       var data = obj[i];
-      var spell = this.spells[data['name']];
+      var spell = this.spells[indexToSpell(data['name'])];
       if (data && spell) {
         spell.durationLeft = data['durationLeft'];
         spell.cooldownLeft = data['cooldownLeft'];
@@ -1471,7 +1485,7 @@ Game.prototype.loadMonsters = function(obj) {
     var i = obj.length;
     while (i--) {
       var data = obj[i];
-      var monster = this.monsters[data['name']];
+      var monster = this.monsters[indexToMonster(data['name'])];
       if (data && monster) {
         if (data['currentHealth']) monster.currentHealth = data['currentHealth'];
         monster.count = data['count'];

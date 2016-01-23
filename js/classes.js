@@ -40,6 +40,29 @@ Item.prototype.calculatePurchaseCost  = function(n) {
   return this.calculateTotalCost(n + this.count) - this.calculateTotalCost(this.count);
 };
 
+Item.convertUpgradeToIndex = function(upgrades) {
+  var result = [];
+  var len = upgrades.length;
+  var i = 0;
+  while (i < len) {
+    result.push(upgradeToIndex(upgrades[i]));
+    i++;
+  }
+  return result;
+};
+
+Item.convertIndexToUpgrade = function(indices) {
+  var result = [];
+  var len = indices.length;
+  var i = 0;
+  while (i < len) {
+    result.push(indexToUpgrade(indices[i]));
+    i++;
+  }
+  return result;
+};
+
+
 var Upgrade = function(game, item, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income, requirements) {
   this.Init(game, item, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income, requirements);
 };

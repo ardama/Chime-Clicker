@@ -8,9 +8,12 @@ var AMPLIFYING_TOME = "Amplifying Tome";
 var RUBY_CRYSTAL = "Ruby Crystal";
 var DAGGER = "Dagger";
 
-// Upgrade Types
-var ITEM_UPGRADE = 0;
-var SPELL_UPGRADE = 1;
+// create naming maps
+var INDEX_TO_ITEM = [BOOTS_OF_SPEED, ANCIENT_COIN, SPELLTHIEFS_EDGE, RELIC_SHIELD, AMPLIFYING_TOME, RUBY_CRYSTAL, DAGGER];
+var ITEM_TO_INDEX = {};
+for (var i = 0; i < INDEX_TO_ITEM.length; i++) {
+  ITEM_TO_INDEX[INDEX_TO_ITEM[i]] = i;
+}
 
 // Item Upgrades
 var BOOTS_OF_SWIFTNESS = "Boots of Swiftness";
@@ -46,6 +49,19 @@ var STATIKK_SHIV = "Statikk Shiv";
 var PHANTOM_DANCER = "Phantom Dancer";
 var TRINITY_FORCE = "Trinity Force";
 
+var INDEX_TO_UPGRADE = [BOOTS_OF_SWIFTNESS, BOOTS_OF_MOBILITY, IONIAN_BOOTS_OF_LUCIDITY,
+                        SORCERERS_SHOES, MERCURYS_TREADS, NOMADS_MEDALLION, TALISMAN_OF_ASCENSION,
+                        FROSTFANG, FROST_QUEENS_CLAIM, TARGONS_BRACE, FACE_OF_THE_MOUNTAIN,
+                        NEEDLESSLY_LARGE_ROD, RABADONS_DEATHCAP, LUDENS_ECHO, ZHONYAS_HOURGLASS,
+                        FIENDISH_CODEX, MORELLONOMICON, AETHER_WISP, KINDLEGEM, LOCKET_OF_THE_IRON_SOLARI,
+                        GIANTS_BELT, WARMOGS_ARMOR, FROZEN_MALLET, CRYSTALLINE_BRACER, RIGHTEOUS_GLORY,
+                        RECURVE_BOW, RUNAANS_HURRICANE, WITS_END, ZEAL, STATIKK_SHIV,
+                        PHANTOM_DANCER, TRINITY_FORCE];
+var UPGRADE_TO_INDEX = {};
+for (var i = 0; i < INDEX_TO_UPGRADE.length; i++) {
+  UPGRADE_TO_INDEX[INDEX_TO_UPGRADE[i]] = i;
+}
+
 // Spells
 var FLASH = "Flash";
 var GHOST = "Ghost";
@@ -57,14 +73,16 @@ var IGNITE = "Ignite";
 var EXHAUST = "Exhaust";
 var CLEANSE = "Cleanse";
 var TELEPORT = "Teleport";
-
 var FAVOR = "Favor";
 var SPOILS_OF_WAR = "Spoils of War"
 var TRIBUTE = "Tribute";
 
-// Spell Types
-var SPELL_PASSIVE = "passive";
-var SPELL_ACTIVE = "active";
+var INDEX_TO_SPELL = [FLASH, GHOST, BARRIER, HEAL, SMITE, CHALLENGING_SMITE, IGNITE,
+                      EXHAUST, CLEANSE, TELEPORT, FAVOR, SPOILS_OF_WAR, TRIBUTE];
+var SPELL_TO_INDEX = {};
+for (var i = 0; i < INDEX_TO_SPELL.length; i++) {
+  SPELL_TO_INDEX[INDEX_TO_SPELL[i]] = i;
+}
 
 // Monsters
 var CASTER_MINION = "Caster Minion";
@@ -87,10 +105,28 @@ var DR_MUNDO = "Dr. Mundo";
 var SION = "Sion";
 var TEEMO = "Teemo";
 
+var INDEX_TO_MONSTER = [CASTER_MINION, RIFT_SCUTTLER, MELEE_MINION, CANNON_MINION, RAZORBEAK,
+                        MURK_WOLF, KRUG, GROMP, BLUE_SENTINEL, RED_BRAMBLEBACK, SUPER_MINION,
+                        RIFT_HERALD, DRAGON, VILEMAW, BARON_NASHOR, CHO_GATH, DR_MUNDO, SION, TEEMO];
+var MONSTER_TO_INDEX = {};
+for (var i = 0; i < INDEX_TO_MONSTER.length; i++) {
+  MONSTER_TO_INDEX[INDEX_TO_MONSTER[i]] = i;
+}
+
+// Spell Types
+var SPELL_PASSIVE = "passive";
+var SPELL_ACTIVE = "active";
+
 // Monster Types
 var MONSTER_JUNGLE = "jungle";
 var MONSTER_CHAMPION = "champion"
 var MONSTER_ALL = "all";
+
+var INDEX_TO_TYPE = [SPELL_PASSIVE, SPELL_ACTIVE, MONSTER_JUNGLE, MONSTER_CHAMPION, MONSTER_ALL];
+var TYPE_TO_INDEX = {};
+for (var i = 0; i < INDEX_TO_TYPE.length; i++) {
+  TYPE_TO_INDEX[INDEX_TO_TYPE[i]] = i;
+}
 
 // Constant Arrays
 var MONSTERS = [CASTER_MINION, RIFT_SCUTTLER, MELEE_MINION, CANNON_MINION, RAZORBEAK,
@@ -232,6 +268,21 @@ function updateLastItem() {
 };
 
 ///// UTILITY ////////////////////
+function isString(str) { return (typeof str === 'string' || str instanceof String); };
+
+function itemToIndex(item) { return isString(item) ? ITEM_TO_INDEX[item] : item; };
+function upgradeToIndex(upgrade) { return isString(upgrade) ? UPGRADE_TO_INDEX[upgrade] : upgrade; };
+function spellToIndex(spell) { return isString(spell) ? SPELL_TO_INDEX[spell] : spell; };
+function monsterToIndex(monster) { return isString(monster) ? MONSTER_TO_INDEX[monster] : monster; };
+function typeToIndex(type) { return isString(type) ? TYPE_TO_INDEX[type] : type; };
+
+function indexToItem(index) { return isString(index) ? index : INDEX_TO_ITEM[index]; };
+function indexToUpgrade(index) { return isString(index) ? index : INDEX_TO_UPGRADE[index]; };
+function indexToSpell(index) { return isString(index) ? index : INDEX_TO_SPELL[index]; };
+function indexToMonster(index) { return isString(index) ? index : INDEX_TO_MONSTER[index]; };
+function indexToType(index) { return isString(index) ? index : INDEX_TO_TYPE[index]; };
+
+
 var LONG_NUMBER_NAMES = ['million', 'billion', 'trillion', 'quadrillion', 'quintillion', 'sextillion', 'septillion', 'octillion', 'nontillion', 'decillion']
 var SHORT_NUMBER_NAMES = ['m', 'b', 't', 'qd', 'qt', 'sx', 'sp', 'o', 'n', 'dc']
 function prettyIntBig(num, fixed) {
@@ -392,6 +443,18 @@ GameApp.controller('GameController', function($scope) {
     window.importGame = function() {
       $scope.game.importGame($('#import-modal-text').val());
     }
+
+    $scope.itemToIndex = function(a) {return itemToIndex(a)};
+    $scope.upgradeToIndex = function(a) {return upgradeToIndex(a)};
+    $scope.spellToIndex = function(a) {return spellToIndex(a)};
+    $scope.monsterToIndex = function(a) {return monsterToIndex(a)};
+    $scope.typeToIndex = function(a) {return typeToIndex(a)};
+
+    $scope.indexToItem = function(a) {return indexToItem(a)};
+    $scope.indexToUpgrade = function(a) {return indexToUpgrade(a)};
+    $scope.indexToSpell = function(a) {return indexToSpell(a)};
+    $scope.indexToMonster = function(a) {return indexToMonster(a)};
+    $scope.indexToType = function(a) {return indexToType(a)};
 });
 
 
