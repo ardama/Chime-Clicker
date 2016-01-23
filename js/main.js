@@ -148,7 +148,7 @@ var MONSTER_HEALTH = 200;
 var MONSTER_EXPERIENCE = 65;
 var MONSTER_REWARD = 20;
 var POINT_BONUS = {'easy' : 1, 'medium' : 4, 'hard' : 10, 'marathon' : 30, 'impossible' : 100};
-var SMITE_PERCENT = {'easy' : .12, 'medium' : .10, 'hard' : .09, 'marathon' : .08, 'impossible' : .06};
+var SMITE_PERCENT = {'easy' : .12, 'medium' : .1, 'hard' : .08, 'marathon' : .06, 'impossible' : .04};
 
 
 var DIFFICULTIES = ['easy', 'medium', 'hard', 'marathon', 'impossible'];
@@ -160,7 +160,7 @@ var SCALE_ITEM_COST = 0.10;
 var SCALE_MONSTER_REWARD = 0.00;
 var SCALE_MONSTER_HEALTH = 0.02;
 var SCALE_MONSTER_LEVEL_REWARD = 5;
-var SCALE_MONSTER_LEVEL_HEALTH = {'easy' : 5.2, 'medium' : 5.8, 'hard' : 6.4, 'marathon' : 7.2, 'impossible' : 9.6};
+var SCALE_MONSTER_LEVEL_HEALTH = {'easy' : 5.2, 'medium' : 5.8, 'hard' : 6.4, 'marathon' : 7.2, 'impossible' : 9.0};
 var SCALE_EXPERIENCE_NEEDED = 5;
 var SCALE_MEEP_STRENGTH = 1;
 

@@ -259,8 +259,9 @@ Game.prototype.createSpells = function() {
                       showRing(TRIBUTE, RING_DURATION)},
       function(game) {},
       function(game) {return game.upgrades[FROST_QUEENS_CLAIM].status == game.PURCHASED;},
-      function(game) {return game.spells[TRIBUTE].status == game.LOCKED ? "":
-      "Gain <b>" + (game.tributeBonus * 100).toFixed(1) + "%</b> of reward gold on next monster click.  Gold scales with Spellthief's Edges owned.</br></br>Deals <b>" + game.prettyIntCompact(game.damageStat * game.attackrateStat * game.exhaustBonus * 5, 1) + "</b> bonus damage to champions (scales with DPS).</br></br>30 second cooldown."}
+      function(game) {if (game.spells[TRIBUTE].status == game.LOCKED) return "";
+                      else if (game.monster == TEEMO) return "Gain <b>" + (game.tributeBonus * 100 / 15).toFixed(1) + "%</b> of reward gold on next Teemo click.  Gold scales with Spellthief's Edges owned.</br></br>Deals <b>" + game.prettyIntCompact(game.damageStat * game.attackrateStat * game.exhaustBonus * 5, 1) + "</b> bonus damage (scales with DPS).</br></br>30 second cooldown.";
+                      else return "Gain <b>" + (game.tributeBonus * 100).toFixed(1) + "%</b> of reward gold on next monster click.  Gold scales with Spellthief's Edges owned.</br></br>Deals <b>" + game.prettyIntCompact(game.damageStat * game.attackrateStat * game.exhaustBonus * 5, 1) + "</b> bonus damage to champions (scales with DPS).</br></br>30 second cooldown.";}
     );
 
     return spells;
@@ -909,15 +910,15 @@ Game.prototype.getSpellTimePercent = function(spellName) {
 };
 
 Game.prototype.getFavorBonus = function() {
-  return getBaseLog(4, this.items[ANCIENT_COIN].count + 1);
+  return .4 * Math.pow(this.items[ANCIENT_COIN].count + 10000, .3) - 4;
 };
 
 Game.prototype.getSpoilsOfWarBonus = function() {
-  return getBaseLog(1.5, this.items[RELIC_SHIELD].count + 1);
+  return 1.0 * Math.pow(this.items[RELIC_SHIELD].count + 10000, .3) - 2;
 };
 
 Game.prototype.getTributeBonus = function() {
-  return 5 + getBaseLog(2.5, this.items[SPELLTHIEFS_EDGE].count + 1);
+  return .6 * Math.pow(this.items[SPELLTHIEFS_EDGE].count + 10000, .3) - 5;
 };
 
 Game.prototype.getSmiteDamage = function() {
