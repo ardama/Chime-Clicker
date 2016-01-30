@@ -3,17 +3,23 @@
 <head>
 <title>Chime Clicker</title>
 
-<script src="js/jquery.min.js"></script>
-<script src="js/jquery.tooltipster.js"></script>
-<script src="js/jquery.hotkeys.js"></script>
-<script src="js/jquery.simplemodal.1.4.4.min.js"></script>
-<script src="js/angular.min.js"></script>
-<script src="js/ng-order-object-by.js"></script>
-<script src="js/jsonh.js"></script>
-<script src="js/lz-string.min.js"></script>
+<script src="js/vendor/jquery.min.js"></script>
+<script src="js/vendor/jquery.tooltipster.js"></script>
+<script src="js/vendor/jquery.hotkeys.js"></script>
+<script src="js/vendor/jquery.simplemodal.1.4.4.min.js"></script>
+<script src="js/vendor/angular.min.js"></script>
+<script src="js/vendor/ng-order-object-by.js"></script>
+<script src="js/vendor/jsonh.js"></script>
+<script src="js/vendor/lz-string.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/game.js"></script>
-<script src="js/classes.js"></script>
+<script src="js/classes/achievement.js"></script>
+<script src="js/classes/item.js"></script>
+<script src="js/classes/mastery.js"></script>
+<script src="js/classes/monster.js"></script>
+<script src="js/classes/rune.js"></script>
+<script src="js/classes/spell.js"></script>
+<script src="js/classes/upgrade.js"></script>
 <link rel="shortcut icon" href="favicon.ico" type="image/icon">
 <link rel="icon" href="favicon.ico" type="image/icon">
 <link href="stylesheets/output.css" rel="stylesheet" type="text/css">
@@ -65,8 +71,8 @@ ga('send', 'pageview');
 			<div id="column-1" class="column">
 				<div id="meeps-row" class="row">
 					<div id="meeps-container" class="container">
-						<div id="ghost-pulse" class="pulse {{game.spells['Ghost'].status == game.ACTIVE ? 'active': ''}}"></div>
-						<div id="meeps-status" class="status {{game.spells['Flash'].status == game.ACTIVE ? 'flash-active' : '';}}">
+						<div id="ghost-pulse" class="pulse {{game.spells['Ghost'].status == ACTIVE ? 'active': ''}}"></div>
+						<div id="meeps-status" class="status {{game.spells['Flash'].status == ACTIVE ? 'flash-active' : '';}}">
 							<div id="meeps-wrapper" data-toggle="tooltip" data-title="Collect chimes to earn meeps.  Meeps grant {{game.meepDamage}} Damage." data-position="right">
 								<text>
 									{{game.prettyInt(game.meeps)}}
@@ -78,7 +84,7 @@ ga('send', 'pageview');
 						</div>
 						<div id="chimes-bar-dropdown" class="dropdown">
 							<div class="dropdown-content">
-								<div id="chimes-bar" class="bar {{game.spells['Ghost'].status == game.ACTIVE ? 'ghost-active' : '';}}">
+								<div id="chimes-bar" class="bar {{game.spells['Ghost'].status == ACTIVE ? 'ghost-active' : '';}}">
 									<div id="chimes-bar-fill" class="bar-fill" style="width:{{game.getMeepProgressPercent()}}%"></div>
 									<div id="chimes-rate" data-toggle="tooltip" data-title="Chimes collected per second." data-position="right">
 										CPS {{game.prettyIntVariable(game.chimesRate)}}
@@ -110,8 +116,8 @@ ga('send', 'pageview');
 
 				<div id="monster-row" class="row">
 					<div id="damage-container" class="container">
-						<div id="exhaust-pulse" class="pulse {{game.spells['Exhaust'].status == game.ACTIVE ? 'active': ''}}"></div>
-						<div id="smite-pulse" class="pulse {{game.spells['Smite'].status == game.ACTIVE ? 'active': ''}}"></div>
+						<div id="exhaust-pulse" class="pulse {{game.spells['Exhaust'].status == ACTIVE ? 'active': ''}}"></div>
+						<div id="smite-pulse" class="pulse {{game.spells['Smite'].status == ACTIVE ? 'active': ''}}"></div>
 						<div id="damage-status" class="status">
 							<div id="monster-selector" class="selector {{game.isFirstMonster()}} {{game.isLastMonster()}}">
 								<div class="selector-button selector-left touch-target">
@@ -136,7 +142,7 @@ ga('send', 'pageview');
 						</div>
 						<div id="damage-bar-dropdown" class="dropdown">
 							<div class="dropdown-content">
-								<div id="damage-bar" class="bar {{game.spells['Smite'].status != game.ACTIVE ? '' : game.isMonsterChampion(game.monster) ? 'challenging-active' : 'smite-active'}} {{game.spells['Exhaust'].status == game.ACTIVE ? 'exhaust-active' : '';}}">
+								<div id="damage-bar" class="bar {{game.spells['Smite'].status != ACTIVE ? '' : game.isMonsterChampion(game.monster) ? 'challenging-active' : 'smite-active'}} {{game.spells['Exhaust'].status == ACTIVE ? 'exhaust-active' : '';}}">
 									<div id="damage-bar-fill" class="bar-fill" style="width:{{game.getMonsterHealthPercent()}}%"></div>
 									<div id="damage-rate" data-toggle="tooltip" data-title="Damage dealt per second." data-position="right">
 										DPS {{game.prettyIntVariable(game.damageRate)}}
@@ -193,7 +199,7 @@ ga('send', 'pageview');
 										<div class="game-stat-name">{{game.getStatNameVariable('Defense', 100)}}</div> {{game.prettyIntCompact(game.defenseStat)}}
 									</div>
 								</div>
-								<div id="damageStat-value" class="game-stat game-stat-top game-stat-right {{game.spells['Ignite'].status == game.ACTIVE ? 'ignite-active' : '';}}">
+								<div id="damageStat-value" class="game-stat game-stat-top game-stat-right {{game.spells['Ignite'].status == ACTIVE ? 'ignite-active' : '';}}">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Damage dealt per click.">
 										<div class="game-stat-name">{{game.getStatNameVariable('Damage', 100)}}</div> {{game.prettyIntCompact(game.damageStat)}}
 									</div>
@@ -325,7 +331,7 @@ ga('send', 'pageview');
 						<div class="item-divider"></div>
 					</div>
 					<!-- locked items -->
-					<div ng-repeat="item in game.getObjectsByStatus(game.items, game.LOCKED)" class="item item-locked container">
+					<div ng-repeat="item in game.getObjectsByStatus(game.items, LOCKED)" class="item item-locked container">
 						<!-- item image -->
 						<div class="item-left">
 							<div class="item-locked-image"><i class="fa fa-lock"></i> Level {{game.items[item].level}}</div>
@@ -372,7 +378,7 @@ ga('send', 'pageview');
 <div id="modal-holder" style="display:none;">
 	<div id="difficulty-modal" class="modal">
 		<div id="difficulty-modal-body">
-			<div ng-repeat="difficulty in game.DIFFICULTIES" class="{{difficulty == game.difficulty ? 'hide': ''}} difficulty-button" ng-click="game.showNewGameModal(false, difficulty)">{{difficulty.capitalize()}}</div>
+			<div ng-repeat="difficulty in DIFFICULTIES" class="{{difficulty == game.difficulty ? 'hide': ''}} difficulty-button" ng-click="game.showNewGameModal(false, difficulty)">{{difficulty.capitalize()}}</div>
 		</div>
 	</div>
 
@@ -496,7 +502,7 @@ ga('send', 'pageview');
 				<div id="newgame-modal-text"></div>
 				<div id="newgame-modal-button-container" class="modal-button-container">
 					<div id="newgame-cancel" class="modal-button" onclick="hideModal()">Cancel</div>
-					<div ng-repeat="difficulty in game.DIFFICULTIES" class="{{difficulty != game.newGameDifficulty || game.newGameReset ? 'hide': ''}} newgame-confirm modal-button" ng-click="game.newGame(false, difficulty)">New Game</div>
+					<div ng-repeat="difficulty in DIFFICULTIES" class="{{difficulty != game.newGameDifficulty || game.newGameReset ? 'hide': ''}} newgame-confirm modal-button" ng-click="game.newGame(false, difficulty)">New Game</div>
 					<div class="{{!game.newGameReset ? 'hide': ''}} newgame-confirm modal-button" ng-click="game.newGame(true, game.difficulty)">Reset</div>
 				</div>
 			</div>

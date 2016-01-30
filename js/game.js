@@ -5,14 +5,6 @@ var Game = function (scope, difficulty) {
 Game.prototype.Init = function(scope, difficulty) {
   this.scope = scope;
 
-  this.LOCKED = LOCKED;
-  this.AVAILABLE = AVAILABLE;
-  this.UNAVAILABLE = UNAVAILABLE;
-  this.PURCHASED = PURCHASED
-  this.ACTIVE = ACTIVE;
-  this.COOLDOWN = COOLDOWN;
-  this.DIFFICULTIES = DIFFICULTIES;
-
   this.difficulty = difficulty;
   this.fps = 18;
   this.stepSize = 1 / this.fps;
@@ -47,18 +39,26 @@ Game.prototype.Init = function(scope, difficulty) {
   this.damagePerClick = 0;
   this.scaleMonsterLevelHealth = SCALE_MONSTER_LEVEL_HEALTH[difficulty];
 
-  this.defenseStat = 1;
+  this.defenseStat = 0;
   this.movespeedStat = 0;
   this.damageStat = 0;
-  this.damageBought = 5;
   this.attackrateStat = 0;
-  this.income = 0;
 
+  this.defenseBase = 1;
+  this.movespeedBase = 0;
+  this.damageBase = 0;
+  this.damageBought = 5;
+  this.attackrateBase = 0;
+  this.income = 0;
+  this.cooldownReduction = 0;
+  this.oldCooldownReduction = 0;
+
+
+  // Spell variables
   this.favorBonus = 0;
   this.spoilsOfWarBonus = 0;
   this.spoilsOfWarActive = 0;
   this.tributeBonus = 0;
-
   this.smiteBonus = 0;
   this.smiteDamageRate = 0;
   this.ghostBonus = 1;
@@ -66,11 +66,34 @@ Game.prototype.Init = function(scope, difficulty) {
   this.exhaustBonus = 1;
   this.igniteBonus = 1;
 
-  this.items = this.createItems();
-  this.spells = this.createSpells();
-  this.upgrades = this.createUpgrades();
+  // Rune variables
+  this.runeDefense = 0;
+  this.runeMovespeed = 0;
+  this.runeDamage = 0;
+  this.runeAttackrate = 0;
+  this.runeScalingDefense = 1.0;
+  this.runeScalingMovespeed = 1.0;
+  this.runeScalingDamage = 1.0;
+  this.runeScalingAttackrate = 1.0;
+
+  this.runeGold = 0;
+  this.runeScalingGold = 1.0;
+  this.runeChimeClicking = 1.0;
+  this.runeMonsterClicking = 1.0;
+  this.runeCooldownReduction = 0;
+  this.runeScalingCooldownReduction = 0;
+  this.runePenetration = 1.0;
+  this.runeTeemoSlayer = 1.0;
+
   this.monstersAvailable = [];
-  this.monsters = this.createMonsters();
+
+  this.items = Item.Create(this);
+  this.spells = Spell.Create(this);
+  this.upgrades = Upgrade.Create(this);
+  this.monsters = Monster.Create(this);
+  this.runes = Rune.Create(this);
+  this.masteries = Mastery.Create(this);
+  this.achievements = Achievement.Create(this);
 
   this.load();
 
@@ -79,226 +102,6 @@ Game.prototype.Init = function(scope, difficulty) {
   this.unlockUpgrades();
   this.unlockMonsters(false);
   this.updateStats();
-};
-
-Game.prototype.createItems = function() {
-  var items = {};
-
-  items[RELIC_SHIELD] = new Item(this, 250, 1,      2, 0, 0, 0, 1);
-  items[ANCIENT_COIN] = new Item(this, 250, 1,      0, 0, 0, 0, 5);
-  items[SPELLTHIEFS_EDGE] = new Item(this, 250, 1,  0, 0, 10, 0, 3);
-  items[BOOTS_OF_SPEED] = new Item(this, 750, 2,    0, 1, 0, 0, 0);
-  items[RUBY_CRYSTAL] = new Item(this, 750, 2,      10, 0, 0, 0, 0);
-  items[AMPLIFYING_TOME] = new Item(this, 3000, 3,  0, 0, 50, 0, 0);
-  items[DAGGER] = new Item(this, 3000, 3,           0, 0, 0, 1, 0);
-
-  return items;
-};
-
-Game.prototype.createUpgrades = function() {
-  var upgrades = {};
-
-  // Boots of Speed
-  upgrades[BOOTS_OF_SWIFTNESS] = new Upgrade(this, BOOTS_OF_SPEED,        9000, 4, 0, 2, 0, 0, 0, []);
-  upgrades[BOOTS_OF_MOBILITY] = new Upgrade(this, BOOTS_OF_SPEED,         180000, 6, 0, 4, 0, 0, 0, [BOOTS_OF_SWIFTNESS]);
-  upgrades[IONIAN_BOOTS_OF_LUCIDITY] = new Upgrade(this, BOOTS_OF_SPEED,  25000000, 9, 0, 8, 0, 5, 0, [BOOTS_OF_MOBILITY]);
-  upgrades[MERCURYS_TREADS] = new Upgrade(this, BOOTS_OF_SPEED,           2500000000, 12, 50, 10, 0, 0, 0, [IONIAN_BOOTS_OF_LUCIDITY]);
-  upgrades[SORCERERS_SHOES] = new Upgrade(this, BOOTS_OF_SPEED,           400000000000, 15, 0, 25, 100, 0, 0, [MERCURYS_TREADS]);
-
-  // Ancient Coin
-  upgrades[NOMADS_MEDALLION] = new Upgrade(this, ANCIENT_COIN,            70000, 5, 0, 2, 0, 0, 25, []);
-  upgrades[TALISMAN_OF_ASCENSION] = new Upgrade(this, ANCIENT_COIN,       7000000, 8, 0, 3, 0, 2, 170, [NOMADS_MEDALLION]);
-
-  // Spellthief's Edge
-  upgrades[FROSTFANG] = new Upgrade(this, SPELLTHIEFS_EDGE,               50000, 5, 0, 0, 20, 0, 12, []);
-  upgrades[FROST_QUEENS_CLAIM] = new Upgrade(this, SPELLTHIEFS_EDGE,      5000000, 8, 0, 0, 70, 2, 85, [FROSTFANG]);
-
-  // Relic Shield
-  upgrades[TARGONS_BRACE] = new Upgrade(this, RELIC_SHIELD,               50000, 5, 7, 0, 0, 0, 9, []);
-  upgrades[FACE_OF_THE_MOUNTAIN] = new Upgrade(this, RELIC_SHIELD,        5000000, 8, 16, 0, 0, 2, 90, [TARGONS_BRACE]);
-
-  // Ruby Crystal
-  upgrades[KINDLEGEM] = new Upgrade(this, RUBY_CRYSTAL,                   90000, 5, 10, 0, 0, 1, 0, []);
-  upgrades[CRYSTALLINE_BRACER] = new Upgrade(this, RUBY_CRYSTAL,          1000000, 7, 20, 0, 0, 0, 0, []);
-  upgrades[GIANTS_BELT] = new Upgrade(this, RUBY_CRYSTAL,                 35000000, 9, 40, 0, 0, 0, 0, []);
-  upgrades[WARMOGS_ARMOR] = new Upgrade(this, RUBY_CRYSTAL,               750000000, 11, 70, 0, 0, 0, 0, [GIANTS_BELT]);
-  upgrades[RIGHTEOUS_GLORY] = new Upgrade(this, RUBY_CRYSTAL,             18000000000, 13, 70, 5, 0, 0, 0, [CRYSTALLINE_BRACER]);
-  upgrades[LOCKET_OF_THE_IRON_SOLARI] = new Upgrade(this, RUBY_CRYSTAL,   600000000000, 15, 120, 0, 0, 4, 0, [KINDLEGEM]);
-  upgrades[FROZEN_MALLET] = new Upgrade(this, RUBY_CRYSTAL,               15000000000000, 17, 160, 0, 100, 0, 0, [GIANTS_BELT]);
-
-  // Amplifying Tome
-  upgrades[FIENDISH_CODEX] = new Upgrade(this, AMPLIFYING_TOME,           300000, 6, 0, 0, 50, 1, 0, []);
-  upgrades[AETHER_WISP] = new Upgrade(this, AMPLIFYING_TOME,              8000000, 8, 0, 2, 100, 0, 0, []);
-  upgrades[NEEDLESSLY_LARGE_ROD] = new Upgrade(this, AMPLIFYING_TOME,     150000000, 10, 0, 0, 200, 0, 0, []);
-  upgrades[MORELLONOMICON] = new Upgrade(this, AMPLIFYING_TOME,           4000000000, 12, 0, 0, 200, 4, 0, [FIENDISH_CODEX]);
-  upgrades[LUDENS_ECHO] = new Upgrade(this, AMPLIFYING_TOME,              75000000000, 14, 0, 3, 250, 0, 0, [NEEDLESSLY_LARGE_ROD]);
-  upgrades[ZHONYAS_HOURGLASS] = new Upgrade(this, AMPLIFYING_TOME,        2000000000000, 16, 50, 0, 350, 0, 0, [NEEDLESSLY_LARGE_ROD]);
-  upgrades[RABADONS_DEATHCAP] = new Upgrade(this, AMPLIFYING_TOME,        40000000000000, 18, 0, 0, 800, 0, 0, [NEEDLESSLY_LARGE_ROD]);
-
-  // Dagger
-  upgrades[RECURVE_BOW] = new Upgrade(this, DAGGER,                       350000, 6, 0, 0, 0, 2, 0, []);
-  upgrades[RUNAANS_HURRICANE] = new Upgrade(this, DAGGER,                 9000000, 8, 0, 0, 20, 3, 0, [RECURVE_BOW]);
-  upgrades[ZEAL] = new Upgrade(this, DAGGER,                              450000000, 10, 0, 3, 0, 4, 0, []);
-  upgrades[WITS_END] = new Upgrade(this, DAGGER,                          9000000000, 12, 50, 0, 50, 5, 0, [RECURVE_BOW]);
-  upgrades[STATIKK_SHIV] = new Upgrade(this, DAGGER,                      150000000000, 14, 0, 3, 80, 5, 0, [ZEAL]);
-  upgrades[PHANTOM_DANCER] = new Upgrade(this, DAGGER,                    4500000000000, 16, 0, 4, 0, 10, 0, [ZEAL]);
-  upgrades[TRINITY_FORCE] = new Upgrade(this, DAGGER,                     100000000000000, 18, 100, 5, 150, 20, 0, [ZEAL]);
-
-  return upgrades;
-};
-
-Game.prototype.createSpells = function() {
-    var spells = {};
-
-    // game, duration, cooldown, start, end, unlock, tooltip
-    spells[GHOST] = new Spell(this, 10, 90, SPELL_ACTIVE, MONSTER_ALL,
-      function(game) {game.ghostBonus = 2.0;},
-      function(game) {game.ghostBonus = 1.0;},
-      function(game) {return game.level >= 4},
-      function(game) {return game.spells[GHOST].status == game.LOCKED ? "":
-      "+100% chime gathering for 10 seconds.  </br></br>90 second cooldown. <b>(Q)</b>"}
-    );
-
-    spells[FLASH] = new Spell(this, 0, 180, SPELL_ACTIVE, MONSTER_ALL,
-      function(game) {game.addMeeps(Math.ceil(game.meepsEarned * game.flashBonus), true);
-                      showRing(FLASH, RING_DURATION)},
-      function(game) {},
-      function(game) {return game.level >= 6},
-      function(game) {return game.spells[FLASH].status == game.LOCKED ? "":
-      "+3% meeps earned from chimes.</br>(<b>" + game.prettyIntCompact(Math.ceil(game.meepsEarned * game.flashBonus)) + "</b>)</br></br>180 second cooldown. <b>(W)</b>"}
-    );
-
-    spells[SMITE] = new Spell(this, 0, 60, SPELL_ACTIVE, MONSTER_ALL,
-      function(game) {if (!game.isMonsterChampion(game.monster)) {
-                        game.smiteBonus = .20;
-                        game.addDamage(game.getSmiteDamage(), true);
-                        showRing(SMITE, RING_DURATION);
-                        game.smiteBonus = 0;
-                        this.duration = 0;
-                      }
-                      else {
-                        game.smiteDamageRate = game.getSmiteDamage() / 5;
-                        showRing(CHALLENGING_SMITE, RING_DURATION);
-                        this.duration = 5;
-                      }},
-      function(game) {game.smiteDamageRate = 0},
-      function(game) {return game.level >= 2},
-      function(game) {return game.spells[SMITE].status == game.LOCKED ? "":
-      "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage " + (!game.isMonsterChampion(game.monster) ? "instantly" : "over 5 seconds") +".  Damage scales with level and experience.</br></br>Non-champion kills with smite grant +20% gold.</br></br>60 second cooldown. <b>(E)</b>"}
-      );
-
-    spells[EXHAUST] = new Spell(this, 10, 90, SPELL_ACTIVE, MONSTER_CHAMPION,
-      function(game) {game.exhaustBonus = 2.0;},
-      function(game) {game.exhaustBonus = 1.0},
-      function(game) {return game.level >= 16},
-      function(game) {return game.spells[EXHAUST].status == game.LOCKED ? "":
-      "+100% damage dealt for 10 seconds.  Only works against champions.  </br></br>90 second cooldown. <b>(T)</b>"}
-    );
-
-    spells[IGNITE] = new Spell(this, 0, 120, SPELL_ACTIVE, MONSTER_ALL,
-      function(game) {game.igniteBonus += .04;
-                      game.updateStats();
-                      showRing(IGNITE+'1', RING_DURATION);},
-      function(game) {showRing(IGNITE+'2', RING_DURATION);},
-      function(game) {return game.level >= 17},
-      function(game) {return game.spells[IGNITE].status == game.LOCKED ? "":
-      "+3% damage from items.</br>(<b>" + game.prettyIntCompact(Math.ceil(game.damageBought * .03)) + "</b>)</br></br>120 second cooldown. <b>(R)</b>"}
-      //"Deal <b>" + game.prettyIntCompact(game.igniteDamage) + "</b> damage over 5 seconds.  Damage scales with level.  Only works against champions.  </br></br>120 second cooldown. <b>(R)</b>"}
-    );
-
-
-    spells[TELEPORT] = new Spell(this, 0, 300, SPELL_ACTIVE, MONSTER_ALL,
-      function(game) {},
-      function(game) {var cooldownSpells = game.getObjectsByStatus(game.spells, game.COOLDOWN);
-                      var len = cooldownSpells.length;
-                      for (var i = 0; i < len; i++) {
-                        var spell = game.spells[cooldownSpells[i]];
-                        spell.cooldownLeft = 0;
-                        spell.status = game.AVAILABLE;
-                      }
-                      var activeSpells = game.getObjectsByStatus(game.spells, game.ACTIVE);
-                      len = activeSpells.length;
-                      for (var i = 0; i < len; i++) {
-                        var spell = game.spells[activeSpells[i]];
-                        spell.durationLeft += spell.duration;
-                      }
-                     },
-      function(game) {return game.level >= 13},
-      function(game) {return game.spells[TELEPORT].status == game.LOCKED ? "":
-      "Reset cooldowns of all spells.  </br></br>300 second cooldown. <b>(Y)</b>"}
-    );
-
-    spells[SPOILS_OF_WAR] = new Spell(this, 0, 45, SPELL_PASSIVE, MONSTER_JUNGLE,
-      function(game) {game.spoilsOfWarActive = 1;
-                      game.killMonster();
-                      game.spoilsOfWarActive = 0;
-                      showRing(SPOILS_OF_WAR, RING_DURATION)},
-      function(game) {},
-      function(game) {return game.upgrades[FACE_OF_THE_MOUNTAIN].status == game.PURCHASED;},
-      function(game) {return game.spells[SPOILS_OF_WAR].status == game.LOCKED ? "":
-      "Execute monsters below 25% max health on click, gaining <b>+" + (game.spoilsOfWarBonus * 100).toFixed(1) + "%</b> reward gold.  Gold scales with Relic Shields owned.  Does not work against champions. </br></br>45 second cooldown."}
-    );
-
-    spells[FAVOR] = new Spell(this, 0, 0, SPELL_PASSIVE, MONSTER_ALL,
-      function(game) {},
-      function(game) {},
-      function(game) {return game.upgrades[TALISMAN_OF_ASCENSION].status == game.PURCHASED;},
-      function(game) {return game.spells[FAVOR].status == game.LOCKED ? "":
-      "Passively gain <b>+" + (game.favorBonus * 100).toFixed(1) + "%</b> gold from monsters killed.  Gold scales with Ancient Coins owned. </br></br>No cooldown."}
-    );
-
-    spells[TRIBUTE] = new Spell(this, 0, 30, SPELL_PASSIVE, MONSTER_ALL,
-      function(game) {var monster = game.monsters[game.monster];
-                      var gold = Math.ceil(monster.gold * game.tributeBonus);
-                      gold /= game.monster == TEEMO ? 15 : 1;
-                      game.gold += gold;
-                      game.progress.spells[TRIBUTE].goldGained += gold;
-                      if (monster.type == MONSTER_CHAMPION) {
-                        game.addDamage(game.damageStat * game.attackrateStat * game.exhaustBonus * 5);
-                      }
-                      showRing(TRIBUTE, RING_DURATION)},
-      function(game) {},
-      function(game) {return game.upgrades[FROST_QUEENS_CLAIM].status == game.PURCHASED;},
-      function(game) {if (game.spells[TRIBUTE].status == game.LOCKED) return "";
-                      else if (game.monster == TEEMO) return "Gain <b>" + (game.tributeBonus * 100 / 15).toFixed(1) + "%</b> of reward gold on next Teemo click.  Gold scales with Spellthief's Edges owned.</br></br>Deals <b>" + game.prettyIntCompact(game.damageStat * game.attackrateStat * game.exhaustBonus * 5, 1) + "</b> bonus damage (scales with DPS).</br></br>30 second cooldown.";
-                      else return "Gain <b>" + (game.tributeBonus * 100).toFixed(1) + "%</b> of reward gold on next monster click.  Gold scales with Spellthief's Edges owned.</br></br>Deals <b>" + game.prettyIntCompact(game.damageStat * game.attackrateStat * game.exhaustBonus * 5, 1) + "</b> bonus damage to champions (scales with DPS).</br></br>30 second cooldown.";}
-    );
-
-    return spells;
-}
-
-Game.prototype.createMonsters = function() {
-  var monsters = {};
-  var monster;
-  var scaleHealth;
-  var scaleExp;
-  var scaleReward;
-  var type;
-  var i;
-  var len = MONSTERS.length;
-  for (i = 0; i < len; i++) {
-    monster = MONSTERS[i];
-    scaleHealth = Math.pow(this.scaleMonsterLevelHealth, i);
-    scaleExp = Math.pow(SCALE_MONSTER_LEVEL_REWARD, i);
-    scaleReward = Math.pow(SCALE_MONSTER_LEVEL_REWARD, i);
-    if (i == len - 1) {
-      var health = MONSTER_HEALTH * scaleHealth * 15;
-      var healthPower = Math.floor(getBaseLog(10, health));
-      var newHealth = Math.pow(10, healthPower) * 1.11111.toFixed(2 + healthPower % 3);
-      newHealth = Math.ceil(health / newHealth) * newHealth;
-
-      scaleHealth =  newHealth / MONSTER_HEALTH;
-      scaleExp = 999990000000000000 / MONSTER_EXPERIENCE;
-      scaleReward = 999990000000000 / MONSTER_REWARD;
-    }
-
-    type = this.isMonsterChampion(monster) ? MONSTER_CHAMPION : MONSTER_JUNGLE;
-    monsters[monster] = new Monster(this, i + 1, Math.floor(MONSTER_HEALTH * scaleHealth),
-                                                 MONSTER_EXPERIENCE * scaleExp + 10 * (i + 1),
-                                                 MONSTER_REWARD * scaleReward + 10 * (i + 1),
-                                                 type);
-  }
-  return monsters;
 };
 
 Game.prototype.start = function() {
@@ -319,6 +122,10 @@ Game.prototype.start = function() {
 Game.prototype.step = function(step) {
   this.stepStart = new Date();
   var elapsedTime  = (this.stepStart - this.stepEnd) / 1000;
+
+  // Don't simulate more than 8hrs of afk time
+  elapsedTime = Math.min(elapsedTime, 1000 * 60 * 60 * 8);
+
   var thisref = this;
   if (elapsedTime > 0 && !this.paused) {
     this.scope.$apply(function(scope) {
@@ -373,11 +180,16 @@ Game.prototype.addChimes = function(chimes) {
 };
 
 Game.prototype.addDamage = function(damage, user) {
+  if (this.isMonsterChampion(this.monster))
+    damage *= this.runePenetration;
+  if (this.monster == TEEMO)
+    damage *= this.runeTeemoSlayer;
+
   this.progress.general.totalDamage += damage;
 
   var executeThreshold = .25 * this.monsters[this.monster].maxHealth;
   var currentHealth = this.monsters[this.monster].currentHealth;
-  if (user && this.spells[SPOILS_OF_WAR].status == this.AVAILABLE && currentHealth - damage <= executeThreshold) {
+  if (user && this.spells[SPOILS_OF_WAR].status == AVAILABLE && currentHealth - damage <= executeThreshold) {
     if (currentHealth > executeThreshold)
       damage -= currentHealth - executeThreshold;
     this.activateSpell(SPOILS_OF_WAR);
@@ -407,6 +219,7 @@ Game.prototype.addDamage = function(damage, user) {
 };
 
 Game.prototype.addGold = function(gold) {
+  gold *= this.runeScalingGold;
   this.gold += gold;
   this.progress.general.goldEarned += gold;
 };
@@ -448,9 +261,9 @@ Game.prototype.addMeeps = function(meeps, flash) {
 };
 
 Game.prototype.addSpellTime = function(time) {
-  var activeSpells = this.getObjectsByStatus(this.spells, this.ACTIVE);
-  var cooldownSpells = this.getObjectsByStatus(this.spells, this.COOLDOWN);
-  var unavailableSpells = this.getObjectsByStatus(this.spells, this.UNAVAILABLE);
+  var activeSpells = this.getObjectsByStatus(this.spells, ACTIVE);
+  var cooldownSpells = this.getObjectsByStatus(this.spells, COOLDOWN);
+  var unavailableSpells = this.getObjectsByStatus(this.spells, UNAVAILABLE);
   var len = activeSpells.length;
   for (var i = 0; i < len; i++) {
     var activeSpell = this.spells[activeSpells[i]];
@@ -458,7 +271,7 @@ Game.prototype.addSpellTime = function(time) {
     if (activeSpell.durationLeft <= -.2) {
       activeSpell.durationLeft = 0;
       activeSpell.end(this);
-      activeSpell.status = this.COOLDOWN;
+      activeSpell.status = COOLDOWN;
       activeSpell.cooldownLeft = activeSpell.cooldown;
       this.updateStats();
     }
@@ -472,9 +285,9 @@ Game.prototype.addSpellTime = function(time) {
       // after coming off cooldown, check if spell should be available or not
       var monster = this.monsters[this.monster];
       if (monster && cooldownSpell.target != MONSTER_ALL && cooldownSpell.target != monster.type)
-        cooldownSpell.status = this.UNAVAILABLE;
+        cooldownSpell.status = UNAVAILABLE;
       else
-        cooldownSpell.status = this.AVAILABLE;
+        cooldownSpell.status = AVAILABLE;
     }
   }
 
@@ -485,7 +298,7 @@ Game.prototype.addSpellTime = function(time) {
     if (unavailableSpell.durationLeft > 0) {
       unavailableSpell.durationLeft = 0;
       unavailableSpell.end(this);
-      unavailableSpell.status = this.COOLDOWN;
+      unavailableSpell.status = COOLDOWN;
       unavailableSpell.cooldownLeft = unavailableSpell.cooldown;
       this.updateStats();
     }
@@ -494,72 +307,90 @@ Game.prototype.addSpellTime = function(time) {
 
 // Update Functions
 Game.prototype.updateStats = function() {
-  this.chimesRate = this.defenseStat * this.movespeedStat * this.ghostBonus;
-  // chimes collected equals base defenseStat + 2% of current cps
-  this.chimesPerClick = this.defenseStat * this.ghostBonus + .03 * this.chimesRate;
+  this.damageBase = this.damageBought * this.igniteBonus + this.meeps * this.meepDamage;
 
-  this.damageStat = this.damageBought * this.igniteBonus + this.meeps * this.meepDamage;
+  this.defenseStat = this.defenseBase * this.runeScalingDefense;
+  this.movespeedStat = this.movespeedBase * this.runeScalingMovespeed;
+  this.damageStat = this.damageBase * this.runeScalingDamage;
+  this.attackrateStat = this.attackrateBase * this.runeScalingAttackrate;
+
+  this.chimesRate = this.defenseStat * this.movespeedStat * this.ghostBonus;
+  // chimes collected equals base defenseStat + 3% of current cps
+  this.chimesPerClick = (this.defenseStat * this.ghostBonus + .03 * this.chimesRate) * this.runeChimeClicking;
+
   this.damageRate = this.damageStat * this.attackrateStat * this.exhaustBonus + this.smiteDamageRate;
-  // damage dealt equals base damageStat + 2% of current dps
-  this.damagePerClick = this.exhaustBonus * this.damageStat + .03 * this.damageRate;
+  // damage dealt equals base damageStat + 3% of current dps
+  this.damagePerClick = (this.exhaustBonus * this.damageStat + .03 * this.damageRate) * this.runeMonsterClicking;
 };
 
 Game.prototype.unlockItems = function() {
-  var items = this.getObjectsByStatus(this.items, this.LOCKED);
+  var items = this.getObjectsByStatus(this.items, LOCKED);
   var len = items.length;
   for (var i = 0; i < len; i++) {
     var item = this.items[items[i]];
     if (item.unlock(this)) {
-      item.status = this.AVAILABLE;
+      item.status = AVAILABLE;
     }
   }
 };
 
 Game.prototype.unlockUpgrades = function() {
-  var upgrades = this.getObjectsByStatus(this.upgrades, this.LOCKED);
+  var upgrades = this.getObjectsByStatus(this.upgrades, LOCKED);
   var len = upgrades.length;
   for (var i = 0; i < len; i++) {
     var upgrade = this.upgrades[upgrades[i]];
     var item = this.items[upgrade.item];
     if (upgrade.unlock(this)) {
-      upgrade.status = this.AVAILABLE;
+      upgrade.status = AVAILABLE;
       item.upgradesAvailable.push(upgrades[i]);
     }
   }
 };
 
 Game.prototype.unlockSpells = function() {
-  var spells = this.getObjectsByStatus(this.spells, this.LOCKED);
+  var spells = this.getObjectsByStatus(this.spells, LOCKED);
   var len = spells.length;
   for (var i = 0; i < len; i++) {
     var spell = this.spells[spells[i]];
     if (spell.unlock(this)) {
-      spell.status = this.AVAILABLE;
+      spell.status = AVAILABLE;
     }
   }
 
   // disable spells when on wrong monster type
-  spells = this.getObjectsByStatus(this.spells, this.AVAILABLE).concat(this.getObjectsByStatus(this.spells, this.ACTIVE));
+  spells = this.getObjectsByStatus(this.spells, AVAILABLE).concat(this.getObjectsByStatus(this.spells, ACTIVE));
   len = spells.length;
   for (var i = 0; i < len; i++) {
     var spell = this.spells[spells[i]];
     var monster = this.monsters[this.monster];
     if (monster && spell.target != MONSTER_ALL && spell.target != monster.type) {
-      spell.status = this.UNAVAILABLE;
+      spell.status = UNAVAILABLE;
     }
   }
 
   // enables spells when on correct monster type
-  spells = this.getObjectsByStatus(this.spells, this.UNAVAILABLE);
+  spells = this.getObjectsByStatus(this.spells, UNAVAILABLE);
   len = spells.length;
   for (var i = 0; i < len; i++) {
     var spell = this.spells[spells[i]];
     var monster = this.monsters[this.monster];
     if (!monster || spell.target == MONSTER_ALL || spell.target == monster.type) {
-      spell.status = this.AVAILABLE;
+      spell.status = AVAILABLE;
     }
   }
+};
 
+Game.prototype.applyCooldownReduction = function() {
+  var oldCooldownReduction = Math.min(this.oldCooldownReduction, .4);
+  var newCooldownReduction = Math.min(this.cooldownReduction, .4);
+
+  for (var spellName in this.spells) {
+    var spell = this.spells[spellName];
+    spell.cooldown *= (1 - newCooldownReduction) / (1 - oldCooldownReduction);
+    spell.cooldownLeft *= (1 - newCooldownReduction) / (1 - oldCooldownReduction);
+  }
+
+  this.oldCooldownReduction = this.cooldownReduction;
 };
 
 // TODO: do this without setMonster
@@ -567,15 +398,15 @@ Game.prototype.unlockMonsters = function(setMonster) {
   for (var monsterName in this.monsters) {
     if (this.monsters.hasOwnProperty(monsterName)) {
       var monster = this.monsters[monsterName];
-      if (setMonster && monster.status == this.ACTIVE) {
+      if (setMonster && monster.status == ACTIVE) {
         monster.experience /= 5;
-        monster.status = this.AVAILABLE;
+        monster.status = AVAILABLE;
       }
       if (this.level >= monster.level && this.monstersAvailable.indexOf(monsterName) < 0) {
         this.monstersAvailable.push(monsterName);
         if (!this.monster || setMonster) {
           this.monster = monsterName;
-          monster.status = this.ACTIVE;
+          monster.status = ACTIVE;
         }
       }
     }
@@ -591,7 +422,7 @@ Game.prototype.chimesClick = function() {
 };
 
 Game.prototype.damageClick = function() {
-  if (this.spells[TRIBUTE].status == this.AVAILABLE)
+  if (this.spells[TRIBUTE].status == AVAILABLE)
     this.activateSpell(TRIBUTE);
 
   this.addDamage(this.damagePerClick, true);
@@ -611,12 +442,12 @@ Game.prototype.activateSpell = function(name) {
   if (this.paused) return;
 
   var spell = this.spells[name];
-  if (spell.status != this.AVAILABLE) {
+  if (spell.status != AVAILABLE) {
     return;
   }
   spell.start(this);
   spell.durationLeft = spell.duration
-  spell.status = this.ACTIVE;
+  spell.status = ACTIVE;
 
   this.progress.spells[name].count++;
 
@@ -644,10 +475,10 @@ Game.prototype.buyItem = function(name, count) {
     }
   }
 
-  this.defenseStat += bought * item.defenseStat;
-  this.movespeedStat += bought * item.movespeedStat;
+  this.defenseBase += bought * item.defenseStat;
+  this.movespeedBase += bought * item.movespeedStat;
   this.damageBought += bought * item.damageStat;
-  this.attackrateStat += bought * item.attackrateStat;
+  this.attackrateBase += bought * item.attackrateStat;
   this.income += bought * item.income;
 
   item.cost10 = item.calculatePurchaseCost(10);
@@ -656,11 +487,11 @@ Game.prototype.buyItem = function(name, count) {
 
   this.progress.items[name].count += bought;
 
-  if (this.spells[FAVOR].status != this.LOCKED && name == ANCIENT_COIN)
+  if (this.spells[FAVOR].status != LOCKED && name == ANCIENT_COIN)
     this.favorBonus = this.getFavorBonus() / 100;
-  else if (this.spells[TRIBUTE].status != this.LOCKED && name == SPELLTHIEFS_EDGE)
+  else if (this.spells[TRIBUTE].status != LOCKED && name == SPELLTHIEFS_EDGE)
     this.tributeBonus = this.getTributeBonus() / 100;
-  else if (this.spells[SPOILS_OF_WAR].status != this.LOCKED && name == RELIC_SHIELD)
+  else if (this.spells[SPOILS_OF_WAR].status != LOCKED && name == RELIC_SHIELD)
     this.spoilsOfWarBonus = this.getSpoilsOfWarBonus() / 100;
 
   this.updateStats();
@@ -670,9 +501,9 @@ Game.prototype.buyUpgrade = function(name) {
   if (this.paused) return;
 
   var upgrade = this.upgrades[name];
-  if (upgrade.status == this.AVAILABLE && this.gold >= upgrade.cost) {
+  if (upgrade.status == AVAILABLE && this.gold >= upgrade.cost) {
     this.gold -= upgrade.cost;
-    upgrade.status = this.PURCHASED;
+    upgrade.status = PURCHASED;
 
     // Upgrade all future items
     var item = this.items[upgrade.item];
@@ -687,10 +518,10 @@ Game.prototype.buyUpgrade = function(name) {
 
     // Upgrade all previously bought items
     var count = item.count;
-    this.defenseStat += count * upgrade.defenseStat;
-    this.movespeedStat += count * upgrade.movespeedStat;
+    this.defenseBase += count * upgrade.defenseStat;
+    this.movespeedBase += count * upgrade.movespeedStat;
     this.damageBought += count * upgrade.damageStat;
-    this.attackrateStat += count * upgrade.attackrateStat;
+    this.attackrateBase += count * upgrade.attackrateStat;
     this.income += count * upgrade.income;
 
     this.progress.general.goldSpent += upgrade.cost;
@@ -1025,12 +856,34 @@ Game.prototype.saveProgress = function() {
     delete this.progress.times[time]['$$hashKey'];
     times.push(this.progress.times[time]);
   }
+
+  var runes = [];
+  for (var runeTypeName in this.runes) {
+    var runeType = this.runes[runeTypeName];
+    for (var runeName in runeType) {
+      var runeSet = runeType[runeName];
+      for (var runeTier in runeSet) {
+        var rune = runeSet[runeTier];
+        var runeData = {};
+        runeData['type'] = runeTypeToIndex(runeTypeName);
+        runeData['name'] = runeToIndex(runeName);
+        runeData['tier'] = runeTier;
+        runeData['status'] = rune.status;
+        runeData['purchased'] = rune.purchased;
+        runeData['count'] = rune.count;
+        runes.push(runeData);
+      }
+    }
+  }
+
   var progress = {'general' : this.progress.general,
   'items' : jsonh.pack(items),
   'monsters' : jsonh.pack(monsters),
   'spells' : jsonh.pack(spells),
   'wins' : jsonh.pack(wins),
-  'times' : jsonh.pack(times)};
+  'times' : jsonh.pack(times),
+  'runes' : jsonh.pack(runes)
+};
 
   localStorage.setItem('progress', JSON.stringify(progress));
   return progress;
@@ -1156,7 +1009,10 @@ Game.prototype.saveMonsters = function(save) {
 
 Game.prototype.load = function() {
   this.loadProgress();
+  this.calculateStartState();
   this.loadGame();
+  this.recalculateState();
+
 };
 
 Game.prototype.loadProgress = function() {
@@ -1309,11 +1165,40 @@ Game.prototype.loadProgress = function() {
     else {
       progress['times'] = loadObj['times'];
     }
+
+
+    if (loadObj['runes']) {
+      o = jsonh.unpack(loadObj['runes']);
+      i = o.length;
+      while (i--) {
+        var runeData = o[i];
+        var rune = this.runes[indexToRuneType(runeData['type'])][indexToRune(runeData['name'])][runeData['tier']];
+        rune.status = runeData['status'];
+        rune.purchased = runeData['purchased'];
+        rune.count = runeData['count'];
+      }
+    }
   }
 
-
-
   this.progress = $.extend(true, obj, progress);
+};
+
+Game.prototype.calculateStartState = function() {
+  // Apply runes
+  for (var type in this.runes) {
+    var runes = this.getObjectsByStatus(this.runes[type], AVAILABLE);
+    for (var i = 0; i < runes.length; i++) {
+      this.runes[type][runes[i]].apply();
+    }
+  }
+
+  this.gold += this.runeGold;
+  this.defenseBase += this.runeDefense;
+  this.movespeedBase += this.runeMovespeed;
+  this.damageBase += this.runeDamage;
+  this.attackrateBase += this.runeAttackrate;
+
+  this.cooldownReduction = this.runeCooldownReduction + this.runeScalingCooldownReduction * this.level / MONSTERS.length;
 };
 
 Game.prototype.loadGame = function() {
@@ -1324,7 +1209,6 @@ Game.prototype.loadGame = function() {
     this.loadUpgrades(save['upgrades']);
     this.loadSpells(save['spells']);
     this.loadMonsters(save['monsters']);
-    this.recalculateState();
   }
 }
 
@@ -1522,21 +1406,20 @@ Game.prototype.recalculateState = function() {
   if (this.level == 19) this.experienceNeeded = 999990000000000000;
   else this.experienceNeeded *= Math.pow(SCALE_EXPERIENCE_NEEDED, this.level - 1);
 
-
   this.chimesExperience *= Math.pow(SCALE_CHIMES_EXPERIENCE, this.level - 1);
   this.points = this.getPointsEarned();
 
   var items = this.getObjectsByStatus(this.items);
   for (var i = 0; i < items.length; i++) {
     var item = this.items[items[i]];
-    this.defenseStat += item.count * item.defenseStat;
-    this.movespeedStat += item.count * item.movespeedStat;
+    this.defenseBase += item.count * item.defenseStat;
+    this.movespeedBase += item.count * item.movespeedStat;
     this.damageBought += item.count * item.damageStat;
-    this.attackrateStat += item.count * item.attackrateStat;
+    this.attackrateBase += item.count * item.attackrateStat;
     this.income += item.count * item.income;
   }
 
-  var monsters = this.getObjectsByStatus(this.monsters, this.AVAILABLE);
+  var monsters = this.getObjectsByStatus(this.monsters, AVAILABLE);
   for (var i = 0; i < monsters.length; i++) {
     this.monsters[monsters[i]].experience /= 5;
   }
@@ -1547,6 +1430,8 @@ Game.prototype.recalculateState = function() {
   this.spoilsOfWarBonus = this.getSpoilsOfWarBonus() / 100;
   this.tributeBonus = this.getTributeBonus() / 100;
   this.igniteDamage = this.getIgniteDamage();
+
+  this.applyCooldownReduction();
 };
 
 Game.prototype.newGame = function(reset, difficulty) {
@@ -1582,8 +1467,5 @@ Game.prototype.importGame = function(text) {
 };
 
 Game.prototype.pauseGame = function() {
-  if (this.paused)
-    this.paused = false;
-  else
-    this.paused = true;
+  this.paused = !this.paused;
 };

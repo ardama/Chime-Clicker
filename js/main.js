@@ -1,5 +1,4 @@
-var version = "0.3.6"
-
+var version = "0.4.0"
 
 ///// CONSTANTS ////////////////////
 // Items
@@ -11,7 +10,6 @@ var AMPLIFYING_TOME = "Amplifying Tome";
 var RUBY_CRYSTAL = "Ruby Crystal";
 var DAGGER = "Dagger";
 
-// create naming maps
 var INDEX_TO_ITEM = [BOOTS_OF_SPEED, ANCIENT_COIN, SPELLTHIEFS_EDGE, RELIC_SHIELD, AMPLIFYING_TOME, RUBY_CRYSTAL, DAGGER];
 var ITEM_TO_INDEX = {};
 for (var i = 0; i < INDEX_TO_ITEM.length; i++) {
@@ -141,6 +139,52 @@ var IGNORE_PLURALS = [BOOTS_OF_SPEED, BOOTS_OF_SWIFTNESS, BOOTS_OF_MOBILITY, ION
                       SORCERERS_SHOES, MERCURYS_TREADS, SPOILS_OF_WAR];
 var SPECIAL_PLURALS = [ZHONYAS_HOURGLASS, LUDENS_ECHO, FIENDISH_CODEX, FLASH];
 
+// Runes
+  // Colors
+var MARK = "Mark";
+var SEAL = "Seal";
+var GLYPH = "Glyph";
+var QUINT = "Quint";
+
+var INDEX_TO_RUNE_TYPE = [MARK, SEAL, GLYPH, QUINT]
+var RUNE_TYPE_TO_INDEX = {};
+for (var i = 0; i < INDEX_TO_RUNE_TYPE.length; i++) {
+  RUNE_TYPE_TO_INDEX[INDEX_TO_RUNE_TYPE[i]] = i;
+}
+
+  // T1
+var DEFENSE = "Defense";
+var MOVESPEED = "Movement Speed";
+var DAMAGE = "Damage";
+var ATTACKRATE = "Attack Rate";
+var MONSTER_CLICKING = "Monster Clicking";
+var CHIME_CLICKING = "Chime Clicking";
+var GOLD = "Gold";
+var COOLDOWN_REDUCTION = "Cooldown Reduction";
+  // T2
+var SCALING_DEFENSE = "Scaling Defense";
+var SCALING_MOVESPEED = "Scaling Move Speed";
+var SCALING_DAMAGE = "Scaling Damage";
+var SCALING_ATTACKRATE = "Scaling Attack Rate";
+var CLICKING = "Clicking";
+  // T3
+var PENETRATION = "Penetration";
+var SCALING_GOLD = "Scaling Gold";
+var SCALING_COOLDOWN_REDUCTION = "Scaling Cooldown Reduction";
+  // T4
+var TEEMO_SLAYER = "the Teemo Slayer";
+
+var INDEX_TO_RUNE = [DEFENSE, MOVESPEED, DAMAGE, ATTACKRATE, MONSTER_CLICKING, CHIME_CLICKING, GOLD,
+                          COOLDOWN_REDUCTION, SCALING_DEFENSE, SCALING_MOVESPEED, SCALING_DAMAGE, SCALING_ATTACKRATE,
+                          CLICKING, PENETRATION, SCALING_GOLD, SCALING_COOLDOWN_REDUCTION, TEEMO_SLAYER];
+var RUNE_TO_INDEX = {};
+for (var i = 0; i < INDEX_TO_RUNE.length; i++) {
+  RUNE_TO_INDEX[INDEX_TO_RUNE[i]] = i;
+}
+
+var RUNE_PRICES = {'easy' : 4, 'medium' : 4, 'hard' : 6, 'marathon' : 8, 'impossible' : 10};
+
+
 // Default Values
 var STARTING_GOLD = 375;
 var CHIMES_PER_MEEP = 7;
@@ -163,7 +207,7 @@ var SCALE_ITEM_COST = 0.10;
 var SCALE_MONSTER_REWARD = 0.00;
 var SCALE_MONSTER_HEALTH = 0.02;
 var SCALE_MONSTER_LEVEL_REWARD = 5;
-var SCALE_MONSTER_LEVEL_HEALTH = {'easy' : 5.2, 'medium' : 5.8, 'hard' : 6.4, 'marathon' : 7.2, 'impossible' : 9.0};
+var SCALE_MONSTER_LEVEL_HEALTH = {'easy' : 4.4, 'medium' : 4.9, 'hard' : 5.4, 'marathon' : 6.1, 'impossible' : 8.1};
 var SCALE_EXPERIENCE_NEEDED = 5;
 var SCALE_MEEP_STRENGTH = 1;
 
@@ -278,16 +322,20 @@ function upgradeToIndex(upgrade) { return isString(upgrade) ? UPGRADE_TO_INDEX[u
 function spellToIndex(spell) { return isString(spell) ? SPELL_TO_INDEX[spell] : spell; };
 function monsterToIndex(monster) { return isString(monster) ? MONSTER_TO_INDEX[monster] : monster; };
 function typeToIndex(type) { return isString(type) ? TYPE_TO_INDEX[type] : type; };
+function runeTypeToIndex(runeType) { return isString(runeType) ? RUNE_TYPE_TO_INDEX[runeType] : runeType; };
+function runeToIndex(rune) { return isString(rune) ? RUNE_TO_INDEX[rune] : rune; };
 
 function indexToItem(index) { return isString(index) ? index : INDEX_TO_ITEM[index]; };
 function indexToUpgrade(index) { return isString(index) ? index : INDEX_TO_UPGRADE[index]; };
 function indexToSpell(index) { return isString(index) ? index : INDEX_TO_SPELL[index]; };
 function indexToMonster(index) { return isString(index) ? index : INDEX_TO_MONSTER[index]; };
 function indexToType(index) { return isString(index) ? index : INDEX_TO_TYPE[index]; };
+function indexToRuneType(index) { return isString(index) ? index : INDEX_TO_RUNE_TYPE[index]; };
+function indexToRune(index) { return isString(index) ? index : INDEX_TO_RUNE[index]; };
 
 
-var LONG_NUMBER_NAMES = ['million', 'billion', 'trillion', 'quadrillion', 'quintillion', 'sextillion', 'septillion', 'octillion', 'nontillion', 'decillion']
-var SHORT_NUMBER_NAMES = ['m', 'b', 't', 'qd', 'qt', 'sx', 'sp', 'o', 'n', 'dc']
+var LONG_NUMBER_NAMES = ['million', 'billion', 'trillion', 'quadrillion', 'quintillion', 'sextillion', 'septillion', 'octillion', 'nonillion', 'decillion']
+var SHORT_NUMBER_NAMES = ['m', 'b', 't', 'qd', 'qt', 'sx', 'sp', 'o', 'n', 'd']
 function prettyIntBig(num, fixed) {
   fixed = fixed || 2;
   var n = Math.pow(10, fixed);
@@ -323,6 +371,8 @@ function prettyIntBigCompact(num, fixed) {
 };
 
 function prettyInt(num) {
+  // var s = num > 1000 ? Math.floor(num).toString() : num.toFixed(1);
+  // return s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return Math.floor(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
@@ -362,16 +412,6 @@ function getFactorialRange(n, m) {
 
 function stirlingApproximation(n) {
   return (n + 0.5) * Math.log(n) - n + STIRLING_CONST;
-};
-
-// Leaving this here, but it needs to be way more efficient for revised addChimes to work
-function stirlingSum2(n, m) {
-  var sum = 0;
-  while (n-- > m)
-    sum += stirlingApproximation(n);
-
-  return sum;
-
 };
 
 function stirlingSum(n) {
@@ -447,6 +487,14 @@ GameApp.controller('GameController', function($scope) {
     window.importGame = function() {
       $scope.game.importGame($('#import-modal-text').val());
     }
+
+    $scope.LOCKED = LOCKED;
+    $scope.AVAILABLE = AVAILABLE;
+    $scope.UNAVAILABLE = UNAVAILABLE;
+    $scope.PURCHASED = PURCHASED
+    $scope.ACTIVE = ACTIVE;
+    $scope.COOLDOWN = COOLDOWN;
+    $scope.DIFFICULTIES = DIFFICULTIES;
 
     $scope.itemToIndex = function(a) {return itemToIndex(a)};
     $scope.upgradeToIndex = function(a) {return upgradeToIndex(a)};
