@@ -61,6 +61,9 @@ ga('send', 'pageview');
 			<div id="header-help" class="header-link" onclick="showSubpage('help')">
 				Help
 			</div>
+			<a id="header-runes" class="header-link">
+				Runes
+			</a>
 			<a id="header-stats" class="header-link">
 				Stats
 			</a>
@@ -376,6 +379,7 @@ ga('send', 'pageview');
 </div>
 
 <div id="modal-holder" style="display:none;">
+
 	<div id="difficulty-modal" class="modal">
 		<div id="difficulty-modal-body">
 			<div ng-repeat="difficulty in DIFFICULTIES" class="{{difficulty == game.difficulty ? 'hide': ''}} difficulty-button" ng-click="game.showNewGameModal(false, difficulty)">{{difficulty.capitalize()}}</div>
@@ -391,8 +395,6 @@ ga('send', 'pageview');
 			<div class="menu-button button touch-target" ng-click="game.showNewGameModal(true)"><i class='fa fa-trash'></i> Hard Reset</div>
 		</div>
 	</div>
-
-
 
 	<div id="progress-modal" class="modal">
 		<div id="progress-modal-header" class="modal-header">Statistics
@@ -452,7 +454,7 @@ ga('send', 'pageview');
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Chime Points</div>
-						<div class="progress-stat-value">{{game.progress.general.chimePoints.toFixed(1)}}</div>
+						<div class="progress-stat-value">{{(game.progress.general.chimePoints + game.points).toFixed(1)}}</div>
 					</div>
 					<div class="progress-modal-spacer"></div>
 
@@ -495,6 +497,78 @@ ga('send', 'pageview');
 			</div>
 		</div>
 	</div>
+
+	<div id="runes-modal" class="modal">
+		<div id="runes-modal-header" class="modal-header">Runes
+			<div class="close-icon" onclick="hideModal()">&times;</div>
+		</div>
+		<div id="runes-modal-body" class="modal-body">
+			<div id="runes-modal-body-container">
+
+				<div id="active-runes-container">
+					<div id="active-marks" class="active-runes">
+						<div id="active-marks-header" class="active-runes-header"></div>
+						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game.marks(n))">
+							<div class="active-rune-image" ng-style="{'background-image':'url(' + game.getRuneImageUrl(game.marks[n] ? game.marks[n].image : '') + ')'}"></div>
+						</div>
+					</div>
+					<div id="active-seals" class="active-runes">
+						<div id="active-seals-header" class="active-runes-header"></div>
+						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game.seals(n))">
+							<div class="active-rune-image" ng-style="{'background-image':'url(' + game.getRuneImageUrl(game.marks[n] ? game.seals[n].image : '') + ')'}"></div>
+						</div>
+					</div>
+					<div id="active-glyphs" class="active-runes">
+						<div id="active-glyphs-header" class="active-runes-header"></div>
+						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game.glyphs(n))">
+							<div class="active-rune-image" ng-style="{'background-image':'url(' + game.getRuneImageUrl(game.marks[n] ? game.glyphs[n].image : '') + ')'}"></div>
+						</div>
+					</div>
+					<div id="active-quints">
+						<div id="active-quints-header" class="active-runes-header"></div>
+						<div ng-repeat="n in range(3) track by $index" class="active-rune" ng-click="game.removeRune(game.quints(n))">
+							<div class="active-rune-image" ng-style="{'background-image':'url(' + game.getRuneImageUrl(game.quints[n] ? game.quints[n].image : '') + ')'}"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="runes-modal-spacer-h"></div>
+
+				<div id="active-stats-container">
+					<!-- active-stats -->
+
+				</div>
+
+				<div class="runes-modal-spacer-h"></div>
+
+				<div id="available-runes-container">
+					<div id="available-runes-header">
+						<div id="available-runes-header-marks" class="available-runes-header-link" onclick="showAvailableRunes(MARK)">Marks</div>
+						<div id="available-runes-header-seals" class="available-runes-header-link" onclick="showAvailableRunes(SEAL)">Seals</div>
+						<div id="available-runes-header-glyphs" class="available-runes-header-link" onclick="showAvailableRunes(GLYPH)">Glyphs</div>
+						<div id="available-runes-header-quints" class="available-runes-header-link" onclick="showAvailableRunes(QUINT)">Quints</div>
+					</div>
+					<div id="available-marks-tab" class="available-runes-tab">
+						<!-- available-runes -->
+					</div>
+					<div id="available-seals-tab" class="available-runes-tab">
+						<!-- available-runes -->
+					</div>
+					<div id="available-glyphs-tab" class="available-runes-tab">
+						<!-- available-runes -->
+					</div>
+					<div id="available-quints-tab" class="available-runes-tab">
+						<!-- available-runes -->
+					</div>
+
+
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
 
 	<div id="newgame-modal" class="modal">
 		<div id="newgame-modal-body" class="modal-body">

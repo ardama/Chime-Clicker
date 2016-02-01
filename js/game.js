@@ -66,6 +66,12 @@ Game.prototype.Init = function(scope, difficulty) {
   this.exhaustBonus = 1;
   this.igniteBonus = 1;
 
+  // Rune counts
+  this[MARK] = [];
+  this[SEAL] = [];
+  this[GLYPH] = [];
+  this[QUINT] = [];
+
   // Rune variables
   this.runeDefense = 0;
   this.runeMovespeed = 0;
@@ -413,6 +419,25 @@ Game.prototype.unlockMonsters = function(setMonster) {
   }
 };
 
+Game.prototype.updateRunes = function() {
+  this[MARK] = [];
+  this[SEAL] = [];
+  this[GLYPH] = [];
+  this[QUINT] = [];
+  for (var runeTypeName in this.runes) {
+    var runeType = this.runes[runeTypeName];
+    for (var runeName in runeType) {
+      var runeSet = runeType[runeName];
+      for (var runeTier in runeSet) {
+        var rune = runeSet[runeTier];
+        for (var i = 0; i < rune.count; i++) {
+          this[rune.type].push(rune);
+        }
+      }
+    }
+  }
+};
+
 // Action Functions
 Game.prototype.chimesClick = function() {
   this.addChimes(this.chimesPerClick);
@@ -540,6 +565,36 @@ Game.prototype.buyUpgrade = function(name) {
   }
 };
 
+Game.prototype.buyRune = function(type, name, tier, count) {
+  var rune = this.runes[type][name][tier];
+  var cost = rune.cost * count;
+  if (cost <= this.progress.general.chimePoints + this.points) {
+    this.progress.general.chimePoints -= cost;
+    rune.purchased += count;
+    return true;
+  }
+  return false;
+};
+
+// Game.prototype.selectRune = function(type, name, tier) {
+//   var rune = this.runes[type][name][tier];
+// };
+
+Game.prototype.addRune = function(type, name, tier) {
+  var rune = this.runes[type][name][tier];
+  if (this[type].length < 9 && rune.count < rune.purchased) {
+    rune.count++;
+    this.updateRunes();
+  }
+};
+
+Game.prototype.removeRune = function(rune) {
+  if (rune.count > 0) {
+    rune.count--;
+    this.updateRunes();
+  }
+};
+
 Game.prototype.selectMonster = function(direction) {
   var index = this.monstersAvailable.indexOf(this.monster);
   var length = this.monstersAvailable.length;
@@ -655,7 +710,6 @@ Game.prototype.getRoundedTime = function() {
 };
 
 Game.prototype.getImageUrl = function(name, folder) {
-
   if (folder)
     folder += "/";
   else
@@ -676,6 +730,10 @@ Game.prototype.getSpellImageUrl = function(name) {
   if (name == SMITE && this.isMonsterChampion(this.monster))
     name = CHALLENGING_SMITE;
   return this.getImageUrl(name, 'spells');
+};
+
+Game.prototype.getRuneImageUrl = function(name) {
+  return name ? this.getImageUrl(name, 'runes') : '';
 };
 
 Game.prototype.getLockedImageUrl = function() {
@@ -1185,12 +1243,18 @@ Game.prototype.loadProgress = function() {
 
 Game.prototype.calculateStartState = function() {
   // Apply runes
-  for (var type in this.runes) {
-    var runes = this.getObjectsByStatus(this.runes[type], AVAILABLE);
-    for (var i = 0; i < runes.length; i++) {
-      this.runes[type][runes[i]].apply();
+  for (var runeTypeName in this.runes) {
+    var runeType = this.runes[runeTypeName];
+    for (var runeName in runeType) {
+      var runeSet = runeType[runeName];
+      for (var runeTier in runeSet) {
+        var rune = runeSet[runeTier];
+        rune.apply(this);
+      }
     }
   }
+
+  this.updateRunes();
 
   this.gold += this.runeGold;
   this.defenseBase += this.runeDefense;

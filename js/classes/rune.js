@@ -11,18 +11,49 @@ Rune.prototype.Init = function(game, type, name, tier, difficulty, apply, toolti
   this.apply = apply;
   this.tooltip = tooltip;
 
-
   this.fullName = type.capitalize() + ' of ' + name;
   this.cost = RUNE_PRICES[difficulty] * Math.pow(10, tier - 1) * (type == QUINT ? 3 : 1);
   this.status = LOCKED;
   this.purchased = 0;
   this.count = 0;
+  this.image = Rune.GetImageName(this);
   this.unlock = function(game) {return DIFFICULTIES.indexOf(game.difficulty) >= DIFFICULTIES.indexOf(this.difficulty)};
 };
 
 Rune.prototype.getLockedText = function() {
   return "Unlock by completing the game on <b>" + this.difficulty.capitalize() + "</b>";
-}
+};
+
+Rune.GetImageName = function(rune) {
+  var s = '';
+  if (rune.type == MARK) {
+    s += 'r_';
+    if (rune.difficulty == 'medium') s += '1_';
+    else if (rune.difficulty == 'hard') s += '2_';
+    else if (rune.difficulty == 'marathon') s += '4_';
+  }
+  else if (rune.type == SEAL) {
+    s += 'y_';
+    if (rune.difficulty == 'medium') s += '1_';
+    else if (rune.difficulty == 'hard') s += '2_';
+    else if (rune.difficulty == 'marathon') s += '3_';
+  }
+  else if (rune.type == GLYPH) {
+    s += 'b_';
+    if (rune.difficulty == 'medium') s += '3_';
+    else if (rune.difficulty == 'hard') s += '1_';
+    else if (rune.difficulty == 'marathon') s += '2_';
+  }
+  else if (rune.type == QUINT) {
+    s += 'bl_';
+    if (rune.difficulty == 'hard') s += '3_';
+    else if (rune.difficulty == 'marathon') s += '2_';
+    else if (rune.difficulty == 'impossible') s += '1_';
+  }
+
+  s += rune.tier;
+  return s;
+};
 
 Rune.CreateSet = function(game, type, name, difficulty, applyFunc, tooltipFunc) {
   var set = {};
@@ -152,7 +183,7 @@ Rune.Create = function(game) {
   quints[CLICKING] = Rune.CreateSet(game, QUINT, CLICKING, 'hard',
     function(i) {return function(game) {game.runeChimeClicking += this.count * .06 * i; game.runeMonsterClicking += this.count * .06 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + 6 * i + "% Damage/Chimes per click";}}
+    "+" + 6 * i + "% Damage and Chimes per click";}}
   );
   quints[PENETRATION] = Rune.CreateSet(game, QUINT, PENETRATION, 'marathon',
     function(i) {return function(game) {game.runePenetration += this.count * .04 * i}},

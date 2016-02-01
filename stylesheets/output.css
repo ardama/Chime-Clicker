@@ -387,14 +387,14 @@
   box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.75); }
 
 #progress-modal-header {
-  height: 36px;
+  height: 32px;
   padding: 6px 16px;
-  line-height: 36px;
-  font-size: 24px; }
+  line-height: 32px;
+  font-size: 20px; }
   #progress-modal-header .close-icon {
     padding: 0px 9px;
     margin-right: -8px;
-    font-size: 36px; }
+    font-size: 32px; }
 
 #progress-modal-body {
   width: 500px;
@@ -462,6 +462,116 @@
 
 #progress-modal-body::-webkit-scrollbar-thumb:hover {
   background: whitesmoke; }
+
+#runes-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.75); }
+
+#runes-modal {
+  color: white;
+  background-color: #1e272c;
+  border-radius: 1px;
+  overflow: hidden;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.75); }
+
+#runes-modal-header {
+  height: 32px;
+  padding: 6px 16px;
+  line-height: 32px;
+  font-size: 20px; }
+  #runes-modal-header .close-icon {
+    padding: 0px 9px;
+    margin-right: -8px;
+    font-size: 32px; }
+
+#runes-modal-body {
+  width: 600px;
+  height: 500px;
+  padding: 0; }
+
+.runes-modal-spacer-v {
+  float: left;
+  width: 1px;
+  background-color: #171c1e;
+  border-right: solid 1px #263238; }
+
+#runes-modal-body-container {
+  float: left; }
+
+#active-runes-container {
+  float: left;
+  margin-top: 6px;
+  padding-left: 5px; }
+  #active-runes-container .runes-modal-spacer-v {
+    height: 192px; }
+
+.active-runes {
+  float: left;
+  width: 180px;
+  padding: 0 8px; }
+
+.active-runes-header {
+  float: left;
+  width: 100%;
+  height: 4px;
+  margin-bottom: 6px;
+  -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.75);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.75); }
+
+#active-marks-header {
+  background-color: #7f523a; }
+
+#active-seals-header {
+  background-color: #816e34; }
+
+#active-glyphs-header {
+  background-color: #475d67; }
+
+#active-quints-header {
+  background-color: #603e73; }
+
+.active-rune {
+  float: left;
+  width: 44px;
+  height: 44px;
+  margin: 3px;
+  padding: 5px;
+  background-color: #171c1e;
+  -webkit-box-shadow: 0 0 4px 0px rgba(0, 0, 0, 0.75) inset;
+  -moz-box-shadow: 0 0 4px 0px rgba(0, 0, 0, 0.75) inset;
+  box-shadow: 0 0 4px 0px rgba(0, 0, 0, 0.75) inset; }
+
+.active-rune-image {
+  float: left;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover; }
+
+#active-quints {
+  float: left;
+  width: 300px;
+  margin-left: 145px;
+  margin-top: 12px; }
+  #active-quints .active-rune {
+    width: 72px;
+    height: 72px;
+    margin-left: 7px;
+    margin-right: 7px;
+    padding: 7px;
+    background-color: #171c1e;
+    -webkit-box-shadow: 0 0 5px 0px rgba(0, 0, 0, 0.75) inset;
+    -moz-box-shadow: 0 0 5px 0px rgba(0, 0, 0, 0.75) inset;
+    box-shadow: 0 0 5px 0px rgba(0, 0, 0, 0.75) inset; }
 
 #newgame-modal {
   color: white;

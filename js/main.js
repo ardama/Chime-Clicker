@@ -1,4 +1,4 @@
-var version = "0.4.0"
+var version = "0.4.0.0"
 
 ///// CONSTANTS ////////////////////
 // Items
@@ -371,9 +371,8 @@ function prettyIntBigCompact(num, fixed) {
 };
 
 function prettyInt(num) {
-  // var s = num > 1000 ? Math.floor(num).toString() : num.toFixed(1);
-  // return s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return Math.floor(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  var s = num >= 1000 ? Math.floor(num) : Math.round(num * 10) / 10;
+  return s.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
 function prettyTime(seconds) {
@@ -507,6 +506,8 @@ GameApp.controller('GameController', function($scope) {
     $scope.indexToSpell = function(a) {return indexToSpell(a)};
     $scope.indexToMonster = function(a) {return indexToMonster(a)};
     $scope.indexToType = function(a) {return indexToType(a)};
+
+    $scope.range = function(n) {return new Array(n);};
 });
 
 
@@ -661,7 +662,6 @@ $(window).load(function() {
   updateButtons(true);
   updateLastItem();
 
-  $('#difficulty-modal').width($('#restart-container').width());
 
   $('[data-toggle="tooltip"]').each(function() {
     var content = $(this).attr('data-title');
@@ -685,7 +685,16 @@ $(window).load(function() {
     this.click();
   });
 
+  $('#difficulty-modal').width($('#restart-container').width());
+
   $('#header-stats').click(function(event) {
+    if (modal == 'stats') {
+      hideModal();
+      return;
+    }
+    if (modal)
+      hideModal();
+
     event.stopPropagation();
     $('#progress-modal').modal({
       persist: true,
@@ -696,15 +705,45 @@ $(window).load(function() {
         dialog.overlay.fadeIn(200);
         dialog.container.fadeIn(200);
         dialog.data.fadeIn(200);
+      },
+      onShow: function () {
+        modal = 'stats';
+      }
+    });
+  })
+
+  $('#header-runes').click(function(event) {
+    if (modal == 'runes') {
+      hideModal();
+      return;
+    }
+    if (modal)
+      hideModal();
+
+    event.stopPropagation();
+    $('#runes-modal').modal({
+      persist: true,
+      overlayClose: false,
+      overlayId: 'rune-modal-overlay',
+      position: [72, null],
+      onOpen: function (dialog) {
+        dialog.overlay.fadeIn(200);
+        dialog.container.fadeIn(200);
+        dialog.data.fadeIn(200);
+      },
+      onShow: function () {
+        modal = 'runes';
       }
     });
   })
 
   $('#header-menu').click(function(event) {
-    if (modal) {
+    if (modal == 'menu') {
       hideModal();
       return;
     }
+    if (modal)
+      hideModal();
 
     event.stopPropagation();
     var posX = $(this).offset().left - $('body').scrollLeft() - 57;
@@ -721,16 +760,18 @@ $(window).load(function() {
         dialog.data.fadeIn(200);
       },
       onShow: function () {
-        modal = true;
+        modal = 'menu';
       }
     });
   });
 
   $('#difficulty').click(function(event) {
-    if (modal) {
+    if (modal == 'difficulty') {
       hideModal();
       return;
     }
+    if (modal)
+      hideModal();
 
     event.stopPropagation();
     var posX = $(this).offset().left - $('body').scrollLeft();
@@ -747,13 +788,13 @@ $(window).load(function() {
         dialog.data.fadeIn(200);
       },
       onShow: function () {
-        modal = true;
+        modal = 'difficulty';
       }
     });
   });
 
   $('body').click(function(){
-    if (modal) hideModal();
+    if (modal && modal != 'runes') hideModal();
   });
 
   $(window).scroll(function(event) {
