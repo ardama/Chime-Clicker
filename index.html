@@ -508,47 +508,70 @@ ga('send', 'pageview');
 				<div id="active-runes-container">
 					<div id="active-marks" class="active-runes">
 						<div id="active-marks-header" class="active-runes-header"></div>
-						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game.marks(n))">
-							<div class="active-rune-image" ng-style="{'background-image':'url(' + game.getRuneImageUrl(game.marks[n] ? game.marks[n].image : '') + ')'}"></div>
+						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game[RUNE_TYPES[0]][$index])">
+							<div class="active-rune-image" data-status="{{game[RUNE_TYPES[0]][$index] ? 1 : 0}}"
+									 ng-style="{'background-image':'url(' + game.getRuneImageUrl(game[RUNE_TYPES[0]][$index] ? game[RUNE_TYPES[0]][$index].image : '') + ')'}"></div>
 						</div>
 					</div>
 					<div id="active-seals" class="active-runes">
 						<div id="active-seals-header" class="active-runes-header"></div>
-						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game.seals(n))">
-							<div class="active-rune-image" ng-style="{'background-image':'url(' + game.getRuneImageUrl(game.marks[n] ? game.seals[n].image : '') + ')'}"></div>
+						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game[RUNE_TYPES[1]][$index])">
+							<div class="active-rune-image" data-status="{{game[RUNE_TYPES[1]][$index] ? 1 : 0}}"
+									 ng-style="{'background-image':'url(' + game.getRuneImageUrl(game[RUNE_TYPES[1]][$index] ? [RUNE_TYPES[1]][$index].image : '') + ')'}"></div>
 						</div>
 					</div>
 					<div id="active-glyphs" class="active-runes">
 						<div id="active-glyphs-header" class="active-runes-header"></div>
-						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game.glyphs(n))">
-							<div class="active-rune-image" ng-style="{'background-image':'url(' + game.getRuneImageUrl(game.marks[n] ? game.glyphs[n].image : '') + ')'}"></div>
+						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game[RUNE_TYPES[2]][$index])">
+							<div class="active-rune-image" data-status="{{game[RUNE_TYPES[2]][$index] ? 1 : 0}}"
+									 ng-style="{'background-image':'url(' + game.getRuneImageUrl(game[RUNE_TYPES[2]][$index] ? [RUNE_TYPES[2]][$index].image : '') + ')'}"></div>
 						</div>
 					</div>
-					<div id="active-quints">
+					<div id="active-quints" class="active-runes">
 						<div id="active-quints-header" class="active-runes-header"></div>
-						<div ng-repeat="n in range(3) track by $index" class="active-rune" ng-click="game.removeRune(game.quints(n))">
-							<div class="active-rune-image" ng-style="{'background-image':'url(' + game.getRuneImageUrl(game.quints[n] ? game.quints[n].image : '') + ')'}"></div>
+						<div ng-repeat="n in range(3) track by $index" class="active-rune" ng-click="game.removeRune([RUNE_TYPES[3]][$index])">
+							<div class="active-rune-image" data-status="{{game[RUNE_TYPES[3]][$index] ? 1 : 0}}"
+									 ng-style="{'background-image':'url(' + game.getRuneImageUrl([RUNE_TYPES[3]][$index] ? [RUNE_TYPES[3]][$index].image : '') + ')'}"></div>
 						</div>
 					</div>
 				</div>
 
-				<div class="runes-modal-spacer-h"></div>
+				<!-- <div id="active-rune-stats-container">
 
-				<div id="active-stats-container">
-					<!-- active-stats -->
-
-				</div>
-
-				<div class="runes-modal-spacer-h"></div>
+				</div> -->
 
 				<div id="available-runes-container">
 					<div id="available-runes-header">
-						<div id="available-runes-header-marks" class="available-runes-header-link" onclick="showAvailableRunes(MARK)">Marks</div>
-						<div id="available-runes-header-seals" class="available-runes-header-link" onclick="showAvailableRunes(SEAL)">Seals</div>
-						<div id="available-runes-header-glyphs" class="available-runes-header-link" onclick="showAvailableRunes(GLYPH)">Glyphs</div>
-						<div id="available-runes-header-quints" class="available-runes-header-link" onclick="showAvailableRunes(QUINT)">Quints</div>
+						<div ng-repeat="type in RUNE_TYPES track by $index" id="available-runes-header-{{type.toLowerCase()}}s" class="available-runes-header-item" ng-click="showAvailableRunes(type)">
+							<div class="available-runes-header-text">{{type}}s</div>
+							<div class="available-runes-header-bar"></div>
+						</div>
 					</div>
-					<div id="available-marks-tab" class="available-runes-tab">
+					<div ng-repeat="type in RUNE_TYPES" id="available-{{type.toLowerCase()}}-tab" class="available-runes-tab active">
+						<div ng-repeat="(runeName, runeSet) in game.runes[type] track by $index" class="rune-set">
+							<div ng-repeat="(runeTier, rune) in runeSet track by $index" class="rune" data-status="{{rune.status}}">
+								<div class="rune-left" ng-click="game.addRune(rune)">
+									<div class="rune-left-overlay"></div>
+									<div class="rune-image" ng-style="{'background-image':'url(' + game.getRuneImageUrl(rune.image) +')'}"></div>
+								</div>
+								<div class="rune-middle">
+									<div class="rune-middle-overlay">
+										<div class="rune-locked-description">{{rune.tooltip()}}</div>
+									</div>
+									<div class="rune-name">{{rune.fullName}}</div>
+									<div class="rune-description">{{rune.tooltip()}}</div>
+								</div>
+								<div class="rune-right">
+									<div class="rune-right-overlay"></div>
+									<div class="rune-purchase" ng-click="game.buyRune(rune)">{{rune.cost}} CP</div>
+									<div class="rune-controls">
+										<div class="rune-remove" ng-click="game.removeRune(rune)">-</div>
+										<div class="rune-count">{{rune.purchased - rune.count}}</div>
+										<div class="rune-add" ng-click="game.addRune(rune)">+</div>
+									</div>
+								</div>
+							</div>
+						</div>
 						<!-- available-runes -->
 					</div>
 					<div id="available-seals-tab" class="available-runes-tab">

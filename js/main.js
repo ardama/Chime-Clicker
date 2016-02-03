@@ -1,4 +1,4 @@
-var version = "0.4.0.0"
+var version = "0.4.0.1"
 
 ///// CONSTANTS ////////////////////
 // Items
@@ -146,7 +146,8 @@ var SEAL = "Seal";
 var GLYPH = "Glyph";
 var QUINT = "Quint";
 
-var INDEX_TO_RUNE_TYPE = [MARK, SEAL, GLYPH, QUINT]
+var RUNE_TYPES = [MARK, SEAL, GLYPH, QUINT];
+var INDEX_TO_RUNE_TYPE = [MARK, SEAL, GLYPH, QUINT];
 var RUNE_TYPE_TO_INDEX = {};
 for (var i = 0; i < INDEX_TO_RUNE_TYPE.length; i++) {
   RUNE_TYPE_TO_INDEX[INDEX_TO_RUNE_TYPE[i]] = i;
@@ -174,9 +175,12 @@ var SCALING_COOLDOWN_REDUCTION = "Scaling Cooldown Reduction";
   // T4
 var TEEMO_SLAYER = "the Teemo Slayer";
 
+var RUNE_NAMES = [DEFENSE, MOVESPEED, DAMAGE, ATTACKRATE, CHIME_CLICKING, MONSTER_CLICKING, GOLD,
+                  COOLDOWN_REDUCTION, SCALING_DEFENSE, SCALING_MOVESPEED, SCALING_DAMAGE, SCALING_ATTACKRATE,
+                  CLICKING, PENETRATION, SCALING_GOLD, SCALING_COOLDOWN_REDUCTION, TEEMO_SLAYER];
 var INDEX_TO_RUNE = [DEFENSE, MOVESPEED, DAMAGE, ATTACKRATE, MONSTER_CLICKING, CHIME_CLICKING, GOLD,
-                          COOLDOWN_REDUCTION, SCALING_DEFENSE, SCALING_MOVESPEED, SCALING_DAMAGE, SCALING_ATTACKRATE,
-                          CLICKING, PENETRATION, SCALING_GOLD, SCALING_COOLDOWN_REDUCTION, TEEMO_SLAYER];
+                     COOLDOWN_REDUCTION, SCALING_DEFENSE, SCALING_MOVESPEED, SCALING_DAMAGE, SCALING_ATTACKRATE,
+                     CLICKING, PENETRATION, SCALING_GOLD, SCALING_COOLDOWN_REDUCTION, TEEMO_SLAYER];
 var RUNE_TO_INDEX = {};
 for (var i = 0; i < INDEX_TO_RUNE.length; i++) {
   RUNE_TO_INDEX[INDEX_TO_RUNE[i]] = i;
@@ -494,6 +498,8 @@ GameApp.controller('GameController', function($scope) {
     $scope.ACTIVE = ACTIVE;
     $scope.COOLDOWN = COOLDOWN;
     $scope.DIFFICULTIES = DIFFICULTIES;
+    $scope.RUNE_NAMES = RUNE_NAMES;
+    $scope.RUNE_TYPES = RUNE_TYPES;
 
     $scope.itemToIndex = function(a) {return itemToIndex(a)};
     $scope.upgradeToIndex = function(a) {return upgradeToIndex(a)};
@@ -506,6 +512,10 @@ GameApp.controller('GameController', function($scope) {
     $scope.indexToSpell = function(a) {return indexToSpell(a)};
     $scope.indexToMonster = function(a) {return indexToMonster(a)};
     $scope.indexToType = function(a) {return indexToType(a)};
+
+    $scope.removeRune = function(game, type, n) {
+      game.removeRune(game[type][n]);
+    };
 
     $scope.range = function(n) {return new Array(n);};
 });
@@ -733,6 +743,9 @@ $(window).load(function() {
       },
       onShow: function () {
         modal = 'runes';
+        var diff = 660 - $("#runes-modal-body-container").width();
+        $("#runes-modal-body-container").width(660);
+        $('#runes-modal').width($('#runes-modal').width() + diff);
       }
     });
   })

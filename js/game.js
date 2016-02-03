@@ -419,6 +419,20 @@ Game.prototype.unlockMonsters = function(setMonster) {
   }
 };
 
+Game.prototype.unlockRunes = function() {
+  for (var runeTypeName in this.runes) {
+    var runeType = this.runes[runeTypeName];
+    for (var runeName in runeType) {
+      var runeSet = runeType[runeName];
+      for (var runeTier in runeSet) {
+        var rune = runeSet[runeTier];
+        if (rune.status == LOCKED && rune.unlock(this))
+          rune.status = AVAILABLE;
+      }
+    }
+  }
+};
+
 Game.prototype.updateRunes = function() {
   this[MARK] = [];
   this[SEAL] = [];
@@ -565,8 +579,10 @@ Game.prototype.buyUpgrade = function(name) {
   }
 };
 
-Game.prototype.buyRune = function(type, name, tier, count) {
-  var rune = this.runes[type][name][tier];
+Game.prototype.buyRune = function(rune, count) {
+  if (!rune) return;
+
+  count = count || 1;
   var cost = rune.cost * count;
   if (cost <= this.progress.general.chimePoints + this.points) {
     this.progress.general.chimePoints -= cost;
@@ -576,19 +592,18 @@ Game.prototype.buyRune = function(type, name, tier, count) {
   return false;
 };
 
-// Game.prototype.selectRune = function(type, name, tier) {
-//   var rune = this.runes[type][name][tier];
-// };
+Game.prototype.addRune = function(rune) {
+  if (!rune) return;
 
-Game.prototype.addRune = function(type, name, tier) {
-  var rune = this.runes[type][name][tier];
-  if (this[type].length < 9 && rune.count < rune.purchased) {
+  if (this[rune.type].length < 9 && rune.count < rune.purchased) {
     rune.count++;
     this.updateRunes();
   }
 };
 
 Game.prototype.removeRune = function(rune) {
+  if (!rune) return;
+
   if (rune.count > 0) {
     rune.count--;
     this.updateRunes();
@@ -695,7 +710,7 @@ Game.prototype.win = function() {
         break;
       default:
     }
-
+    this.unlockRunes();
     showWinModal();
   }
 };
@@ -847,6 +862,10 @@ Game.prototype.getObjectsByStatus = function(objectMap, status) {
     }
   }
   return objects;
+};
+
+Game.prototype.sortRunes = function(rune) {
+  return RUNE_NAMES.indexOf(rune.name) * 3 + rune.tier;
 };
 
 Game.prototype.getClassName = function(name) {

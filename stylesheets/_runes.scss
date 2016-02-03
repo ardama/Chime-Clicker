@@ -1,0 +1,340 @@
+#runes-modal-overlay {
+	background-color: $boxShadow;
+}
+
+#runes-modal {
+	color: $lightTextPrimary;
+	background-color: $primary1000;
+	border-radius: 1px;
+	overflow: hidden;
+
+	cursor: default;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	@include box-shadow(0 0 6px 1px $boxShadow);
+}
+
+#runes-modal-header {
+  height: 32px;
+	padding: 6px 16px;
+
+  line-height: 32px;
+  font-size: 20px;
+
+  .close-icon {
+    padding: 0px 9px;
+    margin-right: -8px;
+    font-size: 32px;
+  }
+}
+
+#runes-modal-body {
+	height: 500px;
+
+	padding: 0 0 0 0;
+
+}
+
+#runes-modal-body::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+#runes-modal-body::-webkit-scrollbar-track {
+	background-color: rgba($gray1000, 1);
+}
+
+#runes-modal-body::-webkit-scrollbar-thumb {
+  background: rgba($gray100, .7);
+}
+
+#runes-modal-body::-webkit-scrollbar-thumb:hover {
+  background: rgba($gray100, 1);
+}
+
+.runes-modal-spacer-v {
+	width: 1px;
+
+	background-color: $primary1100;
+	border-right: solid 1px $primary900;
+}
+
+#runes-modal-body-container {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+}
+
+#active-runes-container {
+	display: flex;
+	align-items: flex-start;
+	margin: 2px 6px;
+}
+
+
+.active-runes {
+	display: flex;
+	flex-wrap: wrap;
+	width: 180px;
+
+	padding: 0 6px;
+}
+
+#active-quints {
+	width: 60px;
+}
+
+.active-runes-header {
+	width: 100%;
+	height: 4px;
+
+	margin: 4px 0;
+	@include box-shadow(0 1px 2px 0 $boxShadow);
+}
+
+#active-marks-header {
+	background-color: $mark2;
+}
+
+#active-seals-header {
+	background-color: $seal2;
+}
+
+#active-glyphs-header {
+	background-color: $glyph2;
+}
+
+#active-quints-header {
+	background-color: $quint2;
+}
+
+.active-rune {
+
+	width: 44px;
+	height: 44px;
+
+	margin: 3px;
+	padding: 5px;
+
+	background-color: $primary1100;
+	@include box-shadow(0 0 4px 0px $boxShadow inset);
+}
+
+.active-rune-image {
+
+	width: 100%;
+	height: 100%;
+
+	background-repeat: no-repeat;
+	background-size: cover;
+
+	opacity: 1;
+	@include transition(opacity 200ms);
+}
+
+.active-rune-image[data-status="0"] {
+	opacity: 0;
+}
+
+.active-rune-image[data-status="1"] {
+	opacity: 1;
+}
+
+#active-rune-stats-container {
+	min-height: 50px;
+}
+
+#available-runes-container {
+	display: flex;
+	flex-direction: column;
+
+	width: 660px;
+}
+
+#available-runes-header {
+	display: flex;
+	margin: 0 2px;
+}
+
+.available-runes-header-item {
+	position: relative;
+	width: 164px;
+	height: 36px;
+
+	font-size: 18px;
+	line-height: 36px;
+	text-align: center;
+	color: $lightTextSecondary;
+	cursor: pointer;
+
+	@include transition(color 100ms);
+}
+
+.available-runes-header-item:first-child {
+	border-left-color: $primary1000;
+}
+
+.available-runes-header-item:hover {
+	color: $lightTextPrimary;
+}
+
+.available-runes-header-text {
+	width: calc(100% - 4px);
+	height: 100%;
+
+	margin-left: 2px;
+}
+
+.active .available-runes-header-text {
+	color: $lightTextPrimary;
+}
+
+.available-runes-header-bar {
+	position: absolute;
+	bottom: 0;
+	left: 2px;
+	width: 160px;
+	height: 4px;
+
+	@include transition(background-color 100ms);
+}
+
+#available-runes-header-marks .available-runes-header-bar {
+		background-color: $mark2;
+}
+
+#available-runes-header-seals .available-runes-header-bar {
+		background-color: $seal2;
+}
+
+#available-runes-header-glyphs .available-runes-header-bar {
+		background-color: $glyph2;
+}
+
+#available-runes-header-quints .available-runes-header-bar {
+		background-color: $quint2;
+}
+
+#available-runes-header-marks:hover .available-runes-header-bar {
+		background-color: $mark3;
+}
+
+#available-runes-header-seals:hover .available-runes-header-bar {
+		background-color: $seal3;
+}
+
+#available-runes-header-glyphs:hover .available-runes-header-bar {
+		background-color: $glyph3;
+}
+
+#available-runes-header-quints:hover .available-runes-header-bar {
+		background-color: $quint3;
+}
+
+#available-runes-header-marks.active .available-runes-header-text {
+		background-color: $mark2;
+}
+
+#available-runes-header-seals.active .available-runes-header-text {
+		background-color: $seal2;
+}
+
+#available-runes-header-glyphs.active .available-runes-header-text {
+		background-color: $glyph2;
+}
+
+#available-runes-header-quints.active .available-runes-header-text {
+		background-color: $quint2;
+}
+
+.available-runes-tab {
+	display: none;
+	flex-wrap: wrap;
+	padding: 4px;
+}
+
+.available-runes-tab.active {
+	display: flex;
+}
+
+.rune-set {
+	width: 326px;
+	height: 138px;
+
+}
+
+.rune {
+	display: flex;
+
+	width: calc(100% - 8px);
+	height: 40px;
+	margin: 6px 4px;
+
+	font-size: 12px;
+	line-height: 16px;
+
+	background-color: $primary900;
+
+	.rune-left {
+		width: 40px;
+		height: 100%;
+	}
+
+	.rune-middle {
+		width: calc(100% - 40px - 60px);
+		height: 100%;
+	}
+
+	.rune-right {
+		width: 60px;
+		height: 100%;
+	}
+
+	.rune-image {
+		width: calc(100% - 8px);
+		height: calc(100% - 8px);
+
+		margin: 4px;
+
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+
+	.rune-controls {
+		display: flex;
+	}
+}
+
+// LOCKED Rune
+.rune[data-status="0"] {
+	.rune-name {
+		display: none;
+	}
+	.rune-description {
+		display: none;
+	}
+}
+
+// AVAILABLE Rune
+.rune[data-status="1"] {
+	.rune-left {
+		cursor: pointer;
+	}
+	.rune-right {
+		cursor: pointer;
+	}
+	.rune-left-overlay {
+		display: none;
+	}
+	.rune-middle-overlay {
+		display: none;
+	}
+	.rune-right-overlay {
+		display: none;
+	}
+}
