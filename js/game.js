@@ -313,7 +313,7 @@ Game.prototype.addSpellTime = function(time) {
 
 // Update Functions
 Game.prototype.updateStats = function() {
-  this.damageBase = this.damageBought * this.igniteBonus + this.meeps * this.meepDamage;
+  this.damageBase = this.runeDamage + this.damageBought * this.igniteBonus + this.meeps * this.meepDamage;
 
   this.defenseStat = this.defenseBase * this.runeScalingDefense;
   this.movespeedStat = this.movespeedBase * this.runeScalingMovespeed;
@@ -762,27 +762,6 @@ Game.prototype.getLevelText = function() {
   return this.level;
 };
 
-Game.prototype.prettyInt = function(num, fixed) {
-  return prettyIntBig(num, fixed);
-};
-
-Game.prototype.prettyIntCompact = function(num, fixed) {
-  return prettyIntBigCompact(num, fixed);
-};
-
-Game.prototype.prettyIntVariable = function(num, fixed, width) {
-  width = width || 1200;
-  return window.innerWidth > width ? prettyIntBig(num, fixed) : prettyIntBigCompact(num, fixed);
-};
-
-Game.prototype.prettyTime = function(seconds) {
-  return prettyTime(seconds);
-};
-
-Game.prototype.isPlural = function(num, name) {
-  return (num == 1 || $.inArray(name, IGNORE_PLURALS) > -1) ? '' : ($.inArray(name, SPECIAL_PLURALS) > -1 ? 'es': 's');
-};
-
 Game.prototype.getMeepProgressPercent = function() {
   return 100 * this.chimes / this.chimesPerMeepFloor;
 };
@@ -834,7 +813,7 @@ Game.prototype.getIgniteDamage = function() {
 };
 
 Game.prototype.getPointsEarned = function() {
-  return (getBaseLog(20, this.monsters[TEEMO].count) + 1) * POINT_BONUS[this.difficulty];
+  return Math.max((getBaseLog(20, this.monsters[TEEMO].count) + 1) * POINT_BONUS[this.difficulty], 0);
 };
 
 Game.prototype.isFirstMonster = function() {
@@ -868,7 +847,7 @@ Game.prototype.sortRunes = function(rune) {
   return RUNE_NAMES.indexOf(rune.name) * 3 + rune.tier;
 };
 
-Game.prototype.getClassName = function(name) {
+Game.prototype.getSpellClassName = function(name) {
   var name = name.toLowerCase();
   return name.split(' ')[0];
 };
@@ -887,10 +866,6 @@ Game.prototype.getStatNameVariable = function(name, width) {
     }
   }
   return name;
-};
-
-Game.prototype.isZero = function(count) {
-  return count == 0 ? 'zero' : '';
 };
 
 Game.prototype.showNewGameModal = function(reset, difficulty) {

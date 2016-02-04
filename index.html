@@ -78,10 +78,10 @@ ga('send', 'pageview');
 						<div id="meeps-status" class="status {{game.spells['Flash'].status == ACTIVE ? 'flash-active' : '';}}">
 							<div id="meeps-wrapper" data-toggle="tooltip" data-title="Collect chimes to earn meeps.  Meeps grant {{game.meepDamage}} Damage." data-position="right">
 								<text>
-									{{game.prettyInt(game.meeps)}}
+									{{prettyInt(game.meeps)}}
 								</text>
 								<text id="meeps" class="title">
-									Meep{{game.isPlural(game.meeps)}}
+									Meep{{isPlural(game.meeps)}}
 								</text>
 							</div>
 						</div>
@@ -90,10 +90,10 @@ ga('send', 'pageview');
 								<div id="chimes-bar" class="bar {{game.spells['Ghost'].status == ACTIVE ? 'ghost-active' : '';}}">
 									<div id="chimes-bar-fill" class="bar-fill" style="width:{{game.getMeepProgressPercent()}}%"></div>
 									<div id="chimes-rate" data-toggle="tooltip" data-title="Chimes collected per second." data-position="right">
-										CPS {{game.prettyIntVariable(game.chimesRate)}}
+										CPS {{prettyIntVariable(game.chimesRate)}}
 									</div>
 									<div id="chimes-progress" data-toggle="tooltip" data-title="Chimes for next meep." data-position="left">
-										{{game.prettyIntCompact(game.chimes)}}/{{game.prettyIntCompact(game.chimesPerMeepFloor)}}	chimes
+										{{prettyIntCompact(game.chimes)}}/{{prettyIntCompact(game.chimesPerMeepFloor)}}	chimes
 									</div>
 								</div>
 							</div>
@@ -105,7 +105,7 @@ ga('send', 'pageview');
 					<div id="chimes-container" class="container">
 						<div id="chimes-count-container">
 							<div id="chimes-count">
-								Chimes: {{game.prettyIntVariable(game.chimesCollected)}}
+								Chimes: {{prettyIntVariable(game.chimesCollected)}}
 							</div>
 						</div>
 						<div id="chimes-button-wrapper" class="click-button-wrapper">
@@ -132,10 +132,10 @@ ga('send', 'pageview');
 									</div>
 									<div id="monster-gold" data-toggle="tooltip" data-title="Gold on kill." data-position="right">
 										<i class="fa fa-database fa-sm icon-gold"></i>
-										{{game.prettyIntCompact(game.monsters[game.monster].gold)}}
+										{{prettyIntCompact(game.monsters[game.monster].gold)}}
 									</div>
 									<div id="monster-experience" data-toggle="tooltip" data-title="Experience on kill." data-position="left">
-										{{game.prettyIntCompact(game.monsters[game.monster].experience)}} xp
+										{{prettyIntCompact(game.monsters[game.monster].experience)}} xp
 									</div>
 								</div>
 								<div class="selector-button selector-right touch-target">
@@ -148,10 +148,10 @@ ga('send', 'pageview');
 								<div id="damage-bar" class="bar {{game.spells['Smite'].status != ACTIVE ? '' : game.isMonsterChampion(game.monster) ? 'challenging-active' : 'smite-active'}} {{game.spells['Exhaust'].status == ACTIVE ? 'exhaust-active' : '';}}">
 									<div id="damage-bar-fill" class="bar-fill" style="width:{{game.getMonsterHealthPercent()}}%"></div>
 									<div id="damage-rate" data-toggle="tooltip" data-title="Damage dealt per second." data-position="right">
-										DPS {{game.prettyIntVariable(game.damageRate)}}
+										DPS {{prettyIntVariable(game.damageRate)}}
 									</div>
 									<div id="damage-progress">
-										{{game.prettyIntCompact(game.monsters[game.monster].currentHealth)}} / {{game.prettyIntCompact(game.monsters[game.monster].maxHealth)}} hp
+										{{prettyIntCompact(game.monsters[game.monster].currentHealth)}} / {{prettyIntCompact(game.monsters[game.monster].maxHealth)}} hp
 									</div>
 								</div>
 							</div>
@@ -163,7 +163,7 @@ ga('send', 'pageview');
 					<div id="monster-container" class="container">
 						<div id="monster-kill-count-container">
 							<div id="monster-kill-count">
-								Kills: {{game.prettyIntVariable(game.monsters[game.monster].count)}}
+								Kills: {{prettyIntVariable(game.monsters[game.monster].count)}}
 							</div>
 						</div>
 						<div id="monster-button-wrapper" class="click-button-wrapper">
@@ -188,33 +188,33 @@ ga('send', 'pageview');
 							<div id="gold-status">
 								<div id="gold-value">
 									<i class="fa fa-database fa-sm icon-gold"></i>
-									{{game.prettyIntVariable(game.gold, 3)}}
+									{{prettyIntVariable(game.gold, 3)}}
 								</div>
 								<div id="income-value">
 									<div>Income</div>
 									<i class="fa fa-database fa-sm icon-gold"></i>
-									{{game.prettyInt(game.income)}}
+									{{prettyInt(game.income)}}
 								</div>
 							</div>
 							<div id="game-stats">
 								<div id="defenseStat-value" class="game-stat game-stat-top game-stat-left">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Chimes collected per click.">
-										<div class="game-stat-name">{{game.getStatNameVariable('Defense', 100)}}</div> {{game.prettyIntCompact(game.defenseStat)}}
+										<div class="game-stat-name">{{game.getStatNameVariable('Defense', 100)}}</div> {{prettyIntCompact(game.defenseStat)}}
 									</div>
 								</div>
 								<div id="damageStat-value" class="game-stat game-stat-top game-stat-right {{game.spells['Ignite'].status == ACTIVE ? 'ignite-active' : '';}}">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Damage dealt per click.">
-										<div class="game-stat-name">{{game.getStatNameVariable('Damage', 100)}}</div> {{game.prettyIntCompact(game.damageStat)}}
+										<div class="game-stat-name">{{game.getStatNameVariable('Damage', 100)}}</div> {{prettyIntCompact(game.damageStat)}}
 									</div>
 								</div>
 								<div id="movespeedStat-value" class="game-stat game-stat-bottom game-stat-left">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Chime clicks per second.">
-										<div class="game-stat-name">{{game.getStatNameVariable('Move speed', 100)}}</div> {{game.prettyIntCompact(game.movespeedStat)}}
+										<div class="game-stat-name">{{game.getStatNameVariable('Move speed', 100)}}</div> {{prettyIntCompact(game.movespeedStat)}}
 									</div>
 								</div>
 								<div id="attackrateStat-value" class="game-stat game-stat-bottom game-stat-right">
 									<div class="game-stat-wrapper" data-toggle="tooltip" data-title="Damage clicks per second.">
-										<div class="game-stat-name">{{game.getStatNameVariable('Attack rate', 100)}}</div> {{game.prettyIntCompact(game.attackrateStat)}}
+										<div class="game-stat-name">{{game.getStatNameVariable('Attack rate', 100)}}</div> {{prettyIntCompact(game.attackrateStat)}}
 									</div>
 								</div>
 							</div>
@@ -239,7 +239,7 @@ ga('send', 'pageview');
 						<div class="item-left touch-target" ng-click="game.buyItem(item)">
 							<div class="item-cost">
 								<i class="fa fa-database fa-sm icon-gold"></i>
-								{{game.prettyIntCompact(game.items[item].cost)}}
+								{{prettyIntCompact(game.items[item].cost)}}
 							</div>
 							<div ng-style="{'background-image':'url(' + game.getItemImageUrl(item) + ')'}" class="item-image">
 							</div>
@@ -248,46 +248,46 @@ ga('send', 'pageview');
 						</div>
 						<!-- item header -->
 						<div class="item-header">
-							<div class="item-buy item-buy-5 touch-target" ng-click="game.buyItem(item, 10)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{game.prettyIntCompact(game.items[item].cost10)}}" data-position="top">
+							<div class="item-buy item-buy-5 touch-target" ng-click="game.buyItem(item, 10)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{prettyIntCompact(game.items[item].cost10)}}" data-position="top">
 								+10
 							</div>
-							<div class="item-buy item-buy-20 touch-target" ng-click="game.buyItem(item, 100)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{game.prettyIntCompact(game.items[item].cost100)}}" data-position="top">
+							<div class="item-buy item-buy-20 touch-target" ng-click="game.buyItem(item, 100)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{prettyIntCompact(game.items[item].cost100)}}" data-position="top">
 								+100
 							</div>
-							<div class="item-buy item-buy-100 touch-target" ng-click="game.buyItem(item, 1000)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{game.prettyIntCompact(game.items[item].cost1000)}}" data-position="top">
+							<div class="item-buy item-buy-100 touch-target" ng-click="game.buyItem(item, 1000)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{prettyIntCompact(game.items[item].cost1000)}}" data-position="top">
 								+1000
 							</div>
 							<div class="item-name">
-								{{item + game.isPlural(game.items[item].count, item)}}
+								{{item + isPlural(game.items[item].count, item)}}
 							</div>
 							<div class="item-count">
-								{{game.prettyIntCompact(game.items[item].count)}}
+								{{prettyIntCompact(game.items[item].count)}}
 							</div>
 						</div>
 						<!-- item content -->
 						<div class="item-middle">
 							<div class="item-stats">
-								<div class="item-stat {{game.items[item].isZero('defenseStat')}} defenseStat">Defense</div>
-								<div class="item-stat {{game.items[item].isZero('movespeedStat')}} movespeedStat">Move speed</div>
-								<div class="item-stat {{game.items[item].isZero('damageStat')}} damageStat">Damage</div>
-								<div class="item-stat {{game.items[item].isZero('attackrateStat')}} attackrateStat">Attack rate</div>
-								<div class="item-stat {{game.items[item].isZero('income')}} income">Income</div>
+								<div class="item-stat defenseStat" ng-class="zeroClass(game.items[item].defenseStat)">Defense</div>
+								<div class="item-stat movespeedStat" ng-class="zeroClass(game.items[item].movespeedStat)">Move speed</div>
+								<div class="item-stat damageStat" ng-class="zeroClass(game.items[item].damageStat)">Damage</div>
+								<div class="item-stat attackrateStat" ng-class="zeroClass(game.items[item].attackrateStat)">Attack rate</div>
+								<div class="item-stat income" ng-class="zeroClass(game.items[item].income)">Income</div>
 							</div>
 							<div class="item-stat-values">
-								<div class="item-stat-value {{game.items[item].isZero('defenseStat')}} defenseStat">
-									{{game.prettyIntCompact(game.items[item].defenseStat)}}
+								<div class="item-stat-value defenseStat" ng-class="zeroClass(game.items[item].defenseStat)">
+									{{prettyIntCompact(game.items[item].defenseStat)}}
 								</div>
-								<div class="item-stat-value {{game.items[item].isZero('movespeedStat')}} movespeedStat">
-									{{game.prettyIntCompact(game.items[item].movespeedStat)}}
+								<div class="item-stat-value movespeedStat" ng-class="zeroClass(game.items[item].movespeedStat)">
+									{{prettyIntCompact(game.items[item].movespeedStat)}}
 								</div>
-								<div class="item-stat-value {{game.items[item].isZero('damageStat')}} damageStat">
-									{{game.prettyIntCompact(game.items[item].damageStat)}}
+								<div class="item-stat-value damageStat" ng-class="zeroClass(game.items[item].damageStat)">
+									{{prettyIntCompact(game.items[item].damageStat)}}
 								</div>
-								<div class="item-stat-value {{game.items[item].isZero('attackrateStat')}} attackrateStat">
-									{{game.prettyIntCompact(game.items[item].attackrateStat)}}
+								<div class="item-stat-value attackrateStat" ng-class="zeroClass(game.items[item].attackrateStat)">
+									{{prettyIntCompact(game.items[item].attackrateStat)}}
 								</div>
-								<div class="item-stat-value {{game.items[item].isZero('income')}} income">
-									{{game.prettyIntCompact(game.items[item].income)}}
+								<div class="item-stat-value income" ng-class="zeroClass(game.items[item].income)">
+									{{prettyIntCompact(game.items[item].income)}}
 								</div>
 							</div>
 						</div>
@@ -316,7 +316,7 @@ ga('send', 'pageview');
 										<div class="upgrade-image" ng-style="{'background-image':'url(' + game.getItemImageUrl(upgradeAvailable) + ')'}">
 											<div class="upgrade-cost">
 												<i class="fa fa-database fa-sm icon-gold"></i>
-												{{game.prettyIntCompact(game.upgrades[upgradeAvailable].cost)}}
+												{{prettyIntCompact(game.upgrades[upgradeAvailable].cost)}}
 											</div>
 											<div class="upgrade-name">
 												{{upgradeAvailable}}
@@ -352,13 +352,13 @@ ga('send', 'pageview');
 						</div>
 						<br/>
 						<div id="time">
-							{{game.prettyTime(game.timePlayed)}}
+							{{prettyTime(game.timePlayed)}}
 						</div>
 					</div>
 				</div>
 				<div id="spells-container">
 					<div id="version-container">v {{version}}</div>
-					<div ng-repeat="spell in game.getObjectsByStatus(game.spells)" class="spell container {{game.getClassName(spell)}}"
+					<div ng-repeat="spell in game.getObjectsByStatus(game.spells)" class="spell container {{game.getSpellClassName(spell)}}"
 							 data-status="{{game.spells[spell].status}}" data-type="{{game.spells[spell].type}}">
 						<div class="spell-wrapper touch-target" data-toggle="tooltip" data-title="{{game.spells[spell].tooltip(game)}}" ng-click="game.spellClick(spell)">
 							<div class="spell-image" ng-style="{'background-image':'url(' + game.getSpellImageUrl(spell) + ')'}"></div>
@@ -366,7 +366,7 @@ ga('send', 'pageview');
 							<div class="spell-locked-image"><i class="fa fa-2x fa-lock"></i></div>
 							<div class="spell-time">{{game.spells[spell].getSpellTime()}}</div>
 							<div class="spell-text" ng-if="spell == 'Smite'" data-smite="{{game.isMonsterChampion(game.monster) ? 'challenging' : 'smite'}}">
-								{{game.prettyIntCompact(game.getSmiteDamage())}}
+								{{prettyIntCompact(game.getSmiteDamage())}}
 							</div>
 						</div>
 					</div>
@@ -406,51 +406,51 @@ ga('send', 'pageview');
 					<div class="progress-modal-title">General</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Chimes Collected </div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalChimes)}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(game.progress.general.totalChimes)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Clicked Chimes </div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.clickChimes)}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(game.progress.general.clickChimes)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Chime Clicks </div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.chimeClicks)}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(game.progress.general.chimeClicks)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Meeps Earned </div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalMeeps)}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(game.progress.general.totalMeeps)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Damage Dealt </div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalDamage)}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(game.progress.general.totalDamage)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Clicked Damage </div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.clickDamage)}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(game.progress.general.clickDamage)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Damage Clicks </div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.damageClicks)}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(game.progress.general.damageClicks)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Gold Earned </div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.goldEarned)}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(game.progress.general.goldEarned)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Gold Spent </div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.goldSpent)}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(game.progress.general.goldSpent)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Experience Earned </div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.experienceEarned)}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(game.progress.general.experienceEarned)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Time Played </div>
-						<div class="progress-stat-value">{{game.prettyTime(game.progress.general.timePlayed)}}</div>
+						<div class="progress-stat-value">{{prettyTime(game.progress.general.timePlayed)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Total Clicks </div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(game.progress.general.totalClicks)}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(game.progress.general.totalClicks)}}</div>
 					</div>
 					<div class="progress-stat-container">
 						<div class="progress-stat">Chime Points</div>
@@ -468,29 +468,29 @@ ga('send', 'pageview');
 					<div class="progress-modal-title">Fastest Times</div>
 					<div ng-repeat="object in game.progress.times | orderObjectBy: 'order' track by object.order" class="progress-stat-container progress-time">
 						<div class="progress-stat">{{object.difficulty.capitalize()}}</div>
-						<div class="progress-stat-value">{{object.count > 0 ? game.prettyTime(object.count) : '--'}}</div>
+						<div class="progress-stat-value">{{object.count > 0 ? prettyTime(object.count) : '--'}}</div>
 					</div>
 				</div>
 
 				<div class="progress-modal-column">
 					<div class="progress-modal-title">Items Bought</div>
-					<div ng-repeat="object in game.progress.items | orderObjectBy: 'order' track by object.order" data-status="{{game.items[indexToItem(object.item)].status}}" class="{{game.isZero(object.count)}} progress-stat-container progress-item">
-						<div class="progress-stat">{{indexToItem(object.item) + game.isPlural(2, indexToItem(object.item))}}</div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(object.count)}}</div>
+					<div ng-repeat="object in game.progress.items | orderObjectBy: 'order' track by object.order" data-status="{{game.items[indexToItem(object.item)].status}}" class="{{zeroClass(object.count)}} progress-stat-container progress-item">
+						<div class="progress-stat">{{indexToItem(object.item) + isPlural(2, indexToItem(object.item))}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(object.count)}}</div>
 					</div>
 					<div class="progress-modal-spacer"></div>
 
 					<div class="progress-modal-title">Monsters Killed</div>
-					<div ng-repeat="object in game.progress.monsters | orderObjectBy: 'order' track by object.order" data-status="{{game.monsters[indexToMonster(object.monster)].status}}" class="{{game.isZero(object.count)}} progress-stat-container progress-monster">
-						<div class="progress-stat">{{indexToMonster(object.monster) + game.isPlural(2, indexToMonster(object.monster))}}</div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(object.count)}}</div>
+					<div ng-repeat="object in game.progress.monsters | orderObjectBy: 'order' track by object.order" data-status="{{game.monsters[indexToMonster(object.monster)].status}}" class="{{zeroClass(object.count)}} progress-stat-container progress-monster">
+						<div class="progress-stat">{{indexToMonster(object.monster) + isPlural(2, indexToMonster(object.monster))}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(object.count)}}</div>
 					</div>
 					<div class="progress-modal-spacer"></div>
 
 					<div class="progress-modal-title">Spells Used</div>
-					<div ng-repeat="object in game.progress.spells | orderObjectBy: 'order' track by object.order" data-status="{{game.spells[indexToSpell(object.spell)].status}}" class="{{game.isZero(object.count)}} progress-stat-container progress-spell">
+					<div ng-repeat="object in game.progress.spells | orderObjectBy: 'order' track by object.order" data-status="{{game.spells[indexToSpell(object.spell)].status}}" class="{{zeroClass(object.count)}} progress-stat-container progress-spell">
 						<div class="progress-stat">{{indexToSpell(object.spell)}}</div>
-						<div class="progress-stat-value">{{game.prettyIntCompact(object.count)}}</div>
+						<div class="progress-stat-value">{{prettyIntCompact(object.count)}}</div>
 					</div>
 
 				</div>
@@ -536,9 +536,85 @@ ga('send', 'pageview');
 					</div>
 				</div>
 
-				<!-- <div id="active-rune-stats-container">
-
-				</div> -->
+				<div id="rune-info-container">
+					<div id="rune-stats-container">
+						<!-- Flat stats -->
+						<div class="rune-stat flat-stat" ng-class="zeroClass(game.runeDefense)">
+							<div class="rune-stat-value" ng-bind="game.runeDefense"></div>
+							<div class="rune-stat-name"> flat defense</div>
+						</div>
+						<div class="rune-stat flat-stat" ng-class="zeroClass(game.runeMovespeed)">
+							<div class="rune-stat-value" ng-bind="game.runeMovespeed"></div>
+							<div class="rune-stat-name"> flat movespeed</div>
+						</div>
+						<div class="rune-stat flat-stat" ng-class="zeroClass(game.runeDamage)">
+							<div class="rune-stat-value" ng-bind="game.runeDamage"></div>
+							<div class="rune-stat-name"> flat damage</div>
+						</div>
+						<div class="rune-stat flat-stat" ng-class="zeroClass(game.runeAttackrate)">
+							<div class="rune-stat-value" ng-bind="game.runeAttackrate"></div>
+							<div class="rune-stat-name"> flat attackrate</div>
+						</div>
+						<!-- Scaling stats -->
+						<div class="rune-stat" ng-class="zeroClass(game.runeScalingDefense - 1)">
+							<div class="rune-stat-value" ng-bind="(game.runeScalingDefense - 1) * 100"></div>
+							<div class="rune-stat-name">% total defense</div>
+						</div>
+						<div class="rune-stat" ng-class="zeroClass(game.runeScalingMovespeed - 1)">
+							<div class="rune-stat-value" ng-bind="(game.runeScalingMovespeed - 1) * 100"></div>
+							<div class="rune-stat-name">% total movespeed</div>
+						</div>
+						<div class="rune-stat" ng-class="zeroClass(game.runeScalingDamage - 1)">
+							<div class="rune-stat-value" ng-bind="(game.runeScalingDamage - 1) * 100"></div>
+							<div class="rune-stat-name">% total damage</div>
+						</div>
+						<div class="rune-stat" ng-class="zeroClass(game.runeScalingAttackrate - 1)">
+							<div class="rune-stat-value" ng-bind="(game.runeScalingAttackrate - 1) * 100"></div>
+							<div class="rune-stat-name">% total attackrate</div>
+						</div>
+						<!-- Gold -->
+						<div class="rune-stat flat-stat" ng-class="zeroClass(game.runeGold)">
+							<div class="rune-stat-value" ng-bind="game.runeGold"></div>
+							<div class="rune-stat-name"> starting gold</div>
+						</div>
+						<div class="rune-stat" ng-class="zeroClass(game.runeScalingGold - 1)">
+							<div class="rune-stat-value" ng-bind="(game.runeScalingGold - 1) * 100"></div>
+							<div class="rune-stat-name">% gold earned</div>
+						</div>
+						<!-- Cooldown Reduction -->
+						<div class="rune-stat" ng-class="zeroClass(game.runeCooldownReduction)">
+							<div class="rune-stat-value" ng-bind="game.runeCooldownReduction * 100"></div>
+							<div class="rune-stat-name">% cooldown reduction</div>
+						</div>
+						<div class="rune-stat" ng-class="zeroClass(game.runeScalingCooldownReduction)">
+							<div class="rune-stat-value" ng-bind="game.runeScalingCooldownReduction * 100"></div>
+							<div class="rune-stat-name">% scaling cooldown reduction</div>
+						</div>
+						<!-- Clicking -->
+						<div class="rune-stat" ng-class="zeroClass(game.runeChimeClicking - 1)">
+							<div class="rune-stat-value" ng-bind="(game.runeChimeClicking - 1) * 100"></div>
+							<div class="rune-stat-name">% total chimes per click</div>
+						</div>
+						<div class="rune-stat" ng-class="zeroClass(game.runeMonsterClicking - 1)">
+							<div class="rune-stat-value" ng-bind="(game.runeMonsterClicking - 1) * 100"></div>
+							<div class="rune-stat-name">% total damage per click</div>
+						</div>
+						<!-- Damage Bonuses -->
+						<div class="rune-stat" ng-class="zeroClass(game.runePenetration - 1)">
+							<div class="rune-stat-value" ng-bind="(game.runePenetration - 1) * 100"></div>
+							<div class="rune-stat-name">% bonus champion damage</div>
+						</div>
+						<div class="rune-stat" ng-class="zeroClass(game.runeTeemoSlayer - 1)">
+							<div class="rune-stat-value" ng-bind="(game.runeTeemoSlayer - 1) * 100"></div>
+							<div class="rune-stat-name">% bonus Teemo damage</div>
+						</div>
+					</div>
+					<div id="rune-actions-container">
+						<div id="rune-clear-page" ng-click=""><i class='fa fa-trash'></i> Clear Page</div>
+						<div id="rune-new-game" ng-click=""><i class='fa fa-undo'></i> New Game</div>
+						<div id="rune-chime-points"> {{(game.progress.general.chimePoints + game.points).toFixed(1)}} cp</div>
+					</div>
+				</div>
 
 				<div id="available-runes-container">
 					<div id="available-runes-header">
@@ -576,22 +652,8 @@ ga('send', 'pageview');
 								</div>
 							</div>
 						</div>
-						<!-- available-runes -->
 					</div>
-					<div id="available-seals-tab" class="available-runes-tab">
-						<!-- available-runes -->
-					</div>
-					<div id="available-glyphs-tab" class="available-runes-tab">
-						<!-- available-runes -->
-					</div>
-					<div id="available-quints-tab" class="available-runes-tab">
-						<!-- available-runes -->
-					</div>
-
-
-
 				</div>
-
 			</div>
 		</div>
 	</div>

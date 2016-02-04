@@ -48,7 +48,7 @@ Spell.Create = function(game) {
     function(game) {},
     function(game) {return game.level >= 6},
     function(game) {return this.status == LOCKED ? "":
-    "+3% meeps earned from chimes.</br>(<b>" + game.prettyIntCompact(Math.ceil(game.meepsEarned * game.flashBonus)) + "</b>)</br></br>" + Math.round(this.cooldown) + " second cooldown. <b>(W)</b>"}
+    "+3% meeps earned from chimes.</br>(<b>" + prettyIntBigCompact(Math.ceil(game.meepsEarned * game.flashBonus)) + "</b>)</br></br>" + Math.round(this.cooldown) + " second cooldown. <b>(W)</b>"}
   );
 
   spells[SMITE] = new Spell(game, 0, 60, SPELL_ACTIVE, MONSTER_ALL,
@@ -67,7 +67,7 @@ Spell.Create = function(game) {
     function(game) {game.smiteDamageRate = 0},
     function(game) {return game.level >= 2},
     function(game) {return this.status == LOCKED ? "":
-    "Deal <b>" + game.prettyIntCompact(game.getSmiteDamage()) + "</b> damage " + (!game.isMonsterChampion(game.monster) ? "instantly" : "over 5 seconds") +".  Damage scales with level and experience.</br></br>Non-champion kills with smite grant +20% gold.</br></br>" + Math.round(this.cooldown) + " second cooldown. <b>(E)</b>"}
+    "Deal <b>" + prettyIntBigCompact(game.getSmiteDamage()) + "</b> damage " + (!game.isMonsterChampion(game.monster) ? "instantly" : "over 5 seconds") +".  Damage scales with level and experience.</br></br>Non-champion kills with smite grant +20% gold.</br></br>" + Math.round(this.cooldown) + " second cooldown. <b>(E)</b>"}
     );
 
   spells[EXHAUST] = new Spell(game, 10, 90, SPELL_ACTIVE, MONSTER_CHAMPION,
@@ -85,8 +85,8 @@ Spell.Create = function(game) {
     function(game) {showRing(IGNITE+'2', RING_DURATION);},
     function(game) {return game.level >= 17},
     function(game) {return this.status == LOCKED ? "":
-    "+3% damage from items.</br>(<b>" + game.prettyIntCompact(Math.ceil(game.damageBought * .03)) + "</b>)</br></br>" + Math.round(this.cooldown) + " second cooldown. <b>(R)</b>"}
-    //"Deal <b>" + game.prettyIntCompact(game.igniteDamage) + "</b> damage over 5 seconds.  Damage scales with level.  Only works against champions.  </br></br>120 second cooldown. <b>(R)</b>"}
+    "+3% damage from items.</br>(<b>" + prettyIntBigCompact(Math.ceil(game.damageBought * .03)) + "</b>)</br></br>" + Math.round(this.cooldown) + " second cooldown. <b>(R)</b>"}
+    //"Deal <b>" + prettyIntBigCompact(game.igniteDamage) + "</b> damage over 5 seconds.  Damage scales with level.  Only works against champions.  </br></br>120 second cooldown. <b>(R)</b>"}
   );
 
 
@@ -143,8 +143,8 @@ Spell.Create = function(game) {
     function(game) {},
     function(game) {return game.upgrades[FROST_QUEENS_CLAIM].status == PURCHASED;},
     function(game) {if (this.status == LOCKED) return "";
-                    else if (game.monster == TEEMO) return "Gain <b>" + (game.tributeBonus * 100 / 15).toFixed(1) + "%</b> of reward gold on next Teemo click.  Gold scales with Spellthief's Edges owned.</br></br>Deals <b>" + game.prettyIntCompact(game.damageStat * game.attackrateStat * game.exhaustBonus * 5, 1) + "</b> bonus damage (scales with DPS).</br></br>" + Math.round(this.cooldown) + " second cooldown.";
-                    else return "Gain <b>" + (game.tributeBonus * 100).toFixed(1) + "%</b> of reward gold on next monster click.  Gold scales with Spellthief's Edges owned.</br></br>Deals <b>" + game.prettyIntCompact(game.damageStat * game.attackrateStat * game.exhaustBonus * 5, 1) + "</b> bonus damage to champions (scales with DPS).</br></br>" + Math.round(this.cooldown) + " second cooldown.";}
+                    else if (game.monster == TEEMO) return "Gain <b>" + (game.tributeBonus * 100 / 15).toFixed(1) + "%</b> of reward gold on next Teemo click.  Gold scales with Spellthief's Edges owned.</br></br>Deals <b>" + prettyIntBigCompact(game.damageStat * game.attackrateStat * game.exhaustBonus * 5, 1) + "</b> bonus damage (scales with DPS).</br></br>" + Math.round(this.cooldown) + " second cooldown.";
+                    else return "Gain <b>" + (game.tributeBonus * 100).toFixed(1) + "%</b> of reward gold on next monster click.  Gold scales with Spellthief's Edges owned.</br></br>Deals <b>" + prettyIntBigCompact(game.damageStat * game.attackrateStat * game.exhaustBonus * 5, 1) + "</b> bonus damage to champions (scales with DPS).</br></br>" + Math.round(this.cooldown) + " second cooldown.";}
   );
 
   return spells;

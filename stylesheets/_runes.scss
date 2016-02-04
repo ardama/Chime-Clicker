@@ -145,9 +145,107 @@
 	opacity: 1;
 }
 
-#active-rune-stats-container {
+#rune-info-container {
+	display: flex;
+	width: calc(660px - 32px);
+	padding: 8px 16px 16px 16px;
 	min-height: 50px;
 }
+
+#rune-actions-container {
+	display: flex;
+	flex-direction: column;
+
+	width: 136px;
+	padding-left: 16px;
+
+	#rune-clear-page,
+	#rune-new-game {
+		width: 100%;
+		height: 30px;
+
+		line-height: 30px;
+
+		margin: 2px 0 6px 0;
+
+		color: $lightTextSecondary;
+		text-align: center;
+		background-color: $primary900;
+
+		@include box-shadow(0 1px 3px -1px $boxShadow);
+		@include transition(color 100ms, background-color 100ms, margin 100ms, box-shadow 100ms);
+
+		i {
+			font-size: 12px;
+			margin-right: 4px;
+		}
+	}
+
+	#rune-clear-page:hover,
+	#rune-new-game:hover {
+		margin: 1px 0 7px 0;
+		color: $lightTextPrimary;
+		background-color: $primary700;
+
+		@include box-shadow(0 2px 5px -2px $boxShadow);
+	}
+	#rune-clear-page:active,
+	#rune-new-game:active {
+		margin: 2px 0 6px 0;
+		color: $lightTextPrimary;
+		background-color: $primary900;
+
+		@include box-shadow(0 1px 3px -1px $boxShadow);
+	}
+
+	#rune-chime-points {
+		width: 100%;
+		height: 30px;
+
+		line-height: 30px;
+
+		margin: 20px 0 0 0;
+
+		color: $lightTextSecondary;
+		text-align: center;
+
+		background-color: $primary1100;
+		@include box-shadow(0 0px 4px 0px $boxShadow inset);
+	}
+}
+
+#rune-stats-container {
+	display: flex;
+	flex-wrap: wrap;
+
+	width: calc(660px - 32px - 136px - 16px); //476px
+
+
+	.rune-stat {
+		display: flex;
+
+		width: 238px;
+		height: 20px;
+
+		line-height: 20px;
+		font-size: 14px;
+		color: $lightTextSecondary;
+	}
+
+	.rune-stat.zero {
+		display: none;
+	}
+
+	.rune-stat::before {
+		content: "+";
+	}
+
+	.rune-stat.flat-stat .rune-stat-name{
+		margin-left: 3px;
+	}
+
+}
+
 
 #available-runes-container {
 	display: flex;
@@ -201,6 +299,7 @@
 	width: 160px;
 	height: 4px;
 
+	@include box-shadow(0 2px 2px -1px $boxShadow);
 	@include transition(background-color 100ms);
 }
 
@@ -279,6 +378,7 @@
 	line-height: 16px;
 
 	background-color: $primary900;
+	@include box-shadow(0 0 4px -1px $boxShadow);
 
 	.rune-left {
 		width: 40px;

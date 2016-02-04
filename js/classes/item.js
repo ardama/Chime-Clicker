@@ -28,10 +28,6 @@ Item.prototype.Init = function(game, cost, level, defenseStat, movespeedStat, da
   this.cost1000 = this.calculatePurchaseCost(1000);
 };
 
-Item.prototype.isZero = function(stat) {
-  return this[stat] ? '' : 'item-zero';
-};
-
 Item.prototype.calculateTotalCost  = function(n) {
   return this.startCost * SCALE_ITEM_COST * ((Math.pow(n, 3) - n) / 6) + n * this.startCost;
 };

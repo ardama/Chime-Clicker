@@ -1,4 +1,4 @@
-var version = "0.4.0.2";
+var version = "0.4.0.3";
 
 ///// CONSTANTS ////////////////////
 // Items
@@ -491,6 +491,18 @@ GameApp.controller('GameController', function($scope, $sce) {
       $scope.game.importGame($('#import-modal-text').val());
     }
 
+    $scope.prettyInt = function(num, fixed) {return prettyIntBig(num, fixed);};
+    $scope.prettyIntCompact = function(num, fixed) {return prettyIntBigCompact(num, fixed);};
+    $scope.prettyIntVariable = function(num, fixed, width) {
+      width = width || 1200;
+      return window.innerWidth > width ? prettyIntBig(num, fixed) : prettyIntBigCompact(num, fixed);
+    };
+
+    $scope.prettyTime = function(seconds) {return prettyTime(seconds);};
+    $scope.isPlural = function(num, name) {
+      return (num == 1 || IGNORE_PLURALS.indexOf(name) > -1) ? '' : (SPECIAL_PLURALS.indexOf(name) > -1 ? 'es': 's');
+    };
+
     $scope.LOCKED = LOCKED;
     $scope.AVAILABLE = AVAILABLE;
     $scope.UNAVAILABLE = UNAVAILABLE;
@@ -520,6 +532,7 @@ GameApp.controller('GameController', function($scope, $sce) {
     $scope.trustHtml = function(s) {return $sce.trustAsHtml(s)};
     $scope.range = function(n) {return new Array(n);};
     $scope.showAvailableRunes = function(t) {return showAvailableRunes(t)};
+    $scope.zeroClass = function(n) {return n == 0 ? 'zero' : '';}
 
 });
 
@@ -529,7 +542,7 @@ function initializeButtons(game) {
     if (game.paused) return;
 
     game.chimesClick();
-    var text = "+" + game.prettyIntCompact(game.chimesPerClick);
+    var text = "+" + prettyIntBigCompact(game.chimesPerClick);
     createFloatingText($(this), text, e);
   });
 
@@ -537,7 +550,7 @@ function initializeButtons(game) {
     if (game.paused) return;
 
     game.damageClick();
-    var text = "-" + game.prettyIntCompact(game.damagePerClick);
+    var text = "-" + prettyIntBigCompact(game.damagePerClick);
     createFloatingText($(this), text, e);
   });
 
@@ -810,6 +823,9 @@ $(window).load(function() {
   $('body').click(function(){
     if (modal && modal != 'runes') hideModal();
   });
+
+  $('#available-marks-tab').addClass('active');
+  $('#available-runes-header-marks').addClass('active');
 
   $(window).scroll(function(event) {
     if (modal) hideModal();
