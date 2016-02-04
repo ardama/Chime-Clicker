@@ -1,4 +1,4 @@
-var version = "0.4.0.3";
+var version = "0.4.0.4";
 
 ///// CONSTANTS ////////////////////
 // Items

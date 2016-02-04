@@ -517,21 +517,21 @@ ga('send', 'pageview');
 						<div id="active-seals-header" class="active-runes-header"></div>
 						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game[RUNE_TYPES[1]][$index])">
 							<div class="active-rune-image" data-status="{{game[RUNE_TYPES[1]][$index] ? 1 : 0}}"
-									 ng-style="{'background-image':'url(' + game.getRuneImageUrl(game[RUNE_TYPES[1]][$index] ? [RUNE_TYPES[1]][$index].image : '') + ')'}"></div>
+									 ng-style="{'background-image':'url(' + game.getRuneImageUrl(game[RUNE_TYPES[1]][$index] ? game[RUNE_TYPES[1]][$index].image : '') + ')'}"></div>
 						</div>
 					</div>
 					<div id="active-glyphs" class="active-runes">
 						<div id="active-glyphs-header" class="active-runes-header"></div>
 						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game[RUNE_TYPES[2]][$index])">
 							<div class="active-rune-image" data-status="{{game[RUNE_TYPES[2]][$index] ? 1 : 0}}"
-									 ng-style="{'background-image':'url(' + game.getRuneImageUrl(game[RUNE_TYPES[2]][$index] ? [RUNE_TYPES[2]][$index].image : '') + ')'}"></div>
+									 ng-style="{'background-image':'url(' + game.getRuneImageUrl(game[RUNE_TYPES[2]][$index] ? game[RUNE_TYPES[2]][$index].image : '') + ')'}"></div>
 						</div>
 					</div>
 					<div id="active-quints" class="active-runes">
 						<div id="active-quints-header" class="active-runes-header"></div>
-						<div ng-repeat="n in range(3) track by $index" class="active-rune" ng-click="game.removeRune([RUNE_TYPES[3]][$index])">
+						<div ng-repeat="n in range(3) track by $index" class="active-rune" ng-click="game.removeRune(game[RUNE_TYPES[3]][$index])">
 							<div class="active-rune-image" data-status="{{game[RUNE_TYPES[3]][$index] ? 1 : 0}}"
-									 ng-style="{'background-image':'url(' + game.getRuneImageUrl([RUNE_TYPES[3]][$index] ? [RUNE_TYPES[3]][$index].image : '') + ')'}"></div>
+									 ng-style="{'background-image':'url(' + game.getRuneImageUrl(game[RUNE_TYPES[3]][$index] ? game[RUNE_TYPES[3]][$index].image : '') + ')'}"></div>
 						</div>
 					</div>
 				</div>
@@ -557,19 +557,19 @@ ga('send', 'pageview');
 						</div>
 						<!-- Scaling stats -->
 						<div class="rune-stat" ng-class="zeroClass(game.runeScalingDefense - 1)">
-							<div class="rune-stat-value" ng-bind="(game.runeScalingDefense - 1) * 100"></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.runeScalingDefense - 1) * 100)"></div>
 							<div class="rune-stat-name">% total defense</div>
 						</div>
 						<div class="rune-stat" ng-class="zeroClass(game.runeScalingMovespeed - 1)">
-							<div class="rune-stat-value" ng-bind="(game.runeScalingMovespeed - 1) * 100"></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.runeScalingMovespeed - 1) * 100)"></div>
 							<div class="rune-stat-name">% total movespeed</div>
 						</div>
 						<div class="rune-stat" ng-class="zeroClass(game.runeScalingDamage - 1)">
-							<div class="rune-stat-value" ng-bind="(game.runeScalingDamage - 1) * 100"></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.runeScalingDamage - 1) * 100)"></div>
 							<div class="rune-stat-name">% total damage</div>
 						</div>
 						<div class="rune-stat" ng-class="zeroClass(game.runeScalingAttackrate - 1)">
-							<div class="rune-stat-value" ng-bind="(game.runeScalingAttackrate - 1) * 100"></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.runeScalingAttackrate - 1) * 100)"></div>
 							<div class="rune-stat-name">% total attackrate</div>
 						</div>
 						<!-- Gold -->
@@ -578,34 +578,34 @@ ga('send', 'pageview');
 							<div class="rune-stat-name"> starting gold</div>
 						</div>
 						<div class="rune-stat" ng-class="zeroClass(game.runeScalingGold - 1)">
-							<div class="rune-stat-value" ng-bind="(game.runeScalingGold - 1) * 100"></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.runeScalingGold - 1) * 100)"></div>
 							<div class="rune-stat-name">% gold earned</div>
 						</div>
 						<!-- Cooldown Reduction -->
 						<div class="rune-stat" ng-class="zeroClass(game.runeCooldownReduction)">
-							<div class="rune-stat-value" ng-bind="game.runeCooldownReduction * 100"></div>
+							<div class="rune-stat-value" ng-bind="prettyInt(game.runeCooldownReduction * 100)"></div>
 							<div class="rune-stat-name">% cooldown reduction</div>
 						</div>
 						<div class="rune-stat" ng-class="zeroClass(game.runeScalingCooldownReduction)">
-							<div class="rune-stat-value" ng-bind="game.runeScalingCooldownReduction * 100"></div>
+							<div class="rune-stat-value" ng-bind="prettyInt(game.runeScalingCooldownReduction * 100)"></div>
 							<div class="rune-stat-name">% scaling cooldown reduction</div>
 						</div>
 						<!-- Clicking -->
 						<div class="rune-stat" ng-class="zeroClass(game.runeChimeClicking - 1)">
-							<div class="rune-stat-value" ng-bind="(game.runeChimeClicking - 1) * 100"></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.runeChimeClicking - 1) * 100)"></div>
 							<div class="rune-stat-name">% total chimes per click</div>
 						</div>
 						<div class="rune-stat" ng-class="zeroClass(game.runeMonsterClicking - 1)">
-							<div class="rune-stat-value" ng-bind="(game.runeMonsterClicking - 1) * 100"></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.runeMonsterClicking - 1) * 100)"></div>
 							<div class="rune-stat-name">% total damage per click</div>
 						</div>
 						<!-- Damage Bonuses -->
 						<div class="rune-stat" ng-class="zeroClass(game.runePenetration - 1)">
-							<div class="rune-stat-value" ng-bind="(game.runePenetration - 1) * 100"></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.runePenetration - 1) * 100)"></div>
 							<div class="rune-stat-name">% bonus champion damage</div>
 						</div>
 						<div class="rune-stat" ng-class="zeroClass(game.runeTeemoSlayer - 1)">
-							<div class="rune-stat-value" ng-bind="(game.runeTeemoSlayer - 1) * 100"></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.runeTeemoSlayer - 1) * 100)"></div>
 							<div class="rune-stat-name">% bonus Teemo damage</div>
 						</div>
 					</div>
