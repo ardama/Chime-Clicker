@@ -21,7 +21,7 @@ Rune.prototype.Init = function(game, type, name, tier, difficulty, apply, toolti
 };
 
 Rune.prototype.getLockedText = function() {
-  return "Unlock by completing the game on <b>" + this.difficulty.capitalize() + "</b>" + (this.difficulty == 'impossible' ? "" : " or higher");
+  return "Unlock by completing <b>" + this.difficulty.capitalize() + "</b>";
 };
 
 Rune.GetImageName = function(rune) {

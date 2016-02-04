@@ -285,16 +285,6 @@
 		height: 100%;
 	}
 
-	.rune-middle {
-		width: calc(100% - 40px - 60px);
-		height: 100%;
-	}
-
-	.rune-right {
-		width: 60px;
-		height: 100%;
-	}
-
 	.rune-image {
 		width: calc(100% - 8px);
 		height: calc(100% - 8px);
@@ -305,9 +295,121 @@
 		background-size: cover;
 	}
 
+	.rune-middle {
+		width: calc(100% - 40px - 75px - 12px);
+		height: 100%;
+
+		padding: 4px 6px;
+
+		b {
+			color: $smite;
+			font-weight: normal;
+		}
+
+		.rune-locked-description {
+			line-height: 32px;
+		}
+
+		.rune-name {
+			height: 16px;
+			line-height: 16px;
+		}
+
+		.rune-description {
+			height: 16px;
+			line-height: 16px;
+
+			color: $lightTextSecondary;
+		}
+	}
+
+	.rune-right {
+		display: flex;
+		flex-wrap: wrap;
+
+		width: 75px;
+		height: 100%;
+
+		color: $lightTextSecondary;
+
+		i {
+			font-size: 10px;
+		}
+	}
+
+	.rune-count {
+		width: 24px;
+		height: 40px;
+
+		line-height: 40px;
+		font-size: 20px;
+		font-weight: bold;
+		text-align: center;
+
+		border-left: 1px solid $primary1000;
+		cursor: default;
+	}
+
+
 	.rune-controls {
 		display: flex;
+		flex-wrap: wrap;
+
+		width: 50px;
+		height: 40px;
+		line-height: 20px;
+
+		text-align: center;
+
+		.rune-purchase {
+			width: 43px;
+			height: 18px;
+			line-height: 18px;
+			text-align: right;
+
+			padding: 1px 6px 0 0;
+			border-bottom: 1px solid $primary1000;
+			border-left: 1px solid $primary1000;
+
+			@include transition(color 100ms, background-color 100ms);
+		}
+
+		.rune-remove,
+		.rune-add {
+			width: 24px;
+			border-left: 1px solid $primary1000;
+
+			font-weight: bold;
+			font-size: 18px;
+
+			@include transition(color 100ms, background-color 100ms);
+		}
+		.rune-remove.disabled,
+		.rune-add.disabled {
+			color: $lightTextDisabled;
+			cursor: default;
+		}
 	}
+
+	.rune-purchase:hover,
+	.rune-remove:hover,
+	.rune-add:hover {
+		color: $lightTextPrimary;
+		background-color: $primary700;
+	}
+
+	.rune-purchase:active,
+	.rune-remove:active,
+	.rune-add:active {
+		background-color: $primary900;
+	}
+
+	.rune-remove.disabled:hover,
+	.rune-add.disabled:hover {
+		color: $lightTextDisabled;
+		background-color: $primary900;
+	}
+
 }
 
 // LOCKED Rune
@@ -323,6 +425,9 @@
 // AVAILABLE Rune
 .rune[data-status="1"] {
 	.rune-left {
+		cursor: pointer;
+	}
+	.rune-middle {
 		cursor: pointer;
 	}
 	.rune-right {

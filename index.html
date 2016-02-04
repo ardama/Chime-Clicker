@@ -547,27 +547,31 @@ ga('send', 'pageview');
 							<div class="available-runes-header-bar"></div>
 						</div>
 					</div>
-					<div ng-repeat="type in RUNE_TYPES" id="available-{{type.toLowerCase()}}-tab" class="available-runes-tab active">
+					<div ng-repeat="type in RUNE_TYPES" id="available-{{type.toLowerCase()}}s-tab" class="available-runes-tab">
 						<div ng-repeat="(runeName, runeSet) in game.runes[type] track by $index" class="rune-set">
 							<div ng-repeat="(runeTier, rune) in runeSet track by $index" class="rune" data-status="{{rune.status}}">
 								<div class="rune-left" ng-click="game.addRune(rune)">
 									<div class="rune-left-overlay"></div>
 									<div class="rune-image" ng-style="{'background-image':'url(' + game.getRuneImageUrl(rune.image) +')'}"></div>
 								</div>
-								<div class="rune-middle">
+								<div class="rune-middle" ng-click="game.addRune(rune)">
 									<div class="rune-middle-overlay">
-										<div class="rune-locked-description">{{rune.tooltip()}}</div>
+										<div class="rune-locked-description" ng-bind-html="trustHtml(rune.tooltip(game))"></div>
 									</div>
-									<div class="rune-name">{{rune.fullName}}</div>
-									<div class="rune-description">{{rune.tooltip()}}</div>
+									<div class="rune-name" ng-bind="rune.fullName"></div>
+									<div class="rune-description" ng-bind-html="trustHtml(rune.tooltip(game))"></div>
 								</div>
 								<div class="rune-right">
 									<div class="rune-right-overlay"></div>
-									<div class="rune-purchase" ng-click="game.buyRune(rune)">{{rune.cost}} CP</div>
+									<div class="rune-count">{{rune.purchased - rune.count}}</div>
 									<div class="rune-controls">
-										<div class="rune-remove" ng-click="game.removeRune(rune)">-</div>
-										<div class="rune-count">{{rune.purchased - rune.count}}</div>
-										<div class="rune-add" ng-click="game.addRune(rune)">+</div>
+										<div class="rune-purchase" ng-click="game.buyRune(rune)">{{rune.cost}} cp</div>
+										<div class="rune-add {{rune.purchased - rune.count == 0 ? 'disabled' : ''}}" ng-click="game.addRune(rune)">
+											+
+										</div>
+										<div class="rune-remove {{rune.count == 0 ? 'disabled' : ''}}" ng-click="game.removeRune(rune)">
+											&ndash;
+										</div>
 									</div>
 								</div>
 							</div>
