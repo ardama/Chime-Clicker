@@ -52,9 +52,9 @@ ga('send', 'pageview');
 			<div id="header-save" class="header-link" ng-click="game.save()">
 				<i class='fa fa-save'></i>
 			</div>
-			<div id="header-issues" class="header-link" onclick="showSubpage('issues')">
+			<!-- <div id="header-issues" class="header-link" onclick="showSubpage('issues')">
 				Issues
-			</div>
+			</div> -->
 			<div id="header-about" class="header-link" onclick="showSubpage('about')">
 				About
 			</div>
@@ -391,7 +391,7 @@ ga('send', 'pageview');
 			<div class="menu-button button touch-target" ng-click="game.showNewGameModal(false)"><i class='fa fa-undo'></i> New Game</div>
 			<div class="menu-button button touch-target" ng-click="game.pauseGame()"><i class='fa fa-pause'></i> {{game.paused ? 'Unpause' : 'Pause'}} Game</div>
 			<div class="menu-button button touch-target" ng-click="game.exportGame()"><i class="fa fa-upload"></i> Export Save</div>
-			<div class="menu-button button touch-target" onclick="showImportModal()"><i class="fa fa-download"></i> Import Save</div>
+			<div class="menu-button button touch-target" onclick="showModal('import', {})"><i class="fa fa-download"></i> Import Save</div>
 			<div class="menu-button button touch-target" ng-click="game.showNewGameModal(true)"><i class='fa fa-trash'></i> Hard Reset</div>
 		</div>
 	</div>
@@ -508,29 +508,33 @@ ga('send', 'pageview');
 				<div id="active-runes-container">
 					<div id="active-marks" class="active-runes">
 						<div id="active-marks-header" class="active-runes-header"></div>
-						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game[RUNE_TYPES[0]][$index])">
+						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRuneAtIndex(RUNE_TYPES[0], $index)">
 							<div class="active-rune-image" data-status="{{game[RUNE_TYPES[0]][$index] ? 1 : 0}}"
+									 data-title="{{game.getRuneTooltip(RUNE_TYPES[0], $index)}}" data-toggle="tooltip" data-position="top"
 									 ng-style="{'background-image':'url(' + game.getRuneImageUrl(game[RUNE_TYPES[0]][$index] ? game[RUNE_TYPES[0]][$index].image : '') + ')'}"></div>
 						</div>
 					</div>
 					<div id="active-seals" class="active-runes">
 						<div id="active-seals-header" class="active-runes-header"></div>
-						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game[RUNE_TYPES[1]][$index])">
+						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRuneAtIndex(RUNE_TYPES[1], $index)">
 							<div class="active-rune-image" data-status="{{game[RUNE_TYPES[1]][$index] ? 1 : 0}}"
+									 data-title="{{game.getRuneTooltip(RUNE_TYPES[1], $index)}}" data-toggle="tooltip" data-position="top"
 									 ng-style="{'background-image':'url(' + game.getRuneImageUrl(game[RUNE_TYPES[1]][$index] ? game[RUNE_TYPES[1]][$index].image : '') + ')'}"></div>
 						</div>
 					</div>
 					<div id="active-glyphs" class="active-runes">
 						<div id="active-glyphs-header" class="active-runes-header"></div>
-						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRune(game[RUNE_TYPES[2]][$index])">
+						<div ng-repeat="n in range(9) track by $index" class="active-rune" ng-click="game.removeRuneAtIndex(RUNE_TYPES[2], $index)">
 							<div class="active-rune-image" data-status="{{game[RUNE_TYPES[2]][$index] ? 1 : 0}}"
+									 data-title="{{game.getRuneTooltip(RUNE_TYPES[2], $index)}}" data-toggle="tooltip" data-position="top"
 									 ng-style="{'background-image':'url(' + game.getRuneImageUrl(game[RUNE_TYPES[2]][$index] ? game[RUNE_TYPES[2]][$index].image : '') + ')'}"></div>
 						</div>
 					</div>
 					<div id="active-quints" class="active-runes">
 						<div id="active-quints-header" class="active-runes-header"></div>
-						<div ng-repeat="n in range(3) track by $index" class="active-rune" ng-click="game.removeRune(game[RUNE_TYPES[3]][$index])">
+						<div ng-repeat="n in range(3) track by $index" class="active-rune" ng-click="game.removeRuneAtIndex(RUNE_TYPES[3], $index)">
 							<div class="active-rune-image" data-status="{{game[RUNE_TYPES[3]][$index] ? 1 : 0}}"
+									 data-title="{{game.getRuneTooltip(RUNE_TYPES[3], $index)}}" data-toggle="tooltip" data-position="top"
 									 ng-style="{'background-image':'url(' + game.getRuneImageUrl(game[RUNE_TYPES[3]][$index] ? game[RUNE_TYPES[3]][$index].image : '') + ')'}"></div>
 						</div>
 					</div>
@@ -538,81 +542,102 @@ ga('send', 'pageview');
 
 				<div id="rune-info-container">
 					<div id="rune-stats-container">
+						<!-- No Runes -->
+						<div id="rune-stats-none" class="rune-stat flat-stat" ng-class="zeroClass(game.getActiveRuneCount())">
+							<div class="rune-stat-value">No Runes Selected</div>
+						</div>
 						<!-- Flat stats -->
-						<div class="rune-stat flat-stat" ng-class="zeroClass(game.runeDefense)">
-							<div class="rune-stat-value" ng-bind="game.runeDefense"></div>
+						<div class="rune-stat flat-stat" ng-class="[zeroClass(game.tempRuneStats.defense), changedClass(game, 'defense')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="game.tempRuneStats.defense"></div>
 							<div class="rune-stat-name"> flat defense</div>
 						</div>
-						<div class="rune-stat flat-stat" ng-class="zeroClass(game.runeMovespeed)">
-							<div class="rune-stat-value" ng-bind="game.runeMovespeed"></div>
+						<div class="rune-stat flat-stat" ng-class="[zeroClass(game.tempRuneStats.movespeed), changedClass(game, 'movespeed')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="game.tempRuneStats.movespeed"></div>
 							<div class="rune-stat-name"> flat movespeed</div>
 						</div>
-						<div class="rune-stat flat-stat" ng-class="zeroClass(game.runeDamage)">
-							<div class="rune-stat-value" ng-bind="game.runeDamage"></div>
+						<div class="rune-stat flat-stat" ng-class="[zeroClass(game.tempRuneStats.damage), changedClass(game, 'damage')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="game.tempRuneStats.damage"></div>
 							<div class="rune-stat-name"> flat damage</div>
 						</div>
-						<div class="rune-stat flat-stat" ng-class="zeroClass(game.runeAttackrate)">
-							<div class="rune-stat-value" ng-bind="game.runeAttackrate"></div>
+						<div class="rune-stat flat-stat" ng-class="[zeroClass(game.tempRuneStats.attackrate), changedClass(game, 'attackrate')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="game.tempRuneStats.attackrate"></div>
 							<div class="rune-stat-name"> flat attackrate</div>
 						</div>
 						<!-- Scaling stats -->
-						<div class="rune-stat" ng-class="zeroClass(game.runeScalingDefense - 1)">
-							<div class="rune-stat-value" ng-bind="prettyInt((game.runeScalingDefense - 1) * 100)"></div>
+						<div class="rune-stat" ng-class="[zeroClass(game.tempRuneStats.scalingDefense - 1), changedClass(game, 'scalingDefense')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.tempRuneStats.scalingDefense - 1) * 100)"></div>
 							<div class="rune-stat-name">% total defense</div>
 						</div>
-						<div class="rune-stat" ng-class="zeroClass(game.runeScalingMovespeed - 1)">
-							<div class="rune-stat-value" ng-bind="prettyInt((game.runeScalingMovespeed - 1) * 100)"></div>
+						<div class="rune-stat" ng-class="[zeroClass(game.tempRuneStats.scalingMovespeed - 1), changedClass(game, 'scalingMovespeed')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.tempRuneStats.scalingMovespeed - 1) * 100)"></div>
 							<div class="rune-stat-name">% total movespeed</div>
 						</div>
-						<div class="rune-stat" ng-class="zeroClass(game.runeScalingDamage - 1)">
-							<div class="rune-stat-value" ng-bind="prettyInt((game.runeScalingDamage - 1) * 100)"></div>
+						<div class="rune-stat" ng-class="[zeroClass(game.tempRuneStats.scalingDamage - 1), changedClass(game, 'scalingDamage')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.tempRuneStats.scalingDamage - 1) * 100)"></div>
 							<div class="rune-stat-name">% total damage</div>
 						</div>
-						<div class="rune-stat" ng-class="zeroClass(game.runeScalingAttackrate - 1)">
-							<div class="rune-stat-value" ng-bind="prettyInt((game.runeScalingAttackrate - 1) * 100)"></div>
+						<div class="rune-stat" ng-class="[zeroClass(game.tempRuneStats.scalingAttackrate - 1), changedClass(game, 'scalingAttackrate')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.tempRuneStats.scalingAttackrate - 1) * 100)"></div>
 							<div class="rune-stat-name">% total attackrate</div>
 						</div>
 						<!-- Gold -->
-						<div class="rune-stat flat-stat" ng-class="zeroClass(game.runeGold)">
-							<div class="rune-stat-value" ng-bind="game.runeGold"></div>
+						<div class="rune-stat flat-stat" ng-class="[zeroClass(game.tempRuneStats.gold), changedClass(game, 'gold')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="game.tempRuneStats.gold"></div>
 							<div class="rune-stat-name"> starting gold</div>
 						</div>
-						<div class="rune-stat" ng-class="zeroClass(game.runeScalingGold - 1)">
-							<div class="rune-stat-value" ng-bind="prettyInt((game.runeScalingGold - 1) * 100)"></div>
+						<div class="rune-stat" ng-class="[zeroClass(game.tempRuneStats.scalingGold - 1), changedClass(game, 'scalingGold')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.tempRuneStats.scalingGold - 1) * 100)"></div>
 							<div class="rune-stat-name">% gold earned</div>
 						</div>
 						<!-- Cooldown Reduction -->
-						<div class="rune-stat" ng-class="zeroClass(game.runeCooldownReduction)">
-							<div class="rune-stat-value" ng-bind="prettyInt(game.runeCooldownReduction * 100)"></div>
+						<div class="rune-stat" ng-class="[zeroClass(game.tempRuneStats.cooldownReduction), changedClass(game, 'cooldownReduction')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="prettyInt(game.tempRuneStats.cooldownReduction * 100)"></div>
 							<div class="rune-stat-name">% cooldown reduction</div>
 						</div>
-						<div class="rune-stat" ng-class="zeroClass(game.runeScalingCooldownReduction)">
-							<div class="rune-stat-value" ng-bind="prettyInt(game.runeScalingCooldownReduction * 100)"></div>
+						<div class="rune-stat" ng-class="[zeroClass(game.tempRuneStats.scalingCooldownReduction), changedClass(game, 'scalingCooldownReduction')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="prettyInt(game.tempRuneStats.scalingCooldownReduction * 100)"></div>
 							<div class="rune-stat-name">% scaling cooldown reduction</div>
 						</div>
 						<!-- Clicking -->
-						<div class="rune-stat" ng-class="zeroClass(game.runeChimeClicking - 1)">
-							<div class="rune-stat-value" ng-bind="prettyInt((game.runeChimeClicking - 1) * 100)"></div>
+						<div class="rune-stat" ng-class="[zeroClass(game.tempRuneStats.chimeClicking - 1), changedClass(game, 'chimeClicking')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.tempRuneStats.chimeClicking - 1) * 100)"></div>
 							<div class="rune-stat-name">% total chimes per click</div>
 						</div>
-						<div class="rune-stat" ng-class="zeroClass(game.runeMonsterClicking - 1)">
-							<div class="rune-stat-value" ng-bind="prettyInt((game.runeMonsterClicking - 1) * 100)"></div>
+						<div class="rune-stat" ng-class="[zeroClass(game.tempRuneStats.monsterClicking - 1), changedClass(game, 'monsterClicking')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.tempRuneStats.monsterClicking - 1) * 100)"></div>
 							<div class="rune-stat-name">% total damage per click</div>
 						</div>
 						<!-- Damage Bonuses -->
-						<div class="rune-stat" ng-class="zeroClass(game.runePenetration - 1)">
-							<div class="rune-stat-value" ng-bind="prettyInt((game.runePenetration - 1) * 100)"></div>
+						<div class="rune-stat" ng-class="[zeroClass(game.tempRuneStats.penetration - 1), changedClass(game, 'penetration')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.tempRuneStats.penetration - 1) * 100)"></div>
 							<div class="rune-stat-name">% bonus champion damage</div>
 						</div>
-						<div class="rune-stat" ng-class="zeroClass(game.runeTeemoSlayer - 1)">
-							<div class="rune-stat-value" ng-bind="prettyInt((game.runeTeemoSlayer - 1) * 100)"></div>
+						<div class="rune-stat" ng-class="[zeroClass(game.tempRuneStats.teemoSlayer - 1), changedClass(game, 'teemoSlayer')]">
+							<div class="rune-stat-icon"><i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i></div>
+							<div class="rune-stat-value" ng-bind="prettyInt((game.tempRuneStats.teemoSlayer - 1) * 100)"></div>
 							<div class="rune-stat-name">% bonus Teemo damage</div>
 						</div>
 					</div>
 					<div id="rune-actions-container">
-						<div id="rune-clear-page" ng-click=""><i class='fa fa-trash'></i> Clear Page</div>
-						<div id="rune-new-game" ng-click=""><i class='fa fa-undo'></i> New Game</div>
-						<div id="rune-chime-points"> {{(game.progress.general.chimePoints + game.points).toFixed(1)}} cp</div>
+						<div id="rune-clear-page" ng-class="zeroClass(game.getActiveRuneCount())" ng-click="game.clearPage()"><i class='fa fa-trash'></i> Clear Page</div>
+						<div id="rune-undo-changes" ng-class="zeroClass(game.runesChanged)" ng-click="game.revertChanges()"><i class='fa fa-reply'></i> Reset Page</div>
+						<div id="rune-new-game" ng-click="game.showNewGameModal(null, null, 'runes')"><i class='fa fa-undo'></i> New Game</div>
+						<div id="rune-chime-points" data-toggle="tooltip" data-title="<div id='chime-points-tooltip'>Chime points (cp) available.  Earn points by completing the game.</div>" data-position="left"> {{(game.progress.general.chimePoints + game.points).toFixed(1)}} cp</div>
 					</div>
 				</div>
 
@@ -624,31 +649,34 @@ ga('send', 'pageview');
 						</div>
 					</div>
 					<div ng-repeat="type in RUNE_TYPES" id="available-{{type.toLowerCase()}}s-tab" class="available-runes-tab">
-						<div ng-repeat="(runeName, runeSet) in game.runes[type] track by $index" class="rune-set">
+						<div ng-repeat="runeSet in game.getRuneSets(type) track by $index" class="rune-set">
 							<div ng-repeat="(runeTier, rune) in runeSet track by $index" class="rune" data-status="{{rune.status}}">
-								<div class="rune-left" ng-click="game.addRune(rune)">
-									<div class="rune-left-overlay"></div>
+								<div class="rune-locked-overlay"></div>
+								<div class="rune-left" ng-click="game.addRune(rune)" ng-class="zeroClass(rune.purchased - rune.count)">
 									<div class="rune-image" ng-style="{'background-image':'url(' + game.getRuneImageUrl(rune.image) +')'}"></div>
+									<div class="rune-locked-image"><i class="fa fa-lock"></i></div>
 								</div>
-								<div class="rune-middle" ng-click="game.addRune(rune)">
-									<div class="rune-middle-overlay">
-										<div class="rune-locked-description" ng-bind-html="trustHtml(rune.tooltip(game))"></div>
-									</div>
+								<div class="rune-middle" ng-click="game.addRune(rune)" ng-class="zeroClass(rune.purchased - rune.count)">
+									<div class="rune-locked-description" ng-bind-html="trustHtml(rune.tooltip(game))"></div>
 									<div class="rune-name" ng-bind="rune.fullName"></div>
 									<div class="rune-description" ng-bind-html="trustHtml(rune.tooltip(game))"></div>
+									<div class="rune-active-bar" ng-style="{'height': rune.getPurchasedPercent() + '%'}">
+										<div class="rune-active-bar-fill" ng-style="{'height': rune.getActivePercent() + '%'}"></div>
+									</div>
 								</div>
 								<div class="rune-right">
-									<div class="rune-right-overlay"></div>
-									<div class="rune-count">{{rune.purchased - rune.count}}</div>
 									<div class="rune-controls">
-										<div class="rune-purchase" ng-click="game.buyRune(rune)">{{rune.cost}} cp</div>
-										<div class="rune-add {{rune.purchased - rune.count == 0 ? 'disabled' : ''}}" ng-click="game.addRune(rune)">
+										<div class="rune-add" ng-class="zeroClass(rune.purchased - rune.count)" ng-click="game.addRune(rune)">
 											+
 										</div>
-										<div class="rune-remove {{rune.count == 0 ? 'disabled' : ''}}" ng-click="game.removeRune(rune)">
+										<div class="rune-remove" ng-class="zeroClass(rune.count)" ng-click="game.removeRune(rune)">
 											&ndash;
 										</div>
 									</div>
+									<div class="rune-count">
+										<div class="rune-count-text" ng-class="zeroClass(rune.purchased)">{{rune.purchased - rune.count}}</div>
+									</div>
+									<div class="rune-purchase" ng-click="game.buyRune(rune)" ng-class="zeroClass(rune.purchased - 9)">{{rune.cost}}<br/>cp</div>
 								</div>
 							</div>
 						</div>
@@ -664,7 +692,7 @@ ga('send', 'pageview');
 			<div id="newgame-modal-body-container">
 				<div id="newgame-modal-text"></div>
 				<div id="newgame-modal-button-container" class="modal-button-container">
-					<div id="newgame-cancel" class="modal-button" onclick="hideModal()">Cancel</div>
+					<div id="newgame-cancel" class="modal-button">Cancel</div>
 					<div ng-repeat="difficulty in DIFFICULTIES" class="{{difficulty != game.newGameDifficulty || game.newGameReset ? 'hide': ''}} newgame-confirm modal-button" ng-click="game.newGame(false, difficulty)">New Game</div>
 					<div class="{{!game.newGameReset ? 'hide': ''}} newgame-confirm modal-button" ng-click="game.newGame(true, game.difficulty)">Reset</div>
 				</div>
@@ -678,7 +706,7 @@ ga('send', 'pageview');
 		</div>
 		<div id="win-modal-body" class="modal-body">
 			<div id="win-modal-body-container">
-				<div id="win-modal-text">Congratulations you killed Satan!<br/><br/> Feel free to rack up some more Teemo kills before restarting, or begin a new game now.  The more times Teemo dies before you end this game, the more Chime Points (CP) you&#8217;ll earn.  Right now CP&#8217;s don't do anything but I promise they will soon&trade;!</div>
+				<div id="win-modal-text">Congratulations you killed Satan!<br/><br/> Feel free to rack up some more Teemo kills before restarting, or begin a new game now.  The more times Teemo dies, the more Chime Points (cp) you&#8217;ll earn.  Open up the <b>Runes</b> to spend your points!</div>
 				<div id="win-modal-button-container" class="modal-button-container">
 					<div id="win-cancel" class="modal-button" onclick="hideModal()">Keep Killing Teemo</div>
 					<div class="win-confirm modal-button" ng-click="game.newGame(false, game.difficulty)">Start Over</div>

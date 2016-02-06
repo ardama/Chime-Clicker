@@ -367,9 +367,6 @@
   -moz-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset;
   box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset; }
 
-#progress-modal-overlay {
-  background-color: rgba(0, 0, 0, 0.75); }
-
 #progress-modal {
   color: white;
   background-color: #1e272c;
@@ -872,7 +869,6 @@
     left: -30px;
     opacity: 0.0; } }
 
-/* TOOLTIPS ///////////////////////////////////// */
 .tooltipster-custom {
   border-radius: 3px;
   background: rgba(0, 0, 0, 0.87);
@@ -884,10 +880,31 @@
   padding: 6px 8px; }
 
 .tooltipster-custom .tooltipster-content b {
-  color: #ffc107; }
+  color: #ffcc5f;
+  font-weight: normal; }
 
 .tooltipster-custom .tooltip-image {
   border-radius: 2px; }
+
+.tooltipster-custom .rune-tooltip {
+  line-height: 18px; }
+  .tooltipster-custom .rune-tooltip b {
+    font-weight: bold; }
+
+.tooltipster-custom .mark b {
+  color: #bb684c; }
+
+.tooltipster-custom .seal b {
+  color: #ccaa4c; }
+
+.tooltipster-custom .glyph b {
+  color: #748fa1; }
+
+.tooltipster-custom .quint b {
+  color: #a461b2; }
+
+#chime-points-tooltip {
+  color: rgba(230, 230, 230, 0.7); }
 
 #runes-modal-overlay {
   background-color: rgba(0, 0, 0, 0.75); }
@@ -1004,7 +1021,8 @@
   opacity: 0; }
 
 .active-rune-image[data-status="1"] {
-  opacity: 1; }
+  opacity: 1;
+  cursor: pointer; }
 
 #rune-info-container {
   display: flex;
@@ -1018,14 +1036,17 @@
   width: 136px;
   padding-left: 16px; }
   #rune-actions-container #rune-clear-page,
+  #rune-actions-container #rune-undo-changes,
   #rune-actions-container #rune-new-game {
     width: 100%;
     height: 30px;
     line-height: 30px;
     margin: 2px 0 6px 0;
+    border-radius: 1px;
     color: rgba(255, 255, 255, 0.7);
     text-align: center;
     background-color: #263238;
+    cursor: pointer;
     -webkit-box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75);
     box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75);
@@ -1034,18 +1055,21 @@
     -o-transition: color 100ms, background-color 100ms, margin 100ms, box-shadow 100ms;
     transition: color 100ms, background-color 100ms, margin 100ms, box-shadow 100ms; }
     #rune-actions-container #rune-clear-page i,
+    #rune-actions-container #rune-undo-changes i,
     #rune-actions-container #rune-new-game i {
       font-size: 12px;
       margin-right: 4px; }
   #rune-actions-container #rune-clear-page:hover,
+  #rune-actions-container #rune-undo-changes:hover,
   #rune-actions-container #rune-new-game:hover {
     margin: 1px 0 7px 0;
     color: white;
     background-color: #455a64;
-    -webkit-box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.75);
-    box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.75); }
+    -webkit-box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75); }
   #rune-actions-container #rune-clear-page:active,
+  #rune-actions-container #rune-undo-changes:active,
   #rune-actions-container #rune-new-game:active {
     margin: 2px 0 6px 0;
     color: white;
@@ -1053,11 +1077,22 @@
     -webkit-box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75);
     box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75); }
+  #rune-actions-container #rune-clear-page.zero,
+  #rune-actions-container #rune-undo-changes.zero,
+  #rune-actions-container #rune-new-game.zero {
+    color: rgba(255, 255, 255, 0.2) !important;
+    background-color: #1e272c !important;
+    margin: 2px 0 6px 0 !important;
+    cursor: default;
+    -webkit-box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75) !important;
+    -moz-box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75) !important;
+    box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75) !important; }
   #rune-actions-container #rune-chime-points {
     width: 100%;
     height: 30px;
     line-height: 30px;
-    margin: 20px 0 0 0;
+    margin: 2px 0 6px 0;
+    border-radius: 1px;
     color: rgba(255, 255, 255, 0.7);
     text-align: center;
     background-color: #171c1e;
@@ -1068,20 +1103,48 @@
 #rune-stats-container {
   display: flex;
   flex-wrap: wrap;
+  align-content: flex-start;
   width: calc(660px - 32px - 136px - 16px); }
   #rune-stats-container .rune-stat {
     display: flex;
-    width: 238px;
-    height: 20px;
-    line-height: 20px;
+    width: 230px;
+    height: 16px;
+    margin-bottom: 6px;
+    padding-left: 5px;
+    line-height: 16px;
     font-size: 14px;
     color: rgba(255, 255, 255, 0.7); }
+    #rune-stats-container .rune-stat #up-icon,
+    #rune-stats-container .rune-stat #down-icon {
+      display: none;
+      margin-top: 2px; }
   #rune-stats-container .rune-stat.zero {
     display: none; }
-  #rune-stats-container .rune-stat::before {
+  #rune-stats-container .rune-stat.positive #up-icon {
+    display: block;
+    color: #ffcc5f; }
+  #rune-stats-container .rune-stat.negative {
+    border-left-color: #d35342; }
+    #rune-stats-container .rune-stat.negative #down-icon {
+      display: block;
+      color: #d35342; }
+  #rune-stats-container .rune-stat.zero.negative {
+    display: flex;
+    color: rgba(255, 255, 255, 0.2); }
+  #rune-stats-container .rune-stat-icon {
+    width: 10px;
+    text-align: left;
+    font-size: 12px; }
+  #rune-stats-container .rune-stat-value::before {
     content: "+"; }
   #rune-stats-container .rune-stat.flat-stat .rune-stat-name {
     margin-left: 3px; }
+  #rune-stats-container #rune-stats-none {
+    display: none; }
+  #rune-stats-container #rune-stats-none .rune-stat-value::before {
+    content: ""; }
+  #rune-stats-container #rune-stats-none.zero {
+    display: flex; }
 
 #available-runes-container {
   display: flex;
@@ -1178,11 +1241,24 @@
 .available-runes-tab.active {
   display: flex; }
 
+#available-marks-tab .rune-active-bar-fill {
+  background-color: #bb684c; }
+
+#available-seals-tab .rune-active-bar-fill {
+  background-color: #ccaa4c; }
+
+#available-glyphs-tab .rune-active-bar-fill {
+  background-color: #748fa1; }
+
+#available-quints-tab .rune-active-bar-fill {
+  background-color: #a461b2; }
+
 .rune-set {
   width: 326px;
   height: 138px; }
 
 .rune {
+  position: relative;
   display: flex;
   width: calc(100% - 8px);
   height: 40px;
@@ -1194,6 +1270,7 @@
   -moz-box-shadow: 0 0 4px -1px rgba(0, 0, 0, 0.75);
   box-shadow: 0 0 4px -1px rgba(0, 0, 0, 0.75); }
   .rune .rune-left {
+    position: relative;
     width: 40px;
     height: 100%; }
   .rune .rune-image {
@@ -1202,13 +1279,22 @@
     margin: 4px;
     background-repeat: no-repeat;
     background-size: cover; }
+  .rune .rune-locked-image {
+    position: absolute;
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+    margin: 4px;
+    color: rgba(255, 255, 255, 0.35);
+    line-height: 32px;
+    font-size: 24px;
+    text-align: center;
+    background-color: none; }
   .rune .rune-middle {
-    width: calc(100% - 40px - 75px - 12px);
-    height: 100%;
+    position: relative;
+    width: calc(100% - 40px - 78px - 12px);
     padding: 4px 6px; }
     .rune .rune-middle b {
-      color: #ffcc5f;
-      font-weight: normal; }
+      color: rgba(255, 255, 255, 0.7); }
     .rune .rune-middle .rune-locked-description {
       line-height: 32px; }
     .rune .rune-middle .rune-name {
@@ -1218,56 +1304,90 @@
       height: 16px;
       line-height: 16px;
       color: rgba(255, 255, 255, 0.7); }
+    .rune .rune-middle .rune-active-bar {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      height: 100%;
+      width: 5px;
+      background-color: rgba(255, 255, 255, 0.35);
+      -webkit-transition: height 25ms;
+      -moz-transition: height 25ms;
+      -o-transition: height 25ms;
+      transition: height 25ms; }
+    .rune .rune-middle .rune-active-bar-fill {
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+      -webkit-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.54) inset;
+      -moz-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.54) inset;
+      box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.54) inset;
+      -webkit-transition: height 25ms;
+      -moz-transition: height 25ms;
+      -o-transition: height 25ms;
+      transition: height 25ms; }
   .rune .rune-right {
     display: flex;
     flex-wrap: wrap;
-    width: 75px;
+    width: 78px;
     height: 100%;
     color: rgba(255, 255, 255, 0.7); }
     .rune .rune-right i {
       font-size: 10px; }
   .rune .rune-count {
-    width: 24px;
+    position: relative;
+    width: 22px;
     height: 40px;
+    border-left: 1px solid #1e272c;
+    cursor: default; }
+  .rune .rune-count-text {
+    position: absolute;
+    width: 22px;
+    height: 100%;
     line-height: 40px;
     font-size: 20px;
     font-weight: bold;
-    text-align: center;
-    border-left: 1px solid #1e272c;
-    cursor: default; }
+    text-align: center; }
   .rune .rune-controls {
     display: flex;
     flex-wrap: wrap;
-    width: 50px;
+    width: 19px;
     height: 40px;
-    line-height: 20px;
+    border-left: 1px solid #1e272c;
     text-align: center; }
-    .rune .rune-controls .rune-purchase {
-      width: 43px;
-      height: 18px;
-      line-height: 18px;
-      text-align: right;
-      padding: 1px 6px 0 0;
-      border-bottom: 1px solid #1e272c;
-      border-left: 1px solid #1e272c;
-      -webkit-transition: color 100ms, background-color 100ms;
-      -moz-transition: color 100ms, background-color 100ms;
-      -o-transition: color 100ms, background-color 100ms;
-      transition: color 100ms, background-color 100ms; }
     .rune .rune-controls .rune-remove,
     .rune .rune-controls .rune-add {
-      width: 24px;
-      border-left: 1px solid #1e272c;
+      width: 19px;
       font-weight: bold;
       font-size: 18px;
+      line-height: 20px;
       -webkit-transition: color 100ms, background-color 100ms;
       -moz-transition: color 100ms, background-color 100ms;
       -o-transition: color 100ms, background-color 100ms;
       transition: color 100ms, background-color 100ms; }
-    .rune .rune-controls .rune-remove.disabled,
-    .rune .rune-controls .rune-add.disabled {
-      color: rgba(255, 255, 255, 0.2);
-      cursor: default; }
+    .rune .rune-controls .rune-remove {
+      height: 20px; }
+    .rune .rune-controls .rune-add {
+      height: 19px;
+      border-bottom: 1px solid #1e272c; }
+  .rune .rune-purchase {
+    width: 34px;
+    height: 30px;
+    line-height: 15px;
+    text-align: center;
+    padding: 5px 0;
+    border-left: 1px solid #1e272c;
+    -webkit-transition: color 100ms, background-color 100ms;
+    -moz-transition: color 100ms, background-color 100ms;
+    -o-transition: color 100ms, background-color 100ms;
+    transition: color 100ms, background-color 100ms; }
+  .rune .rune-purchase.zero,
+  .rune .rune-remove.zero,
+  .rune .rune-add.zero,
+  .rune .rune-count-text.zero {
+    color: rgba(255, 255, 255, 0.2);
+    cursor: default; }
   .rune .rune-purchase:hover,
   .rune .rune-remove:hover,
   .rune .rune-add:hover {
@@ -1277,27 +1397,36 @@
   .rune .rune-remove:active,
   .rune .rune-add:active {
     background-color: #263238; }
-  .rune .rune-remove.disabled:hover,
-  .rune .rune-add.disabled:hover {
+  .rune .rune-purchase.zero:hover,
+  .rune .rune-remove.zero:hover,
+  .rune .rune-add.zero:hover {
     color: rgba(255, 255, 255, 0.2);
     background-color: #263238; }
 
-.rune[data-status="0"] .rune-name {
-  display: none; }
-.rune[data-status="0"] .rune-description {
-  display: none; }
+.rune[data-status="0"] {
+  background-color: #263238;
+  color: rgba(255, 255, 255, 0.35); }
+  .rune[data-status="0"] .rune-name,
+  .rune[data-status="0"] .rune-description,
+  .rune[data-status="0"] .rune-image,
+  .rune[data-status="0"] .rune-right {
+    display: none; }
 
+.rune[data-status="1"] .rune-locked-overlay {
+  display: none; }
 .rune[data-status="1"] .rune-left {
   cursor: pointer; }
+.rune[data-status="1"] .rune-locked-image {
+  display: none; }
+.rune[data-status="1"] .rune-left.zero {
+  cursor: default; }
 .rune[data-status="1"] .rune-middle {
   cursor: pointer; }
+.rune[data-status="1"] .rune-middle.zero {
+  cursor: default; }
 .rune[data-status="1"] .rune-right {
   cursor: pointer; }
-.rune[data-status="1"] .rune-left-overlay {
-  display: none; }
-.rune[data-status="1"] .rune-middle-overlay {
-  display: none; }
-.rune[data-status="1"] .rune-right-overlay {
+.rune[data-status="1"] .rune-locked-description {
   display: none; }
 
 body {
@@ -1734,9 +1863,9 @@ body {
   text-align: center;
   border-radius: 1px;
   background-color: #263238;
-  -webkit-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75);
-  box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75);
   -webkit-transition: background-color 100ms;
   -moz-transition: background-color 100ms;
   -o-transition: background-color 100ms;
@@ -1747,16 +1876,16 @@ body {
   margin-top: 4px;
   color: white;
   background-color: #455a64;
-  -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75); }
+  -webkit-box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75); }
 
 .item-buy:active {
   margin-top: 5px;
   background-color: #455a64;
-  -webkit-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset;
-  -moz-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset;
-  box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset; }
+  -webkit-box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.75); }
 
 .item-left {
   position: relative;
@@ -1784,19 +1913,19 @@ body {
   width: 100%;
   height: 100%;
   border-radius: 1px;
-  -webkit-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75);
-  box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75); }
+  -webkit-box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75); }
 
 .item-left-shadow:hover {
-  -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75); }
+  -webkit-box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75); }
 
 .item-left-shadow:active {
-  -webkit-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset;
-  -moz-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset;
-  box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset; }
+  -webkit-box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.75); }
 
 .item-cost {
   float: left;

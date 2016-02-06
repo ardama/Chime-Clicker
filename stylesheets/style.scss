@@ -624,7 +624,7 @@ body {
 	border-radius: 1px;
 
 	background-color: $primary900;
-	@include box-shadow(0 0 2px 0px $boxShadow);
+	@include box-shadow(0 1px 3px -1px $boxShadow);
 	@include transition(background-color 100ms);
 
 	cursor: pointer;
@@ -636,14 +636,14 @@ body {
 	color: $lightTextPrimary;
 
 	background-color: $primary700;
-	@include box-shadow(0 0 5px 1px $boxShadow);
+	@include box-shadow(0 2px 5px -1px $boxShadow);
 }
 
 .item-buy:active {
 	margin-top: 5px;
 
 	background-color: $primary700;
-	@include box-shadow(0 0 2px 0px $boxShadow inset);
+	@include box-shadow(0 1px 2px 0px $boxShadow);
 }
 
 .item-left {
@@ -678,15 +678,15 @@ body {
 	height: 100%;
 
 	border-radius: 1px;
-	@include box-shadow(0 0 2px 0px $boxShadow);
+	@include box-shadow(0 1px 3px -1px $boxShadow);
 }
 
 .item-left-shadow:hover {
-	@include box-shadow(0 0 5px 1px $boxShadow);
+	@include box-shadow(0 2px 5px -1px $boxShadow);
 }
 
 .item-left-shadow:active {
-	@include box-shadow(0 0 2px 0px $boxShadow inset);
+	@include box-shadow(0 1px 2px 0px $boxShadow);
 }
 
 

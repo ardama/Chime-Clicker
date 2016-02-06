@@ -72,24 +72,6 @@ Game.prototype.Init = function(scope, difficulty) {
   this[GLYPH] = [];
   this[QUINT] = [];
 
-  // Rune variables
-  this.runeDefense = 0;
-  this.runeMovespeed = 0;
-  this.runeDamage = 0;
-  this.runeAttackrate = 0;
-  this.runeScalingDefense = 1.0;
-  this.runeScalingMovespeed = 1.0;
-  this.runeScalingDamage = 1.0;
-  this.runeScalingAttackrate = 1.0;
-
-  this.runeGold = 0;
-  this.runeScalingGold = 1.0;
-  this.runeChimeClicking = 1.0;
-  this.runeMonsterClicking = 1.0;
-  this.runeCooldownReduction = 0;
-  this.runeScalingCooldownReduction = 0;
-  this.runePenetration = 1.0;
-  this.runeTeemoSlayer = 1.0;
 
   this.monstersAvailable = [];
 
@@ -100,6 +82,10 @@ Game.prototype.Init = function(scope, difficulty) {
   this.runes = Rune.Create(this);
   this.masteries = Mastery.Create(this);
   this.achievements = Achievement.Create(this);
+
+  this.runesChanged = false;
+  this.runeStats = Rune.CreateStatsObject();
+  this.tempRuneStats = Rune.CreateStatsObject();
 
   this.load();
 
@@ -187,9 +173,9 @@ Game.prototype.addChimes = function(chimes) {
 
 Game.prototype.addDamage = function(damage, user) {
   if (this.isMonsterChampion(this.monster))
-    damage *= this.runePenetration;
+    damage *= this.runeStats.penetration;
   if (this.monster == TEEMO)
-    damage *= this.runeTeemoSlayer;
+    damage *= this.runeStats.teemoSlayer;
 
   this.progress.general.totalDamage += damage;
 
@@ -225,7 +211,7 @@ Game.prototype.addDamage = function(damage, user) {
 };
 
 Game.prototype.addGold = function(gold) {
-  gold *= this.runeScalingGold;
+  gold *= this.runeStats.scalingGold;
   this.gold += gold;
   this.progress.general.goldEarned += gold;
 };
@@ -313,20 +299,20 @@ Game.prototype.addSpellTime = function(time) {
 
 // Update Functions
 Game.prototype.updateStats = function() {
-  this.damageBase = this.runeDamage + this.damageBought * this.igniteBonus + this.meeps * this.meepDamage;
+  this.damageBase = this.runeStats.damage + this.damageBought * this.igniteBonus + this.meeps * this.meepDamage;
 
-  this.defenseStat = this.defenseBase * this.runeScalingDefense;
-  this.movespeedStat = this.movespeedBase * this.runeScalingMovespeed;
-  this.damageStat = this.damageBase * this.runeScalingDamage;
-  this.attackrateStat = this.attackrateBase * this.runeScalingAttackrate;
+  this.defenseStat = this.defenseBase * this.runeStats.scalingDefense;
+  this.movespeedStat = this.movespeedBase * this.runeStats.scalingMovespeed;
+  this.damageStat = this.damageBase * this.runeStats.scalingDamage;
+  this.attackrateStat = this.attackrateBase * this.runeStats.scalingAttackrate;
 
   this.chimesRate = this.defenseStat * this.movespeedStat * this.ghostBonus;
   // chimes collected equals base defenseStat + 3% of current cps
-  this.chimesPerClick = (this.defenseStat * this.ghostBonus + .03 * this.chimesRate) * this.runeChimeClicking;
+  this.chimesPerClick = (this.defenseStat * this.ghostBonus + .03 * this.chimesRate) * this.runeStats.chimeClicking;
 
   this.damageRate = this.damageStat * this.attackrateStat * this.exhaustBonus + this.smiteDamageRate;
   // damage dealt equals base damageStat + 3% of current dps
-  this.damagePerClick = (this.exhaustBonus * this.damageStat + .03 * this.damageRate) * this.runeMonsterClicking;
+  this.damagePerClick = (this.exhaustBonus * this.damageStat + .03 * this.damageRate) * this.runeStats.monsterClicking;
 };
 
 Game.prototype.unlockItems = function() {
@@ -428,25 +414,6 @@ Game.prototype.unlockRunes = function() {
         var rune = runeSet[runeTier];
         if (rune.status == LOCKED && rune.unlock(this))
           rune.status = AVAILABLE;
-      }
-    }
-  }
-};
-
-Game.prototype.updateRunes = function() {
-  this[MARK] = [];
-  this[SEAL] = [];
-  this[GLYPH] = [];
-  this[QUINT] = [];
-  for (var runeTypeName in this.runes) {
-    var runeType = this.runes[runeTypeName];
-    for (var runeName in runeType) {
-      var runeSet = runeType[runeName];
-      for (var runeTier in runeSet) {
-        var rune = runeSet[runeTier];
-        for (var i = 0; i < rune.count; i++) {
-          this[rune.type].push(rune);
-        }
       }
     }
   }
@@ -593,21 +560,69 @@ Game.prototype.buyRune = function(rune, count) {
 };
 
 Game.prototype.addRune = function(rune) {
-  if (!rune) return;
+  if (!rune || rune.count >= rune.purchased) return;
 
-  if (this[rune.type].length < 9 && rune.count < rune.purchased) {
-    rune.count++;
-    this.updateRunes();
+  var runes = this[rune.type];
+  for (var i = 0; i < 9; i++) {
+    if (!runes[i]) {
+      runes[i] = rune;
+      rune.count++;
+      rune.apply(this.tempRuneStats, 1);
+      this.runesChanged = true;
+      break;
+    }
   }
 };
 
 Game.prototype.removeRune = function(rune) {
   if (!rune) return;
 
-  if (rune.count > 0) {
+  var index = this[rune.type].lastIndexOf(rune);
+  if (index > -1) this.removeRuneAtIndex(rune.type, index);
+};
+
+Game.prototype.removeRuneAtIndex = function(type, index) {
+  var rune = this[type][index];
+  if (rune) {
     rune.count--;
-    this.updateRunes();
+    rune.apply(this.tempRuneStats, -1);
+    this[type][index] = null;
+    this.runesChanged = true;
   }
+};
+
+Game.prototype.clearPage = function() {
+  for (var i = 0; i < RUNE_TYPES.length; i++) {
+    var runeType = RUNE_TYPES[i];
+    for (var j = 0; j < this[runeType].length; j++) {
+      this.removeRuneAtIndex(runeType, j);
+    }
+    this[runeType] = [];
+  }
+};
+
+Game.prototype.revertChanges = function() {
+  this.tempRuneStats = Rune.CreateStatsObject();
+
+  for (var runeTypeName in this.runes) {
+    var runeType = this.runes[runeTypeName];
+    this[runeTypeName] = [];
+    for (var runeName in runeType) {
+      var runeSet = runeType[runeName];
+      for (var runeTier in runeSet) {
+        var rune = runeSet[runeTier];
+        rune.count = rune.active;
+
+        if (rune.count) {
+          rune.apply(this.tempRuneStats, rune.count);
+          for (var i = 0; i < rune.count; i++)
+            this[runeTypeName].push(rune);
+        }
+      }
+    }
+  }
+
+  this.runesChanged = false;
 };
 
 Game.prototype.selectMonster = function(direction) {
@@ -711,7 +726,7 @@ Game.prototype.win = function() {
       default:
     }
     this.unlockRunes();
-    showWinModal();
+    showModal('win', {});
   }
 };
 
@@ -816,6 +831,18 @@ Game.prototype.getPointsEarned = function() {
   return Math.max((getBaseLog(20, this.monsters[TEEMO].count) + 1) * POINT_BONUS[this.difficulty], 0);
 };
 
+Game.prototype.getActiveRuneCount = function() {
+  var count = 0;
+  for (var i = 0; i < RUNE_TYPES.length; i++) {
+    var runes = this[RUNE_TYPES[i]];
+    for (var j = 0; j < runes.length; j++) {
+      if (runes[j])
+        count++
+    }
+  }
+  return count;
+};
+
 Game.prototype.isFirstMonster = function() {
   var index = this.monstersAvailable.indexOf(this.monster);
   return index == 0 ? 'first' : '';
@@ -847,6 +874,29 @@ Game.prototype.sortRunes = function(rune) {
   return RUNE_NAMES.indexOf(rune.name) * 3 + rune.tier;
 };
 
+Game.prototype.getRuneSets = function(type) {
+  var runes = this.runes[type];
+  var runeSets = [];
+  for (var runeName in runes) {
+    runeSets.push(runes[runeName]);
+  }
+  runeSets.sort(function(a, b) {
+    var names = RUNE_NAMES[a[1].type];
+    return names.indexOf(a[1].name) - names.indexOf(b[1].name);
+  });
+  return runeSets
+};
+
+Game.prototype.getRuneTooltip = function(type, index) {
+  var tooltip = '';
+  var rune = this[type][index];
+  if (rune) {
+    var tier = "I".repeat(rune.tier);
+    tooltip = '<div class="rune-tooltip ' + rune.type.toLowerCase() + '"><b>' + rune.fullName + ' ' + tier + '</b><br/>' + rune.tooltip() + '</div>';
+  }
+  return tooltip;
+};
+
 Game.prototype.getSpellClassName = function(name) {
   var name = name.toLowerCase();
   return name.split(' ')[0];
@@ -868,12 +918,12 @@ Game.prototype.getStatNameVariable = function(name, width) {
   return name;
 };
 
-Game.prototype.showNewGameModal = function(reset, difficulty) {
+Game.prototype.showNewGameModal = function(reset, difficulty, source) {
   difficulty = difficulty || this.difficulty;
   this.newGameDifficulty = difficulty;
   this.newGameReset = reset;
   var points = this.points;
-  return showNewGameModal(reset, difficulty, points);
+  return showModal("newgame", {'reset': reset, 'difficulty': difficulty, 'points': points, 'source': source});
 };
 
 Game.prototype.save = function() {
@@ -923,6 +973,7 @@ Game.prototype.saveProgress = function() {
         runeData['status'] = rune.status;
         runeData['purchased'] = rune.purchased;
         runeData['count'] = rune.count;
+        runeData['active'] = rune.active;
         runes.push(runeData);
       }
     }
@@ -1057,6 +1108,19 @@ Game.prototype.saveMonsters = function(save) {
     }
   }
   save['monsters'] = jsonh.pack(obj);
+};
+
+Game.prototype.saveRunes = function() {
+  for (var runeTypeName in this.runes) {
+    var runeType = this.runes[runeTypeName];
+    for (var runeName in runeType) {
+      var runeSet = runeType[runeName];
+      for (var runeTier in runeSet) {
+        var rune = runeSet[runeTier];
+        rune.active = rune.count;
+      }
+    }
+  }
 };
 
 Game.prototype.load = function() {
@@ -1228,6 +1292,7 @@ Game.prototype.loadProgress = function() {
         rune.status = runeData['status'];
         rune.purchased = runeData['purchased'];
         rune.count = runeData['count'];
+        rune.active = runeData['active'];
       }
     }
   }
@@ -1243,20 +1308,23 @@ Game.prototype.calculateStartState = function() {
       var runeSet = runeType[runeName];
       for (var runeTier in runeSet) {
         var rune = runeSet[runeTier];
-        rune.apply(this);
+        rune.apply(this.runeStats, rune.active);
+        rune.apply(this.tempRuneStats, rune.count);
+        if (rune.active != rune.count)
+          this.runesChanged = true;
+        for (var i = 0; i < rune.count; i++)
+          this[runeTypeName].push(rune);
       }
     }
   }
 
-  this.updateRunes();
+  this.gold += this.runeStats.gold;
+  this.defenseBase += this.runeStats.defense;
+  this.movespeedBase += this.runeStats.movespeed;
+  this.damageBase += this.runeStats.damage;
+  this.attackrateBase += this.runeStats.attackrate;
 
-  this.gold += this.runeGold;
-  this.defenseBase += this.runeDefense;
-  this.movespeedBase += this.runeMovespeed;
-  this.damageBase += this.runeDamage;
-  this.attackrateBase += this.runeAttackrate;
-
-  this.cooldownReduction = this.runeCooldownReduction + this.runeScalingCooldownReduction * this.level / MONSTERS.length;
+  this.cooldownReduction = this.runeStats.cooldownReduction + this.runeStats.scalingCooldownReduction * this.level / MONSTERS.length;
 };
 
 Game.prototype.loadGame = function() {
@@ -1501,6 +1569,7 @@ Game.prototype.newGame = function(reset, difficulty) {
       this.progress.general.chimePoints += this.points;
       this.progress.general.chimePointsEarned += this.points;
     }
+    this.saveRunes();
     this.saveProgress();
   }
   localStorage.setItem('difficulty', difficulty ? DIFFICULTIES.indexOf(difficulty) : DIFFICULTIES.indexOf(this.difficulty));
@@ -1509,9 +1578,11 @@ Game.prototype.newGame = function(reset, difficulty) {
 };
 
 Game.prototype.exportGame = function() {
-  showExportModal(lzw_encode(JSON.stringify({'progress' : this.saveProgress(),
-                                    'save' : this.saveGame(),
-                                    'difficulty' : DIFFICULTIES.indexOf(this.difficulty)})));
+  showModal('export', {'text': lzw_encode(JSON.stringify({'progress' : this.saveProgress(),
+                                                      'save' : this.saveGame(),
+                                                      'difficulty' : DIFFICULTIES.indexOf(this.difficulty)
+                                                    }))
+  });
 };
 
 Game.prototype.importGame = function(text) {

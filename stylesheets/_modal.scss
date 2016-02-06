@@ -75,10 +75,6 @@
   @include box-shadow(0 0 2px 0px $boxShadow inset);
 }
 
-#progress-modal-overlay {
-	background-color: $boxShadow;
-}
-
 #progress-modal {
 	color: $lightTextPrimary;
 	background-color: $primary1000;
@@ -224,9 +220,6 @@
 	@include box-shadow(0 0 7px 0px $boxShadow);
 }
 
-#newgame-modal-overlay {
-}
-
 #newgame-modal-header {
   height: 24px;
 	padding: 6px 12px;
@@ -272,10 +265,6 @@
 	user-select: none;
 
 	@include box-shadow(0 0 7px 0px $boxShadow);
-}
-
-#win-modal-overlay {
-
 }
 
 #win-modal-header {

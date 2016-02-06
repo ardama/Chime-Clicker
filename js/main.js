@@ -1,4 +1,4 @@
-var version = "0.4.0.4";
+var version = "0.4.1.0";
 
 ///// CONSTANTS ////////////////////
 // Items
@@ -175,9 +175,16 @@ var SCALING_COOLDOWN_REDUCTION = "Scaling Cooldown Reduction";
   // T4
 var TEEMO_SLAYER = "the Teemo Slayer";
 
-var RUNE_NAMES = [DEFENSE, MOVESPEED, DAMAGE, ATTACKRATE, CHIME_CLICKING, MONSTER_CLICKING, GOLD,
-                  COOLDOWN_REDUCTION, SCALING_DEFENSE, SCALING_MOVESPEED, SCALING_DAMAGE, SCALING_ATTACKRATE,
-                  CLICKING, PENETRATION, SCALING_GOLD, SCALING_COOLDOWN_REDUCTION, TEEMO_SLAYER];
+// var RUNE_NAMES = [DEFENSE, MOVESPEED, DAMAGE, ATTACKRATE, CHIME_CLICKING, MONSTER_CLICKING, GOLD,
+//                   COOLDOWN_REDUCTION, SCALING_DEFENSE, SCALING_MOVESPEED, SCALING_DAMAGE, SCALING_ATTACKRATE,
+//                   CLICKING, PENETRATION, SCALING_GOLD, SCALING_COOLDOWN_REDUCTION, TEEMO_SLAYER];
+
+var MARK_NAMES = [DAMAGE, ATTACKRATE, MONSTER_CLICKING, SCALING_DAMAGE, SCALING_ATTACKRATE, PENETRATION];
+var SEAL_NAMES = [MOVESPEED, GOLD, CHIME_CLICKING, SCALING_DEFENSE, SCALING_MOVESPEED, SCALING_GOLD];
+var GLYPH_NAMES = [SCALING_DAMAGE, DEFENSE, COOLDOWN_REDUCTION, SCALING_DEFENSE, CLICKING, SCALING_COOLDOWN_REDUCTION];
+var QUINT_NAMES = [SCALING_ATTACKRATE, SCALING_MOVESPEED, CLICKING, PENETRATION, SCALING_GOLD, COOLDOWN_REDUCTION, TEEMO_SLAYER];
+var RUNE_NAMES = {Mark : MARK_NAMES, Seal : SEAL_NAMES, Glyph : GLYPH_NAMES, Quint : QUINT_NAMES}
+
 var INDEX_TO_RUNE = [DEFENSE, MOVESPEED, DAMAGE, ATTACKRATE, MONSTER_CLICKING, CHIME_CLICKING, GOLD,
                      COOLDOWN_REDUCTION, SCALING_DEFENSE, SCALING_MOVESPEED, SCALING_DAMAGE, SCALING_ATTACKRATE,
                      CLICKING, PENETRATION, SCALING_GOLD, SCALING_COOLDOWN_REDUCTION, TEEMO_SLAYER];
@@ -236,7 +243,9 @@ var buttonXMargin = 45;
 var buttonMaxSize = 260;
 var buttonOffset = 1; // for press animation
 
-var modal = false;
+var activeModal;
+var queuedModal;
+var queuedArgs;
 
 function updateButtons(force) {
   $('.click-button').each(function() {
@@ -287,7 +296,7 @@ function updateButtons(force) {
 };
 
 function updateTooltips(scroll) {
-  $('.spell-wrapper, .item-buy').each(function() {
+  $('.spell-wrapper, .item-buy, .active-rune-image').each(function() {
     // TODO: figure out how to position off-screen tooltips properly
     if (scroll) {
       return;
@@ -301,6 +310,7 @@ function updateTooltips(scroll) {
       }
       else {
         $(this).tooltipster('disable');
+        $(this).tooltipster('content', newContent);
       }
     }
   });
@@ -510,7 +520,6 @@ GameApp.controller('GameController', function($scope, $sce) {
     $scope.ACTIVE = ACTIVE;
     $scope.COOLDOWN = COOLDOWN;
     $scope.DIFFICULTIES = DIFFICULTIES;
-    $scope.RUNE_NAMES = RUNE_NAMES;
     $scope.RUNE_TYPES = RUNE_TYPES;
 
     $scope.itemToIndex = function(a) {return itemToIndex(a)};
@@ -532,7 +541,12 @@ GameApp.controller('GameController', function($scope, $sce) {
     $scope.trustHtml = function(s) {return $sce.trustAsHtml(s)};
     $scope.range = function(n) {return new Array(n);};
     $scope.showAvailableRunes = function(t) {return showAvailableRunes(t)};
-    $scope.zeroClass = function(n) {return n == 0 ? 'zero' : '';}
+    $scope.zeroClass = function(n) {return !n ? 'zero' : '';};
+    $scope.changedClass = function(game, stat) {
+      if (game.runeStats[stat] > game.tempRuneStats[stat]) return 'negative';
+      else if (game.runeStats[stat] < game.tempRuneStats[stat]) return 'positive';
+      else return '';
+    };
 
 });
 
@@ -573,8 +587,8 @@ function initializeHotkeys(game) {
   $(document).bind('keydown.q', function() {game.spellClick(GHOST)});
   $(document).bind('keydown.w', function() {game.spellClick(FLASH)});
   $(document).bind('keydown.e', function() {game.spellClick(SMITE)});
-  $(document).bind('keydown.r', function() {game.spellClick(IGNITE)});
-  $(document).bind('keydown.t', function() {game.spellClick(EXHAUST)});
+  $(document).bind('keydown.r', function() {game.spellClick(EXHAUST)});
+  $(document).bind('keydown.t', function() {game.spellClick(IGNITE)});
   $(document).bind('keydown.y', function() {game.spellClick(TELEPORT)});
 
   // Monster hotkeys
@@ -687,7 +701,9 @@ $(window).resize(function() {
 $(window).load(function() {
   updateButtons(true);
   updateLastItem();
-
+  $('#available-marks-tab').addClass('active');
+  $('#available-runes-header-marks').addClass('active');
+  $('#difficulty-modal').width($('#restart-container').width());
 
   $('[data-toggle="tooltip"]').each(function() {
     var content = $(this).attr('data-title');
@@ -711,129 +727,33 @@ $(window).load(function() {
     this.click();
   });
 
-  $('#difficulty-modal').width($('#restart-container').width());
 
   $('#header-stats').click(function(event) {
-    if (modal == 'stats') {
-      hideModal();
-      return;
-    }
-    if (modal)
-      hideModal();
-
-    event.stopPropagation();
-    $('#progress-modal').modal({
-      persist: true,
-      overlayClose: true,
-      overlayId: 'progress-modal-overlay',
-      position: [72, null],
-      onOpen: function (dialog) {
-        dialog.overlay.fadeIn(200);
-        dialog.container.fadeIn(200);
-        dialog.data.fadeIn(200);
-      },
-      onShow: function () {
-        modal = 'stats';
-      }
-    });
+    showModal('stats', {'event': event});
   })
 
   $('#header-runes').click(function(event) {
-    if (modal == 'runes') {
-      hideModal();
-      return;
-    }
-    if (modal)
-      hideModal();
-
-    event.stopPropagation();
-    $('#runes-modal').modal({
-      persist: true,
-      overlayClose: false,
-      overlayId: 'rune-modal-overlay',
-      position: [72, null],
-      onOpen: function (dialog) {
-        dialog.overlay.fadeIn(200);
-        dialog.container.fadeIn(200);
-        dialog.data.fadeIn(200);
-      },
-      onShow: function () {
-        modal = 'runes';
-        fixRuneModalWidth();
-      }
-    });
+    showModal('runes', {'event': event});
   })
 
   $('#header-menu').click(function(event) {
-    if (modal == 'menu') {
-      hideModal();
-      return;
-    }
-    if (modal)
-      hideModal();
-
-    event.stopPropagation();
-    var posX = $(this).offset().left - $('body').scrollLeft() - 57;
-    var posY = $(this).offset().top + $(this).outerHeight();
-
-    $('#menu-modal').modal({
-      persist: true,
-      overlayClose: true,
-      position: [posY, posX],
-      modal: false,
-      onOpen: function(dialog) {
-      	dialog.overlay.fadeIn(200);
-        dialog.container.fadeIn(200);
-        dialog.data.fadeIn(200);
-      },
-      onShow: function () {
-        modal = 'menu';
-      }
-    });
+    showModal('menu', {'event': event});
   });
 
   $('#difficulty').click(function(event) {
-    if (modal == 'difficulty') {
-      hideModal();
-      return;
-    }
-    if (modal)
-      hideModal();
-
-    event.stopPropagation();
-    var posX = $(this).offset().left - $('body').scrollLeft();
-    var posY = $(this).offset().top + $(this).outerHeight() + 2;
-
-    $('#difficulty-modal').modal({
-      persist: true,
-      overlayClose: true,
-      position: [posY, posX],
-      modal: false,
-      onOpen: function(dialog) {
-      	dialog.overlay.fadeIn(200);
-        dialog.container.fadeIn(200);
-        dialog.data.fadeIn(200);
-      },
-      onShow: function () {
-        modal = 'difficulty';
-      }
-    });
+    showModal('difficulty', {'event': event});
   });
 
   $('body').click(function(){
-    if (modal && modal != 'runes') hideModal();
+    if (activeModal == 'difficulty' || activeModal == 'menu') hideModal();
   });
 
-  $('#available-marks-tab').addClass('active');
-  $('#available-runes-header-marks').addClass('active');
-
   $(window).scroll(function(event) {
-    if (modal) hideModal();
-    updateTooltips(true);
+    hideModal();
   });
 
   $('#column-3').scroll(function(event) {
-    if (modal) hideModal();
+    hideModal();
   });
 
   SCOPE.game.start();
@@ -844,22 +764,171 @@ String.prototype.capitalize = function() {
 };
 
 function hideModal() {
-  modal = false;
-  $.modal.close();
+  if (activeModal) {
+    activeModal = null;
+    $.modal.close();
+  }
 };
 
-function showNewGameModal(reset, difficulty, points) {
-  hideModal();
-  var message;
-  if (reset)
-    message = 'Are you sure you want to reset everything and start a new game?  All progress will be permanently discarded.'
-  else {
-    message = 'Are you sure you want to start a new game' + (difficulty ? ' on <b>' + difficulty.capitalize() + '</b>' : '')+'?  Your overall progress will be saved';
-    if (points > 0)
-      message += ' and you will be credited with <b>' + points.toFixed(1) + '</b> chime points.';
-    else
-      message += '.';
+function showModal(modal, args) {
+  if (!modal) return;
+  if (activeModal) {
+    if (activeModal != modal) {
+      queuedModal = modal;
+      queuedArgs = args;
+    }
+    hideModal();
+    return;
   }
+
+  if (modal == 'stats') showStatsModal(args);
+  else if (modal == 'runes') showRunesModal(args);
+  else if (modal == 'menu') showMenuModal(args);
+  else if (modal == 'difficulty') showDifficultyModal(args);
+  else if (modal == 'newgame') showNewGameModal(args);
+  else if (modal == 'win') showWinModal(args);
+  else if (modal == 'export') showExportModal(args);
+  else if (modal == 'import') showImportModal(args);
+};
+
+function showStatsModal(args) {
+  if (args.event) args.event.stopPropagation();
+  $('#progress-modal').modal({
+    persist: true,
+    overlayClose: true,
+    overlayId: 'progress-modal-overlay',
+    position: [72, null],
+    onOpen: function (dialog) {
+      dialog.overlay.fadeIn(200);
+      dialog.container.fadeIn(200);
+      dialog.data.fadeIn(200);
+    },
+    onShow: function () {
+      activeModal = 'stats';
+      queuedModal = null;
+      queuedArgs = null;
+    },
+    onClose: function (dialog) {
+      dialog.overlay.fadeOut(200);
+      dialog.container.fadeOut(200);
+      dialog.data.fadeOut(200, function() {
+        $.modal.close();
+        showModal(queuedModal, queuedArgs);
+      });
+    }
+  });
+};
+
+function showRunesModal(args) {
+  if (args.event) args.event.stopPropagation();
+  $('#runes-modal').modal({
+    persist: true,
+    overlayClose: false,
+    overlayId: 'rune-modal-overlay',
+    position: [72, null],
+    onOpen: function (dialog) {
+      dialog.overlay.fadeIn(200);
+      dialog.container.fadeIn(200);
+      dialog.data.fadeIn(200);
+    },
+    onShow: function () {
+      fixRuneModalWidth();
+      activeModal = 'runes';
+      queuedModal = null;
+      queuedArgs = null;
+    },
+    onClose: function (dialog) {
+      dialog.overlay.fadeOut(200);
+      dialog.container.fadeOut(200);
+      dialog.data.fadeOut(200, function() {
+        $.modal.close();
+        showModal(queuedModal, queuedArgs);
+      });
+    }
+  });
+};
+
+function showMenuModal(args) {
+  if (args.event) args.event.stopPropagation();
+  var posX = $('#header-menu').offset().left - $('body').scrollLeft() - 57;
+  var posY = $('#header-menu').offset().top + $('#header-menu').outerHeight();
+
+  $('#menu-modal').modal({
+    persist: true,
+    overlayClose: true,
+    position: [posY, posX],
+    modal: false,
+    onOpen: function (dialog) {
+      dialog.overlay.fadeIn(150);
+      dialog.container.fadeIn(150);
+      dialog.data.fadeIn(150);
+    },
+    onShow: function () {
+      activeModal = 'menu';
+      queuedModal = null;
+      queuedArgs = null;
+    },
+    onClose: function (dialog) {
+      dialog.overlay.fadeOut(150);
+      dialog.container.fadeOut(150);
+      dialog.data.fadeOut(150, function() {
+        $.modal.close();
+        showModal(queuedModal, queuedArgs);
+      });
+    }
+  });
+}
+
+function showDifficultyModal(args) {
+  if (args.event) args.event.stopPropagation();
+  var posX = $('#difficulty').offset().left - $('body').scrollLeft();
+  var posY = $('#difficulty').offset().top + $('#difficulty').outerHeight() + 2;
+
+  $('#difficulty-modal').modal({
+    persist: true,
+    overlayClose: true,
+    position: [posY, posX],
+    modal: false,
+    onOpen: function (dialog) {
+      dialog.overlay.fadeIn(150);
+      dialog.container.fadeIn(150);
+      dialog.data.fadeIn(150);
+    },
+    onShow: function () {
+      activeModal = 'difficulty';
+      queuedModal = null;
+      queuedArgs = null;
+    },
+    onClose: function (dialog) {
+      dialog.overlay.fadeOut(150);
+      dialog.container.fadeOut(150);
+      dialog.data.fadeOut(150, function() {
+        $.modal.close();
+        showModal(queuedModal, queuedArgs);
+      });
+    }
+  });
+}
+
+function showNewGameModal(args) {
+  var message;
+  if (args.reset)
+    message = 'Are you sure you want to reset everything and start a new game?  All progress will be permanently erased.'
+  else {
+    message = 'Start a new game';
+    message += args.difficulty ? ' on <b>' + args.difficulty.capitalize() + '</b>' : '';
+    message += args.source == 'runes' ? ' with current rune page' : '';
+    message += '?  Your overall progress will be saved.';
+  }
+
+  $("#newgame-cancel").off('click');
+  $("#newgame-cancel").on('click', function(event) {
+    if (args.source == 'runes') {
+      queuedModal = args.source;
+      queuedArgs = {'event' : event};
+    }
+    hideModal();
+  });
 
   $("#newgame-modal-text").html(message);
   $("#newgame-modal").modal({
@@ -872,12 +941,24 @@ function showNewGameModal(reset, difficulty, points) {
       dialog.overlay.fadeIn(200);
       dialog.container.fadeIn(200);
       dialog.data.fadeIn(200);
+    },
+    onShow: function () {
+      activeModal = 'newgame';
+      queuedModal = null;
+      queuedArgs = null;
+    },
+    onClose: function (dialog) {
+      dialog.overlay.fadeOut(200);
+      dialog.container.fadeOut(200);
+      dialog.data.fadeOut(200, function() {
+        $.modal.close();
+        showModal(queuedModal, queuedArgs);
+      });
     }
   });
 };
 
-function showWinModal() {
-  hideModal();
+function showWinModal(args) {
   $("#win-modal").modal({
     persist: true,
     overlayClose: false,
@@ -888,13 +969,25 @@ function showWinModal() {
       dialog.overlay.fadeIn(200);
       dialog.container.fadeIn(200);
       dialog.data.fadeIn(200);
+    },
+    onShow: function () {
+      activeModal = 'win';
+      queuedModal = null;
+      queuedArgs = null;
+    },
+    onClose: function (dialog) {
+      dialog.overlay.fadeOut(200);
+      dialog.container.fadeOut(200);
+      dialog.data.fadeOut(200, function() {
+        $.modal.close();
+        showModal(queuedModal, queuedArgs);
+      });
     }
   });
 };
 
-function showExportModal(text) {
-  hideModal();
-  $("#export-modal-text").html(text);
+function showExportModal(args) {
+  $("#export-modal-text").html(args.text);
   $("#export-modal").modal({
     persist: true,
     overlayClose: false,
@@ -905,12 +998,24 @@ function showExportModal(text) {
       dialog.overlay.fadeIn(200);
       dialog.container.fadeIn(200);
       dialog.data.fadeIn(200);
+    },
+    onShow: function () {
+      activeModal = 'export';
+      queuedModal = null;
+      queuedArgs = null;
+    },
+    onClose: function (dialog) {
+      dialog.overlay.fadeOut(200);
+      dialog.container.fadeOut(200);
+      dialog.data.fadeOut(200, function() {
+        $.modal.close();
+        showModal(queuedModal, queuedArgs);
+      });
     }
   });
 };
 
-function showImportModal() {
-  hideModal();
+function showImportModal(args) {
   $("#import-modal").modal({
     persist: true,
     overlayClose: false,
@@ -921,6 +1026,19 @@ function showImportModal() {
       dialog.overlay.fadeIn(200);
       dialog.container.fadeIn(200);
       dialog.data.fadeIn(200);
+    },
+    onShow: function () {
+      activeModal = 'import';
+      queuedModal = null;
+      queuedArgs = null;
+    },
+    onClose: function (dialog) {
+      dialog.overlay.fadeOut(200);
+      dialog.container.fadeOut(200);
+      dialog.data.fadeOut(200, function() {
+        $.modal.close();
+        showModal(queuedModal, queuedArgs);
+      });
     }
   });
 };

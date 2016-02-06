@@ -1,4 +1,3 @@
-/* TOOLTIPS ///////////////////////////////////// */
 .tooltipster-custom {
 	border-radius: 3px;
 	background: $darkTextPrimary;
@@ -11,10 +10,39 @@
 }
 
 .tooltipster-custom .tooltipster-content b {
-	color: $secondary500;
+	color: $smite;
+	font-weight: normal;
 }
 
 .tooltipster-custom .tooltip-image {
-//	width: 140px;
 	border-radius: 2px;
+}
+
+.tooltipster-custom .rune-tooltip {
+	line-height: 18px;
+
+	b {
+		font-weight: bold;
+	}
+
+}
+
+.tooltipster-custom .mark b {
+	color: $mark3;
+}
+
+.tooltipster-custom .seal b {
+	color: $seal3;
+}
+
+.tooltipster-custom .glyph b {
+	color: $glyph3;
+}
+
+.tooltipster-custom .quint b {
+	color: $quint3;
+}
+
+#chime-points-tooltip {
+	color: darken($lightTextSecondary, 10%);
 }
