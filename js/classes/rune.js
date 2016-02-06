@@ -134,7 +134,7 @@ Rune.Create = function(game) {
     "+" + 1.5 * i + "% Defense";}}
   );
   seals[SCALING_MOVESPEED] = Rune.CreateSet(game, SEAL, SCALING_MOVESPEED, 'hard',
-    function(i) {return function(obj, num) {obj.scalingMovsSpeed += num * .015 * i}},
+    function(i) {return function(obj, num) {obj.scalingMoveSpeed += num * .015 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
     "+" + 1.5 * i + "% Move Speed";}}
   );

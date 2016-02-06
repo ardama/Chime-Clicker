@@ -639,6 +639,11 @@ ga('send', 'pageview');
 						<div id="rune-new-game" ng-click="game.showNewGameModal(null, null, 'runes')"><i class='fa fa-undo'></i> New Game</div>
 						<div id="rune-chime-points" data-toggle="tooltip" data-title="<div id='chime-points-tooltip'>Chime points (cp) available.  Earn points by completing the game.</div>" data-position="left"> {{(game.progress.general.chimePoints + game.points).toFixed(1)}} cp</div>
 					</div>
+					<div id="rune-help-container">
+						<div id="rune-help-text" ng-class="zeroClass(game.runesChanged)">
+							Start a new game for <i id="up-icon" class='fa fa-long-arrow-up'></i><i id="down-icon" class='fa fa-long-arrow-down'></i> changes to take effect.
+						</div>
+					</div>
 				</div>
 
 				<div id="available-runes-container">

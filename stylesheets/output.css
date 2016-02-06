@@ -1026,6 +1026,7 @@
 
 #rune-info-container {
   display: flex;
+  flex-wrap: wrap;
   width: calc(660px - 32px);
   padding: 8px 16px 16px 16px;
   min-height: 50px; }
@@ -1099,6 +1100,24 @@
     -webkit-box-shadow: 0 0px 4px 0px rgba(0, 0, 0, 0.75) inset;
     -moz-box-shadow: 0 0px 4px 0px rgba(0, 0, 0, 0.75) inset;
     box-shadow: 0 0px 4px 0px rgba(0, 0, 0, 0.75) inset; }
+
+#rune-help-container {
+  width: calc(660px - 32px - 136px - 16px);
+  height: 20px; }
+
+#rune-help-text {
+  line-height: 20px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7); }
+  #rune-help-text #up-icon {
+    color: #ffcc5f;
+    font-size: 12px; }
+  #rune-help-text #down-icon {
+    color: #d35342;
+    font-size: 12px; }
+
+#rune-help-text.zero {
+  display: none; }
 
 #rune-stats-container {
   display: flex;

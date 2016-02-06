@@ -148,6 +148,7 @@
 
 #rune-info-container {
 	display: flex;
+	flex-wrap: wrap;
 	width: calc(660px - 32px);
 	padding: 8px 16px 16px 16px;
 	min-height: 50px;
@@ -232,6 +233,31 @@
 		background-color: $primary1100;
 		@include box-shadow(0 0px 4px 0px $boxShadow inset);
 	}
+}
+
+#rune-help-container {
+	width: calc(660px - 32px - 136px - 16px);
+	height: 20px;
+}
+
+#rune-help-text {
+	line-height: 20px;
+	font-size: 14px;
+	color: $lightTextSecondary;
+
+	#up-icon {
+		color: $smite;
+		font-size: 12px;
+	}
+
+	#down-icon {
+		color: $challenging2;
+		font-size: 12px;
+	}
+}
+
+#rune-help-text.zero {
+	display: none;
 }
 
 #rune-stats-container {
