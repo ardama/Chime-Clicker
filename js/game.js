@@ -820,7 +820,13 @@ Game.prototype.getTributeBonus = function() {
 };
 
 Game.prototype.getSmiteDamage = function() {
-  return 20 * this.level + MONSTER_HEALTH * Math.pow(this.scaleMonsterLevelHealth, this.level - 1) * SMITE_PERCENT[this.difficulty] * (1 + this.getExperiencePercent() / 100);
+  var monsterName = MONSTERS[this.level - 1]
+  var monster = this.monsters[monsterName];
+  var damage = 20 * this.level + monster.startHealth * SMITE_PERCENT[this.difficulty] * (1 + this.getExperiencePercent() / 100);
+  if (monsterName == TEEMO) {
+    damage /= 20;
+  }
+  return damage;
 };
 
 Game.prototype.getIgniteDamage = function() {
