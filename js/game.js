@@ -549,7 +549,9 @@ Game.prototype.buyUpgrade = function(name) {
 Game.prototype.buyRune = function(rune, count) {
   if (!rune) return;
 
+  var max = rune.type == QUINT ? 3 : 9;
   count = count || 1;
+  count = Math.min(max - rune.purchased, count);
   var cost = rune.cost * count;
   if (cost <= this.progress.general.chimePoints + this.points) {
     this.progress.general.chimePoints -= cost;
@@ -563,7 +565,8 @@ Game.prototype.addRune = function(rune) {
   if (!rune || rune.count >= rune.purchased) return;
 
   var runes = this[rune.type];
-  for (var i = 0; i < 9; i++) {
+  var max = rune.type == QUINT ? 3 : 9;
+  for (var i = 0; i < max; i++) {
     if (!runes[i]) {
       runes[i] = rune;
       rune.count++;

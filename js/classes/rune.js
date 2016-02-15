@@ -12,7 +12,7 @@ Rune.prototype.Init = function(game, type, name, tier, difficulty, apply, toolti
   this.tooltip = tooltip;
 
   this.fullName = type.capitalize() + ' of ' + name;
-  this.cost = RUNE_PRICES[difficulty] * Math.pow(10, tier - 1) * (type == QUINT ? 3 : 1);
+  this.cost = RUNE_PRICES[difficulty] * Math.pow(10, tier - 1) * (type == QUINT ? 4 : 1);
   this.status = LOCKED;
   this.purchased = 0;
   this.count = 0;
@@ -80,9 +80,9 @@ Rune.Create = function(game) {
   // Marks
   var marks = {};
   marks[DAMAGE] = Rune.CreateSet(game, MARK, DAMAGE, 'medium',
-    function(i) {return function(obj, num) {obj.damage += num * 10 * i}},
+    function(i) {return function(obj, num) {obj.damage += num * 15 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + 10 * i + " Damage";}}
+    "+" + 15 * i + " Damage";}}
   );
   marks[ATTACKRATE] = Rune.CreateSet(game, MARK, ATTACKRATE, 'medium',
     function(i) {return function(obj, num) {obj.attackrate += num * .5 * i}},
@@ -90,9 +90,9 @@ Rune.Create = function(game) {
     "+" + .5 * i + " Attack Rate";}}
   );
   marks[MONSTER_CLICKING] = Rune.CreateSet(game, MARK, MONSTER_CLICKING, 'medium',
-    function(i) {return function(obj, num) {obj.monsterClicking += num * .03 * i}},
+    function(i) {return function(obj, num) {obj.monsterClicking += num * .04 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + 3 * i + "% Damage per click";}}
+    "+" + 4 * i + "% Damage per click";}}
   );
   marks[SCALING_DAMAGE] = Rune.CreateSet(game, MARK, SCALING_DAMAGE, 'hard',
     function(i) {return function(obj, num) {obj.scalingDamage += num * .01 * i}},
@@ -114,19 +114,19 @@ Rune.Create = function(game) {
   // Seals
   var seals = {};
   seals[MOVESPEED] = Rune.CreateSet(game, SEAL, MOVESPEED, 'medium',
-    function(i) {return function(obj, num) {obj.movespeed += num * .5 * i}},
+    function(i) {return function(obj, num) {obj.movespeed += num * 1 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + .5 * i + " Move Speed";}}
+    "+" + 1 * i + " Move Speed";}}
   );
   seals[GOLD] = Rune.CreateSet(game, SEAL, GOLD, 'medium',
-    function(i) {return function(obj, num) {obj.gold += num * 300 * i}},
+    function(i) {return function(obj, num) {obj.gold += num * 375 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + 300 * i + " Starting gold";}}
+    "+" + 375 * i + " Starting gold";}}
   );
   seals[CHIME_CLICKING] = Rune.CreateSet(game, SEAL, CHIME_CLICKING, 'medium',
-    function(i) {return function(obj, num) {obj.chimeClicking += num * .03 * i}},
+    function(i) {return function(obj, num) {obj.chimeClicking += num * .06 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + 3 * i + "% Chimes per click";}}
+    "+" + 6 * i + "% Chimes per click";}}
   );
   seals[SCALING_DEFENSE] = Rune.CreateSet(game, SEAL, SCALING_DEFENSE, 'hard',
     function(i) {return function(obj, num) {obj.scalingDefense += num * .015 * i}},
@@ -153,9 +153,9 @@ Rune.Create = function(game) {
     "+" + 1 * i + "% Damage";}}
   );
   glyphs[DEFENSE] = Rune.CreateSet(game, GLYPH, DEFENSE, 'medium',
-    function(i) {return function(obj, num) {obj.defense += num * 4 * i}},
+    function(i) {return function(obj, num) {obj.defense += num * 6 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + 4 * i + " Defense";}}
+    "+" + 6 * i + " Defense";}}
   );
   glyphs[COOLDOWN_REDUCTION] = Rune.CreateSet(game, GLYPH, COOLDOWN_REDUCTION, 'medium',
     function(i) {return function(obj, num) {obj.cooldownReduction += num * (.005 + .005 * i)}},
@@ -168,9 +168,9 @@ Rune.Create = function(game) {
     "+" + 1 * i + "% Defense";}}
   );
   glyphs[CLICKING] = Rune.CreateSet(game, GLYPH, CLICKING, 'hard',
-    function(i) {return function(obj, num) {obj.chimeClicking += num * .03 * i; obj.monsterClicking += num * .03 * i}},
+    function(i) {return function(obj, num) {obj.chimeClicking += num * .04 * i; obj.monsterClicking += num * .04 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + 3 * i + "% Damage/Chimes per click";}}
+    "+" + 4 * i + "% Damage/Chimes per click";}}
   );
   glyphs[SCALING_COOLDOWN_REDUCTION] = Rune.CreateSet(game, GLYPH, SCALING_COOLDOWN_REDUCTION, 'marathon',
     function(i) {return function(obj, num) {obj.scalingCooldownReduction += num * (.01 + .005 * i)}},
@@ -182,39 +182,39 @@ Rune.Create = function(game) {
   // Quints
   var quints = {};
   quints[SCALING_ATTACKRATE] = Rune.CreateSet(game, QUINT, SCALING_ATTACKRATE, 'hard',
-    function(i) {return function(obj, num) {obj.scalingAttackrate += num * .02 * i}},
+    function(i) {return function(obj, num) {obj.scalingAttackrate += num * .03 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + 2 * i + "% Attack Rate";}}
+    "+" + 3 * i + "% Attack Rate";}}
   );
   quints[SCALING_MOVESPEED] = Rune.CreateSet(game, QUINT, SCALING_MOVESPEED, 'hard',
-    function(i) {return function(obj, num) {obj.scalingMovespeed += num * .03 * i}},
+    function(i) {return function(obj, num) {obj.scalingMovespeed += num * .045 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + 3 * i + "% Move Speed";}}
+    "+" + 4.5 * i + "% Move Speed";}}
   );
   quints[CLICKING] = Rune.CreateSet(game, QUINT, CLICKING, 'hard',
-    function(i) {return function(obj, num) {obj.chimeClicking += num * .06 * i; obj.monsterClicking += num * .06 * i}},
+    function(i) {return function(obj, num) {obj.chimeClicking += num * .12 * i; obj.monsterClicking += num * .12 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + 6 * i + "% Damage and Chimes per click";}}
+    "+" + 12 * i + "% Damage and Chimes per click";}}
   );
   quints[PENETRATION] = Rune.CreateSet(game, QUINT, PENETRATION, 'marathon',
-    function(i) {return function(obj, num) {obj.penetration += num * .04 * i}},
+    function(i) {return function(obj, num) {obj.penetration += num * .06 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + 4 * i + "% Damage to champions";}}
+    "+" + 6 * i + "% Damage to champions";}}
   );
   quints[SCALING_GOLD] = Rune.CreateSet(game, QUINT, SCALING_GOLD, 'marathon',
-    function(i) {return function(obj, num) {obj.scalingGold += num * .02 * i}},
+    function(i) {return function(obj, num) {obj.scalingGold += num * .03 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + 2 * i + "% Gold earned";}}
+    "+" + 3 * i + "% Gold earned";}}
   );
   quints[COOLDOWN_REDUCTION] = Rune.CreateSet(game, QUINT, COOLDOWN_REDUCTION, 'marathon',
-    function(i) {return function(obj, num) {obj.cooldownReduction += num * (.01 + .01 * i)}},
+    function(i) {return function(obj, num) {obj.cooldownReduction += num * (.015 + .015 * i)}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + (1 + 1 * i) + "% CDR";}}
+    "+" + (1.5 + 1.5 * i) + "% CDR";}}
   );
   quints[TEEMO_SLAYER] = Rune.CreateSet(game, QUINT, TEEMO_SLAYER, 'impossible',
-    function(i) {return function(obj, num) {obj.teemoSlayer += num * .06 * i}},
+    function(i) {return function(obj, num) {obj.teemoSlayer += num * .1 * i}},
     function(i) {return function(game) {return this.status == LOCKED ? this.getLockedText() :
-    "+" + 6 * i + "% Damage to Teemo";}}
+    "+" + 10 * i + "% Damage to Teemo";}}
   );
   runes[QUINT] = quints;
 
