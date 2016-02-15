@@ -29,7 +29,7 @@
   #header #header-link-container {
     float: right;
     margin-right: 60px;
-    border-left: 1px solid black;
+    border-left: 1px solid #000000;
     border-right: 1px solid #191919; }
     #header #header-link-container .header-link {
       float: right;
@@ -41,7 +41,7 @@
       text-decoration: none;
       cursor: pointer;
       border-left: 1px solid #191919;
-      border-right: 1px solid black;
+      border-right: 1px solid #000000;
       -webkit-transition: border-left 100ms, border-right 100ms, color 100ms, background-color 100ms;
       -moz-transition: border-left 100ms, border-right 100ms, color 100ms, background-color 100ms;
       -o-transition: border-left 100ms, border-right 100ms, color 100ms, background-color 100ms;
@@ -51,8 +51,8 @@
       color: white;
       border-left: 1px solid #263238; }
     #header #header-link-container .header-link:active {
-      background-color: #1e272c;
-      border-left: 1px solid #1e272c; }
+      background-color: #1E272C;
+      border-left: 1px solid #1E272C; }
     #header #header-link-container #header-save {
       width: 55px;
       font-size: 14px;
@@ -62,10 +62,10 @@
       transition: border-left 100ms, border-right 100ms, color 100ms, background-color 100ms; }
     #header #header-link-container #header-save.saving {
       color: white;
-      background-color: #607d8b; }
+      background-color: #607D8B; }
     #header #header-link-container #header-save.saving:hover {
       color: white;
-      background-color: #607d8b; }
+      background-color: #607D8B; }
     #header #header-link-container #header-menu {
       width: 55px;
       font-size: 14px; }
@@ -76,7 +76,7 @@
   height: 16px;
   line-height: 16px;
   font-size: 14px;
-  background-color: #455a64;
+  background-color: #455A64;
   -webkit-box-shadow: 0px 7px 8px -8px rgba(0, 0, 0, 0.75) inset, 0px 0 4px 1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 7px 8px -8px rgba(0, 0, 0, 0.75) inset, 0px 0 4px 1px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 7px 8px -8px rgba(0, 0, 0, 0.75) inset, 0px 0 4px 1px rgba(0, 0, 0, 0.75);
@@ -105,10 +105,10 @@
   line-height: 25px; }
 
 #chimes-bar.ghost-active {
-  color: #bef9fd;
+  color: #BEF9FD;
   background-color: #082438; }
   #chimes-bar.ghost-active #chimes-bar-fill {
-    background-color: #0b4d80; }
+    background-color: #0B4D80; }
 
 #chimes-rate {
   position: absolute;
@@ -127,19 +127,19 @@
 
 #damage-bar.exhaust-active {
   color: white;
-  background-color: #694e12; }
+  background-color: #694E12; }
   #damage-bar.exhaust-active #damage-bar-fill {
-    background-color: #c9a73f; }
+    background-color: #C9A73F; }
 
 #damage-bar.challenging-active {
-  background-color: #7c2224; }
+  background-color: #7C2224; }
   #damage-bar.challenging-active #damage-bar-fill {
-    background-color: #d35342; }
+    background-color: #D35342; }
 
 #damage-bar.smite-active {
-  background-color: #a15923; }
+  background-color: #A15923; }
   #damage-bar.smite-active #damage-bar-fill {
-    background-color: #f5c32e; }
+    background-color: #F5C32E; }
 
 #damage-rate {
   position: absolute;
@@ -163,7 +163,7 @@
   height: 100%; }
 
 .won #experience-bar-fill {
-  background-color: #455a64; }
+  background-color: #455A64; }
 
 #experience-progress {
   position: absolute;
@@ -187,7 +187,7 @@
   height: 100%;
   color: rgba(255, 255, 255, 0.7);
   border-radius: 1px;
-  background-color: #455a64;
+  background-color: #455A64;
   -webkit-box-shadow: 0px 7px 8px -8px rgba(0, 0, 0, 0.75) inset, 0px 1px 4px 1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 7px 8px -8px rgba(0, 0, 0, 0.75) inset, 0px 1px 4px 1px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 7px 8px -8px rgba(0, 0, 0, 0.75) inset, 0px 1px 4px 1px rgba(0, 0, 0, 0.75);
@@ -357,7 +357,7 @@
 
 .modal-button:hover {
   color: white;
-  background-color: #455a64;
+  background-color: #455A64;
   -webkit-box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.75); }
@@ -369,7 +369,7 @@
 
 #progress-modal {
   color: white;
-  background-color: #1e272c;
+  background-color: #1E272C;
   border-radius: 1px;
   overflow: hidden;
   cursor: default;
@@ -406,7 +406,7 @@
   width: 249px;
   padding: 8px 0;
   border-left: 1px solid #263238;
-  border-right: 1px solid #171c1e; }
+  border-right: 1px solid #171C1E; }
 
 .progress-modal-column:first-child {
   border-left: none; }
@@ -437,14 +437,14 @@
   float: left;
   width: 100%;
   height: 1px;
-  background-color: #171c1e;
+  background-color: #171C1E;
   border-bottom: solid 1px #263238;
   margin: 8px 0; }
 
 .progress-modal-title {
   float: left;
   width: 100%;
-  color: #ffcc5f;
+  color: #FFCC5F;
   text-align: center; }
 
 #progress-modal-body::-webkit-scrollbar {
@@ -462,7 +462,7 @@
 
 #newgame-modal {
   color: white;
-  background-color: #1e272c;
+  background-color: #1E272C;
   border-radius: 1px;
   overflow: hidden;
   cursor: default;
@@ -495,11 +495,11 @@
   font-family: "Noto","Helvetica Neue",Helvetica,Arial,sans-serif; }
   #newgame-modal-body b {
     font-weight: normal;
-    color: #ffcc5f; }
+    color: #FFCC5F; }
 
 #win-modal {
   color: white;
-  background-color: #1e272c;
+  background-color: #1E272C;
   border-radius: 1px;
   overflow: hidden;
   cursor: default;
@@ -532,7 +532,7 @@
   font-family: "Noto","Helvetica Neue",Helvetica,Arial,sans-serif; }
   #win-modal-body b {
     font-weight: normal;
-    color: #ffcc5f; }
+    color: #FFCC5F; }
 
 #difficulty-modal {
   float: left;
@@ -557,7 +557,7 @@
   font-size: 14px;
   text-align: center;
   background-color: #263238;
-  border-bottom: 1px solid #171c1e;
+  border-bottom: 1px solid #171C1E;
   cursor: pointer;
   -webkit-transition: color 100ms, background-color 100ms;
   -moz-transition: color 100ms, background-color 100ms;
@@ -565,7 +565,7 @@
   transition: color 100ms, background-color 100ms; }
 
 .difficulty-button:hover {
-  background-color: #455a64;
+  background-color: #455A64;
   color: white; }
 
 .difficulty-button:first-child {
@@ -597,7 +597,7 @@
   text-align: center;
   background-color: #131313;
   border-top: 1px solid #191919;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #000000;
   cursor: pointer;
   -webkit-transition: color 100ms, background-color 100ms border-top 100ms, border-bottom 100ms;
   -moz-transition: color 100ms, background-color 100ms border-top 100ms, border-bottom 100ms;
@@ -605,8 +605,8 @@
   transition: color 100ms, background-color 100ms border-top 100ms, border-bottom 100ms; }
 
 .menu-button:hover {
-  border-top: 1px solid #455a64;
-  background-color: #455a64;
+  border-top: 1px solid #455A64;
+  background-color: #455A64;
   color: white; }
 
 .menu-button:first-child {
@@ -621,7 +621,7 @@
 
 #export-modal {
   color: white;
-  background-color: #1e272c;
+  background-color: #1E272C;
   border-radius: 1px;
   overflow-x: hidden;
   word-wrap: break-word;
@@ -657,7 +657,7 @@
 
 #import-modal {
   color: white;
-  background-color: #1e272c;
+  background-color: #1E272C;
   border-radius: 1px;
   overflow-x: hidden;
   word-wrap: break-word;
@@ -711,67 +711,55 @@
   display: block; }
 
 #ghost-pulse {
-  background-color: #0b4d80; }
+  background-color: #0B4D80; }
 
 #smite-pulse {
-  background-color: #d35342;
+  background-color: #D35342;
   animation-iteration-count: 8; }
 
 #exhaust-pulse {
-  background-color: #c9a73f; }
+  background-color: #C9A73F; }
 
 @-webkit-keyframes pulse {
   0% {
     height: 0px;
     opacity: 1.0; }
-
   30% {
     height: 0px;
     opacity: 1.0; }
-
   100% {
     height: 12px;
     opacity: 0.0; } }
-
 @-moz-keyframes pulse {
   0% {
     height: 0px;
     opacity: 1.0; }
-
   30% {
     height: 0px;
     opacity: 1.0; }
-
   100% {
     height: 12px;
     opacity: 0.0; } }
-
 @-o-keyframes pulse {
   0% {
     height: 0px;
     opacity: 1.0; }
-
   30% {
     height: 0px;
     opacity: 1.0; }
-
   100% {
     height: 12px;
     opacity: 0.0; } }
-
 @keyframes pulse {
   0% {
     height: 0px;
     opacity: 1.0; }
-
   30% {
     height: 0px;
     opacity: 1.0; }
-
   100% {
     height: 12px;
     opacity: 0.0; } }
-
 .ring {
   display: none;
   position: absolute;
@@ -791,10 +779,10 @@
   border-color: rgba(255, 204, 95, 0.8); }
 
 #spoils-ring {
-  border-color: #0f8e78; }
+  border-color: #0F8E78; }
 
 #tribute-ring {
-  border-color: #2382dd; }
+  border-color: #2382DD; }
 
 #ignite-ring-1 {
   border-color: rgba(119, 26, 22, 0.8); }
@@ -811,64 +799,52 @@
     top: -0px;
     left: -0px;
     opacity: 0.0; }
-
   40% {
     opacity: .50; }
-
   100% {
     border-width: 30px;
     top: -30px;
     left: -30px;
     opacity: 0.0; } }
-
 @-moz-keyframes ring {
   0% {
     border-width: 0px;
     top: -0px;
     left: -0px;
     opacity: 0.0; }
-
   40% {
     opacity: .50; }
-
   100% {
     border-width: 30px;
     top: -30px;
     left: -30px;
     opacity: 0.0; } }
-
 @-o-keyframes ring {
   0% {
     border-width: 0px;
     top: -0px;
     left: -0px;
     opacity: 0.0; }
-
   40% {
     opacity: .50; }
-
   100% {
     border-width: 30px;
     top: -30px;
     left: -30px;
     opacity: 0.0; } }
-
 @keyframes ring {
   0% {
     border-width: 0px;
     top: -0px;
     left: -0px;
     opacity: 0.0; }
-
   40% {
     opacity: .50; }
-
   100% {
     border-width: 30px;
     top: -30px;
     left: -30px;
     opacity: 0.0; } }
-
 .tooltipster-custom {
   border-radius: 3px;
   background: rgba(0, 0, 0, 0.87);
@@ -880,7 +856,7 @@
   padding: 6px 8px; }
 
 .tooltipster-custom .tooltipster-content b {
-  color: #ffcc5f;
+  color: #FFCC5F;
   font-weight: normal; }
 
 .tooltipster-custom .tooltip-image {
@@ -892,16 +868,16 @@
     font-weight: bold; }
 
 .tooltipster-custom .mark b {
-  color: #bb684c; }
+  color: #BB684C; }
 
 .tooltipster-custom .seal b {
-  color: #ccaa4c; }
+  color: #CCAA4C; }
 
 .tooltipster-custom .glyph b {
-  color: #748fa1; }
+  color: #748FA1; }
 
 .tooltipster-custom .quint b {
-  color: #a461b2; }
+  color: #A461B2; }
 
 #chime-points-tooltip {
   color: rgba(230, 230, 230, 0.7); }
@@ -911,7 +887,7 @@
 
 #runes-modal {
   color: white;
-  background-color: #1e272c;
+  background-color: #1E272C;
   border-radius: 1px;
   overflow: hidden;
   cursor: default;
@@ -954,7 +930,7 @@
 
 .runes-modal-spacer-v {
   width: 1px;
-  background-color: #171c1e;
+  background-color: #171C1E;
   border-right: solid 1px #263238; }
 
 #runes-modal-body-container {
@@ -985,23 +961,23 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.75); }
 
 #active-marks-header {
-  background-color: #7f523a; }
+  background-color: #7F523A; }
 
 #active-seals-header {
-  background-color: #9d8c47; }
+  background-color: #9D8C47; }
 
 #active-glyphs-header {
-  background-color: #495f6c; }
+  background-color: #495F6C; }
 
 #active-quints-header {
-  background-color: #6e4a7c; }
+  background-color: #6E4A7C; }
 
 .active-rune {
   width: 44px;
   height: 44px;
   margin: 3px;
   padding: 5px;
-  background-color: #171c1e;
+  background-color: #171C1E;
   -webkit-box-shadow: 0 0 4px 0px rgba(0, 0, 0, 0.75) inset;
   -moz-box-shadow: 0 0 4px 0px rgba(0, 0, 0, 0.75) inset;
   box-shadow: 0 0 4px 0px rgba(0, 0, 0, 0.75) inset; }
@@ -1065,7 +1041,7 @@
   #rune-actions-container #rune-new-game:hover {
     margin: 1px 0 7px 0;
     color: white;
-    background-color: #455a64;
+    background-color: #455A64;
     -webkit-box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75);
     box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75); }
@@ -1082,7 +1058,7 @@
   #rune-actions-container #rune-undo-changes.zero,
   #rune-actions-container #rune-new-game.zero {
     color: rgba(255, 255, 255, 0.2) !important;
-    background-color: #1e272c !important;
+    background-color: #1E272C !important;
     margin: 2px 0 6px 0 !important;
     cursor: default;
     -webkit-box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75) !important;
@@ -1096,7 +1072,7 @@
     border-radius: 1px;
     color: rgba(255, 255, 255, 0.7);
     text-align: center;
-    background-color: #171c1e;
+    background-color: #171C1E;
     -webkit-box-shadow: 0 0px 4px 0px rgba(0, 0, 0, 0.75) inset;
     -moz-box-shadow: 0 0px 4px 0px rgba(0, 0, 0, 0.75) inset;
     box-shadow: 0 0px 4px 0px rgba(0, 0, 0, 0.75) inset; }
@@ -1110,10 +1086,10 @@
   font-size: 14px;
   color: rgba(255, 255, 255, 0.7); }
   #rune-help-text #up-icon {
-    color: #ffcc5f;
+    color: #FFCC5F;
     font-size: 12px; }
   #rune-help-text #down-icon {
-    color: #d35342;
+    color: #D35342;
     font-size: 12px; }
 
 #rune-help-text.zero {
@@ -1141,12 +1117,12 @@
     display: none; }
   #rune-stats-container .rune-stat.positive #up-icon {
     display: block;
-    color: #ffcc5f; }
+    color: #FFCC5F; }
   #rune-stats-container .rune-stat.negative {
-    border-left-color: #d35342; }
+    border-left-color: #D35342; }
     #rune-stats-container .rune-stat.negative #down-icon {
       display: block;
-      color: #d35342; }
+      color: #D35342; }
   #rune-stats-container .rune-stat.zero.negative {
     display: flex;
     color: rgba(255, 255, 255, 0.2); }
@@ -1189,7 +1165,7 @@
   transition: color 100ms; }
 
 .available-runes-header-item:first-child {
-  border-left-color: #1e272c; }
+  border-left-color: #1E272C; }
 
 .available-runes-header-item:hover {
   color: white; }
@@ -1217,40 +1193,40 @@
   transition: background-color 100ms; }
 
 #available-runes-header-marks .available-runes-header-bar {
-  background-color: #7f523a; }
+  background-color: #7F523A; }
 
 #available-runes-header-seals .available-runes-header-bar {
-  background-color: #9d8c47; }
+  background-color: #9D8C47; }
 
 #available-runes-header-glyphs .available-runes-header-bar {
-  background-color: #495f6c; }
+  background-color: #495F6C; }
 
 #available-runes-header-quints .available-runes-header-bar {
-  background-color: #6e4a7c; }
+  background-color: #6E4A7C; }
 
 #available-runes-header-marks:hover .available-runes-header-bar {
-  background-color: #bb684c; }
+  background-color: #BB684C; }
 
 #available-runes-header-seals:hover .available-runes-header-bar {
-  background-color: #ccaa4c; }
+  background-color: #CCAA4C; }
 
 #available-runes-header-glyphs:hover .available-runes-header-bar {
-  background-color: #748fa1; }
+  background-color: #748FA1; }
 
 #available-runes-header-quints:hover .available-runes-header-bar {
-  background-color: #a461b2; }
+  background-color: #A461B2; }
 
 #available-runes-header-marks.active .available-runes-header-text {
-  background-color: #7f523a; }
+  background-color: #7F523A; }
 
 #available-runes-header-seals.active .available-runes-header-text {
-  background-color: #9d8c47; }
+  background-color: #9D8C47; }
 
 #available-runes-header-glyphs.active .available-runes-header-text {
-  background-color: #495f6c; }
+  background-color: #495F6C; }
 
 #available-runes-header-quints.active .available-runes-header-text {
-  background-color: #6e4a7c; }
+  background-color: #6E4A7C; }
 
 .available-runes-tab {
   display: none;
@@ -1261,16 +1237,16 @@
   display: flex; }
 
 #available-marks-tab .rune-active-bar-fill {
-  background-color: #bb684c; }
+  background-color: #BB684C; }
 
 #available-seals-tab .rune-active-bar-fill {
-  background-color: #ccaa4c; }
+  background-color: #CCAA4C; }
 
 #available-glyphs-tab .rune-active-bar-fill {
-  background-color: #748fa1; }
+  background-color: #748FA1; }
 
 #available-quints-tab .rune-active-bar-fill {
-  background-color: #a461b2; }
+  background-color: #A461B2; }
 
 .rune-set {
   width: 326px;
@@ -1358,7 +1334,7 @@
     position: relative;
     width: 22px;
     height: 40px;
-    border-left: 1px solid #1e272c;
+    border-left: 1px solid #1E272C;
     cursor: default; }
   .rune .rune-count-text {
     position: absolute;
@@ -1373,7 +1349,7 @@
     flex-wrap: wrap;
     width: 19px;
     height: 40px;
-    border-left: 1px solid #1e272c;
+    border-left: 1px solid #1E272C;
     text-align: center; }
     .rune .rune-controls .rune-remove,
     .rune .rune-controls .rune-add {
@@ -1389,14 +1365,14 @@
       height: 20px; }
     .rune .rune-controls .rune-add {
       height: 19px;
-      border-bottom: 1px solid #1e272c; }
+      border-bottom: 1px solid #1E272C; }
   .rune .rune-purchase {
     width: 34px;
     height: 30px;
     line-height: 15px;
     text-align: center;
     padding: 5px 0;
-    border-left: 1px solid #1e272c;
+    border-left: 1px solid #1E272C;
     -webkit-transition: color 100ms, background-color 100ms;
     -moz-transition: color 100ms, background-color 100ms;
     -o-transition: color 100ms, background-color 100ms;
@@ -1411,7 +1387,7 @@
   .rune .rune-remove:hover,
   .rune .rune-add:hover {
     color: white;
-    background-color: #455a64; }
+    background-color: #455A64; }
   .rune .rune-purchase:active,
   .rune .rune-remove:active,
   .rune .rune-add:active {
@@ -1511,14 +1487,14 @@ body {
   height: calc(100vh - 116px);
   margin-top: 80px;
   color: white;
-  background-color: #171c1e; }
+  background-color: #171C1E; }
 
 #column-3 {
   float: left;
   width: 100px;
   color: #eee;
   text-align: center;
-  background-color: black;
+  background-color: #000000;
   -webkit-box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.75) inset;
   -moz-box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.75) inset;
   box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.75) inset; }
@@ -1608,7 +1584,7 @@ body {
   transition: background-color 175ms; }
 
 #meeps-status.flash-active {
-  background-color: #e0d987; }
+  background-color: #E0D987; }
 
 #meeps-wrapper {
   display: inline-block; }
@@ -1756,9 +1732,9 @@ body {
     font-weight: normal; }
 
 .game-stat.ignite-active {
-  color: #d1481a; }
+  color: #D1481A; }
   .game-stat.ignite-active .game-stat-name {
-    color: #d1481a; }
+    color: #D1481A; }
 
 .game-stat-top {
   height: 50%;
@@ -1797,30 +1773,30 @@ body {
   -moz-transition: box-shadow 100ms, top 100ms;
   -o-transition: box-shadow 100ms, top 100ms;
   transition: box-shadow 100ms, top 100ms;
-  -webkit-box-shadow: 0 20px 30px -19px white inset, 0 -20px 30px -18px black inset, 0 4px 10px -2px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0 20px 30px -19px white inset, 0 -20px 30px -18px black inset, 0 4px 10px -2px rgba(0, 0, 0, 0.75);
-  box-shadow: 0 20px 30px -19px white inset, 0 -20px 30px -18px black inset, 0 4px 10px -2px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 0 20px 30px -19px white inset, 0 -20px 30px -18px #000000 inset, 0 4px 10px -2px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 20px 30px -19px white inset, 0 -20px 30px -18px #000000 inset, 0 4px 10px -2px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 20px 30px -19px white inset, 0 -20px 30px -18px #000000 inset, 0 4px 10px -2px rgba(0, 0, 0, 0.75);
   border-top: 1px solid rgba(255, 255, 255, 0.7);
-  border-bottom: 1px solid black; }
+  border-bottom: 1px solid #000000; }
   .click-button .counter {
     position: absolute;
     font-size: 24px;
     font-weight: bold;
-    text-shadow: 1px 1px 1px black; }
+    text-shadow: 1px 1px 1px #000000; }
 
 .click-button:hover {
   top: 8px;
-  -webkit-box-shadow: 0 20px 30px -18px white inset, 0 -20px 36px -18px black inset, 0 6px 14px 0px rgba(0, 0, 0, 0.54);
-  -moz-box-shadow: 0 20px 30px -18px white inset, 0 -20px 36px -18px black inset, 0 6px 14px 0px rgba(0, 0, 0, 0.54);
-  box-shadow: 0 20px 30px -18px white inset, 0 -20px 36px -18px black inset, 0 6px 14px 0px rgba(0, 0, 0, 0.54); }
+  -webkit-box-shadow: 0 20px 30px -18px white inset, 0 -20px 36px -18px #000000 inset, 0 6px 14px 0px rgba(0, 0, 0, 0.54);
+  -moz-box-shadow: 0 20px 30px -18px white inset, 0 -20px 36px -18px #000000 inset, 0 6px 14px 0px rgba(0, 0, 0, 0.54);
+  box-shadow: 0 20px 30px -18px white inset, 0 -20px 36px -18px #000000 inset, 0 6px 14px 0px rgba(0, 0, 0, 0.54); }
 
 .click-button:active {
   top: 11px;
-  -webkit-box-shadow: 0 20px 30px -20px white inset, 0 -20px 36px -18px black inset, 0 8px 8px -6px black;
-  -moz-box-shadow: 0 20px 30px -20px white inset, 0 -20px 36px -18px black inset, 0 8px 8px -6px black;
-  box-shadow: 0 20px 30px -20px white inset, 0 -20px 36px -18px black inset, 0 8px 8px -6px black;
+  -webkit-box-shadow: 0 20px 30px -20px white inset, 0 -20px 36px -18px #000000 inset, 0 8px 8px -6px #000000;
+  -moz-box-shadow: 0 20px 30px -20px white inset, 0 -20px 36px -18px #000000 inset, 0 8px 8px -6px #000000;
+  box-shadow: 0 20px 30px -20px white inset, 0 -20px 36px -18px #000000 inset, 0 8px 8px -6px #000000;
   border-top: 1px solid rgba(255, 255, 255, 0.7);
-  border-bottom: 1px solid black; }
+  border-bottom: 1px solid #000000; }
 
 .click-button-holder {
   position: absolute;
@@ -1840,7 +1816,7 @@ body {
   float: left;
   width: 100%;
   font-size: 14px;
-  background-color: #171c1e; }
+  background-color: #171C1E; }
 
 .item[data-status='0'] {
   display: none; }
@@ -1849,8 +1825,8 @@ body {
   float: left;
   width: 100%;
   height: 1px;
-  border-top: solid 1px black;
-  background-color: #1e272c; }
+  border-top: solid 1px #000000;
+  background-color: #1E272C; }
 
 .item-header {
   float: left;
@@ -1876,7 +1852,7 @@ body {
   width: 50px;
   height: 25px;
   margin: 5px 5px 0 0;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.35);
   font-size: 16px;
   line-height: 25px;
   text-align: center;
@@ -1885,23 +1861,29 @@ body {
   -webkit-box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75);
   box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.75);
-  -webkit-transition: background-color 100ms;
-  -moz-transition: background-color 100ms;
-  -o-transition: background-color 100ms;
-  transition: background-color 100ms;
+  -webkit-transition: background-color 100ms, color 100ms, margin 100ms, box-shadow 100ms;
+  -moz-transition: background-color 100ms, color 100ms, margin 100ms, box-shadow 100ms;
+  -o-transition: background-color 100ms, color 100ms, margin 100ms, box-shadow 100ms;
+  transition: background-color 100ms, color 100ms, margin 100ms, box-shadow 100ms;
   cursor: pointer; }
+
+.item-buy.negative {
+  color: white; }
 
 .item-buy:hover {
   margin-top: 4px;
-  color: white;
-  background-color: #455a64;
+  color: rgba(255, 255, 255, 0.7);
+  background-color: #455A64;
   -webkit-box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75);
   box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.75); }
 
+.item-buy.negative:hover {
+  color: white; }
+
 .item-buy:active {
   margin-top: 5px;
-  background-color: #455a64;
+  background-color: #455A64;
   -webkit-box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.75); }
@@ -1920,11 +1902,11 @@ body {
   cursor: pointer; }
 
 .item-left:hover {
-  background-color: #455a64;
+  background-color: #455A64;
   margin-top: 4px; }
 
 .item-left:active {
-  background-color: #455a64;
+  background-color: #455A64;
   margin-top: 5px; }
 
 .item-left-shadow {
@@ -1975,7 +1957,7 @@ body {
   line-height: 100px;
   font-size: 24px;
   text-align: center;
-  background-color: #171c1e;
+  background-color: #171C1E;
   border-radius: 1px; }
 
 .item-middle {
@@ -1983,7 +1965,7 @@ body {
   width: 120px;
   height: 100px;
   margin-top: 8px;
-  border-right: 1px solid black; }
+  border-right: 1px solid #000000; }
 
 .item-right {
   float: left;
@@ -2028,8 +2010,8 @@ body {
   width: calc(100% - 137px);
   height: 100%;
   overflow-x: auto;
-  border-left: 1px solid #1e272c;
-  border-right: 1px solid black; }
+  border-left: 1px solid #1E272C;
+  border-right: 1px solid #000000; }
 
 .item-upgrades-wrapper::-webkit-scrollbar {
   width: 6px;
@@ -2066,7 +2048,7 @@ body {
   width: 126px;
   height: calc(100% - 10px);
   padding: 6px 4px 4px 4px;
-  border-left: 1px solid #1e272c; }
+  border-left: 1px solid #1E272C; }
 
 .upgrade {
   float: right;
@@ -2085,7 +2067,7 @@ body {
 
 .upgrade:hover {
   margin-top: -1px;
-  background-color: #455a64;
+  background-color: #455A64;
   -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75);
   box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75); }
@@ -2190,7 +2172,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: transparent;
   border-radius: 1px;
   -webkit-transition: background-color 250ms, height 100ms;
   -moz-transition: background-color 250ms, height 100ms;
@@ -2229,7 +2211,7 @@ body {
 
 .spell[data-status='0'] .spell-locked-image {
   opacity: 1;
-  background-color: #171c1e; }
+  background-color: #171C1E; }
 
 .spell[data-status='2'] .spell-locked-image {
   opacity: 1;
@@ -2259,7 +2241,7 @@ body {
   width: calc(100% - 4px);
   height: 16px;
   padding: 24px 4px 4px 0;
-  color: #f3e1a8;
+  color: #F3E1A8;
   font-size: 16px;
   line-height: 16px;
   text-align: right;
@@ -2279,13 +2261,13 @@ body {
   padding: 16px 2px 2px 0; }
 
 .spell-text[data-smite='challenging'] {
-  color: #fcd1ab; }
+  color: #FCD1AB; }
 
 /* OTHER ///////////////////////////////////// */
 #restart-container {
   float: left;
   width: 100%;
-  background-color: black; }
+  background-color: #000000; }
 
 #save-button,
 #restart-button,
@@ -2314,18 +2296,18 @@ body {
 
 #save-button.saving,
 #save-button.saving:hover {
-  color: #ffc107; }
+  color: #FFC107; }
 
 #save-button:hover,
 #restart-button:hover,
 #reset-button:hover {
-  background-color: #455a64;
+  background-color: #455A64;
   color: white; }
 
 #save-button:active,
 #restart-button:active,
 #reset-button:active {
-  background-color: #455a64;
+  background-color: #455A64;
   -webkit-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset;
   -moz-box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset;
   box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.75) inset; }
@@ -2370,7 +2352,7 @@ body {
   background-repeat: no-repeat; }
 
 .icon-gold {
-  color: #ffc107 !important;
+  color: #FFC107 !important;
   font-size: .6em			!important;
   vertical-align: 12.5%		!important; }
 
@@ -2398,3 +2380,5 @@ body {
     -webkit-box-shadow: 0 6px 6px -6px rgba(0, 0, 0, 0.75) inset, 0 0 6px 0px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 0 6px 6px -6px rgba(0, 0, 0, 0.75) inset, 0 0 6px 0px rgba(0, 0, 0, 0.75);
     box-shadow: 0 6px 6px -6px rgba(0, 0, 0, 0.75) inset, 0 0 6px 0px rgba(0, 0, 0, 0.75); }
+
+/*# sourceMappingURL=output.css.map */

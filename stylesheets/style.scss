@@ -617,7 +617,7 @@ body {
 
 	margin: 5px 5px 0 0;
 
-	color: $lightTextSecondary;
+	color: $lightTextTertiary;
 	font-size: 16px;
 	line-height: $itemBuyButtonSize;
 	text-align: center;
@@ -625,18 +625,26 @@ body {
 
 	background-color: $primary900;
 	@include box-shadow(0 1px 3px -1px $boxShadow);
-	@include transition(background-color 100ms);
+	@include transition(background-color 100ms, color 100ms, margin 100ms, box-shadow 100ms);
 
 	cursor: pointer;
+}
+
+.item-buy.negative {
+	color: $lightTextPrimary;
 }
 
 .item-buy:hover {
 	margin-top: 4px;
 
-	color: $lightTextPrimary;
+	color: $lightTextSecondary;
 
 	background-color: $primary700;
 	@include box-shadow(0 2px 5px -1px $boxShadow);
+}
+
+.item-buy.negative:hover {
+	color: $lightTextPrimary;
 }
 
 .item-buy:active {

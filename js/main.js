@@ -1,4 +1,5 @@
-var version = "0.4.1.3";
+var version = "0.4.1.4";
+var home = "http://chimeclicker.lol.s3-website-us-east-1.amazonaws.com/";
 
 ///// CONSTANTS ////////////////////
 // Items
@@ -344,8 +345,8 @@ function indexToRuneType(index) { return isString(index) ? index : INDEX_TO_RUNE
 function indexToRune(index) { return isString(index) ? index : INDEX_TO_RUNE[index]; };
 
 
-var LONG_NUMBER_NAMES = ['million', 'billion', 'trillion', 'quadrillion', 'quintillion', 'sextillion', 'septillion', 'octillion', 'nonillion', 'decillion']
-var SHORT_NUMBER_NAMES = ['m', 'b', 't', 'qd', 'qt', 'sx', 'sp', 'o', 'n', 'd']
+var LONG_NUMBER_NAMES = ['million', 'billion', 'trillion', 'quadrillion', 'quintillion', 'sextillion', 'septillion', 'octillion', 'nonillion', 'decillion', 'undecillion', 'duodecillion', 'tredecillion'];
+var SHORT_NUMBER_NAMES = ['m', 'b', 't', 'qd', 'qt', 'sx', 'sp', 'o', 'n', 'd', 'ud', 'dd', 'td']
 function prettyIntBig(num, fixed) {
   fixed = fixed || 2;
   var n = Math.pow(10, fixed);
@@ -538,6 +539,7 @@ GameApp.controller('GameController', function($scope, $sce) {
     $scope.range = function(n) {return new Array(n);};
     $scope.showAvailableRunes = function(t) {return showAvailableRunes(t)};
     $scope.zeroClass = function(n) {return !n ? 'zero' : '';};
+    $scope.negativeClass = function(n) {return n < 0 ? 'negative' : '';};
     $scope.changedClass = function(game, stat) {
       if (game.runeStats[stat] > game.tempRuneStats[stat]) return 'negative';
       else if (game.runeStats[stat] < game.tempRuneStats[stat]) return 'positive';

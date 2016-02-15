@@ -248,13 +248,13 @@ ga('send', 'pageview');
 						</div>
 						<!-- item header -->
 						<div class="item-header">
-							<div class="item-buy item-buy-5 touch-target" ng-click="game.buyItem(item, 10)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{prettyIntCompact(game.items[item].cost10)}}" data-position="top">
+							<div class="item-buy item-buy-5 touch-target" ng-class="negativeClass(game.items[item].cost10 - game.gold)" ng-click="game.buyItem(item, 10)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{prettyIntCompact(game.items[item].cost10)}}" data-position="top">
 								+10
 							</div>
-							<div class="item-buy item-buy-20 touch-target" ng-click="game.buyItem(item, 100)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{prettyIntCompact(game.items[item].cost100)}}" data-position="top">
+							<div class="item-buy item-buy-20 touch-target" ng-class="negativeClass(game.items[item].cost100 - game.gold)" ng-click="game.buyItem(item, 100)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{prettyIntCompact(game.items[item].cost100)}}" data-position="top">
 								+100
 							</div>
-							<div class="item-buy item-buy-100 touch-target" ng-click="game.buyItem(item, 1000)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{prettyIntCompact(game.items[item].cost1000)}}" data-position="top">
+							<div class="item-buy item-buy-100 touch-target" ng-class="negativeClass(game.items[item].cost1000 - game.gold)" ng-click="game.buyItem(item, 1000)" data-toggle="tooltip" data-title="<i class='fa fa-database fa-sm icon-gold'></i> {{prettyIntCompact(game.items[item].cost1000)}}" data-position="top">
 								+1000
 							</div>
 							<div class="item-name">
