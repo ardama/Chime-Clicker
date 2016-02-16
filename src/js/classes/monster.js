@@ -40,7 +40,7 @@ Monster.Create = function(game) {
     if (i == len - 1) {
       var health = totalHealth * 15;
       var healthPower = Math.floor(getBaseLog(10, health));
-      var newHealth = Math.pow(10, healthPower) * 1.11111.toFixed(2 + healthPower % 3);
+      var newHealth = Math.pow(10, healthPower) * (1.11111).toFixed(2 + healthPower % 3);
       newHealth = Math.ceil(health / newHealth) * newHealth;
 
       totalHealth =  newHealth;

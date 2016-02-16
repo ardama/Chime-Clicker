@@ -5,3 +5,9 @@
 KeyPair1.pem
 KeyPair1.ppk
 KeyPair2.ppk
+
+# Node Modules
+node_modules
+
+# Built directory
+built
