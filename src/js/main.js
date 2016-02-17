@@ -1,4 +1,4 @@
-var version = '0.5.0';
+var version = '0.5.1';
 var home = 'http://chimeclicker.lol.s3-website-us-east-1.amazonaws.com/';
 ///// CONSTANTS ////////////////////
 // Items
@@ -689,7 +689,7 @@ jQuery.fn.hasHScrollBar = function () {
 };
 ///// INITIALIZE ////////////////////
 var GameApp = angular.module('GameApp', ['ngOrderObjectBy']);
-GameApp.controller('GameController', function ($scope, $sce) {
+GameApp.controller('GameController', ['$scope', '$sce', function ($scope, $sce) {
   $scope.version = version;
   window.SCOPE = $scope;
   var difficulty = localStorage.getItem('difficulty');
@@ -783,7 +783,7 @@ GameApp.controller('GameController', function ($scope, $sce) {
     else
       return '';
   };
-});
+}]);
 function initializeButtons(game) {
   $('#chimes-button').click(function (e) {
     if (game.paused)
@@ -1426,53 +1426,4 @@ function showSave() {
     $('#header-save').removeClass('saving');
     savingTimeout = null;
   }, 200);
-}
-// LZW-compress a string
-function lzw_encode(s) {
-  var dict = {};
-  var data = (s + '').split('');
-  var out = [];
-  var currChar;
-  var phrase = data[0];
-  var code = 256;
-  for (var i = 1; i < data.length; i++) {
-    currChar = data[i];
-    if (dict[phrase + currChar] !== null) {
-      phrase += currChar;
-    } else {
-      out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
-      dict[phrase + currChar] = code;
-      code++;
-      phrase = currChar;
-    }
-  }
-  out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
-  for (i = 0; i < out.length; i++) {
-    out[i] = String.fromCharCode(out[i]);
-  }
-  return out.join('');
-}
-// Decompress an LZW-encoded string
-function lzw_decode(s) {
-  var dict = {};
-  var data = (s + '').split('');
-  var currChar = data[0];
-  var oldPhrase = currChar;
-  var out = [currChar];
-  var code = 256;
-  var phrase;
-  for (var i = 1; i < data.length; i++) {
-    var currCode = data[i].charCodeAt(0);
-    if (currCode < 256) {
-      phrase = data[i];
-    } else {
-      phrase = dict[currCode] ? dict[currCode] : oldPhrase + currChar;
-    }
-    out.push(phrase);
-    currChar = phrase.charAt(0);
-    dict[code] = oldPhrase + currChar;
-    code++;
-    oldPhrase = phrase;
-  }
-  return out.join('');
 }

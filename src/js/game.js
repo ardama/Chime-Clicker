@@ -830,9 +830,9 @@ Game.prototype.saveProgress = function () {
         runeData.name = runeToIndex(runeName);
         runeData.tier = runeTier;
         runeData.status = rune.status;
-        runeData.purchased = rune.purchased;
-        runeData.count = rune.count;
-        runeData.active = rune.active;
+        runeData.purchased = rune.purchased || 0;
+        runeData.count = rune.count || 0;
+        runeData.active = rune.active || 0;
         runes.push(runeData);
       }
     }
