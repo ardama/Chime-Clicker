@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Help - Chime Clicker</title>
+
+<script src="js/vendor/jquery.min.js"></script>
+<script src="js/vendor/jquery.tooltipster.min.js"></script>
+<script src="js/help.min.js"></script>
+<link rel="shortcut icon" href="favicon.ico" type="image/icon">
+<link rel="icon" href="favicon.ico" type="image/icon">
+<link href="css/subpage.min.css" rel="stylesheet" type="text/css">
+<link href="css/tooltipster.min.css" rel="stylesheet" type="text/css">
+<link href='https://fonts.googleapis.com/css?family=Rajdhani:400,600' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<script>$(document).bind('keydown.esc', function() {window.parent.hideSubpage(); window.parent.hideModal();});</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-72528817-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</head>
+<body>
+	<div id="main-container" class="container">
+		<div class="row">
+      <div class="subpage-close-button" onclick="window.parent.hideSubpage()">&times;</div>
+      <div id="content">
+        <h4>Introduction</h4>
+        <p>Chime Clicker is a <a href="http://na.leagueoflegends.com/" target="_blank">League of Legends</a> themed incremental game based off <a href="http://na.leagueoflegends.com/en/champion-reveal/bard-wandering-caretaker" target="_blank">Bard, the Wandering Caretaker</a>.  Your goal is to collect chimes, kill monsters, and gain experience as you level up to victory.  To help you, there is a series of items, upgrades, and spells to unlock along the way.</p>
+        <br/>
+
+        <h4>Chimes and Meeps</h4>
+        <p>Click the <b id="chime-button" class="tooltip">large chime button</b> in the upper left to collect chimes.  After gathering enough, you&#8217;ll earn meeps.  Each meep grants bonus damage to help you kill monsters.  Collecting chimes also grants experience to help you level up.</p>
+        <br/>
+
+        <h4>Monsters</h4>
+        <p>Click the <b id="monster-button" class="tooltip">large monster button</b> in the bottom left to deal damage to the current monster.  After defeating a monster, you&#8217;ll be rewarded for your hard work with gold (for items and upgrades) and experience (for leveling up).  New monsters are unlocked at each level, but get harder to kill as you progress further in the game.  You can always go back and fight easier opponents if the latest monster is too strong, but note that killing past monsters will grant a reduced amount of experience.</p>
+        <br/>
+
+        <h4>Items</h4>
+        <p>The shop offers items that can help you gather chimes and kill monsters faster.  Each item has a <b id="item-price" class="tooltip">price</b> that increases for every unit purchased. You can buy an item in bulk using the additional <b id="item-purchase-buttons" class="tooltip">purchase buttons</b>. Items have the following <b id="item-stats" class="tooltip">stats</b>:</p>
+        <ul>
+          <li><b>Defense</b> - Chimes gathered per click, 1 defense = 1 chime per click.</li>
+          <li><b>Move Speed</b> - Automatic chime gathering, 1 move speed = 1 chime click per second.</li>
+          <li><b>Damage</b> - Damage dealt per click, 1 damage = 1 damage per click.</li>
+          <li><b>Attack Rate</b> - Automatic damage dealing, 1 attack rate = 1 damage click per second.</li>
+          <li><b>Income</b> - Gold generation, 1 income = 1 gold per second.</li>
+        </ul>
+        <br/>
+        <p>When manually clicking the chime button, you&#8217;ll gather additional chimes equal to 4% of total CPS (chimes per second, <b>Defense</b> &times; <b>Move Speed</b>).  Similarly, you&#8217;ll deal extra damage equal to 4% of total DPS (damage per second, <b>Damage</b> &times; <b>Attack Rate</b>) when clicking the monster button.</p>
+        <br/>
+
+        <h4>Upgrades</h4>
+        <p>After leveling up enough, you&#8217;ll start to unlock <b id="upgrade-upgrades" class="tooltip">upgrades</b> for your items.  As with items, each upgrade has its own price and stats.  After purchasing an upgrade, all past and future units of the associated item are granted bonus stats.</p>
+        <br/>
+
+        <h4>Spells</h4>
+        <p>On the right edge, you&#8217;ll find a series of <b id="spell-spells" class="tooltip">spells</b>, each with its own unique effect.  Unlock them by leveling up and/or purchasing specific upgrades.  All spells are free once unlocked, but go on cooldown after every use.  Cooldown reduction (CDR) from runes or upgrades will allow you to use spells more frequently (CDR is capped at 40%).  Hover over your unlocked spells to learn how they work!</p>
+        <br/>
+
+				<h4>Difficulty</h4>
+        <p>There are 5 difficulties to play on.  You should be able to make it through Easy in a couple hours of active play.  Impossible will take much longer (at least a few days).  The main changes across difficulties are: increased monster health, decreased chime experience, decreased meep damage, and decreased spell strength.  Harder difficulties net you more chime points (cp) to spend on runes (see next section) after completing each game.  The stats tab keeps track of number of wins and best time on each (along with a bunch of other stuff) so be sure to check that out when you finish a game.</p>
+        <br/>
+
+        <h4>Runes</h4>
+        <p>After completing the game on Medium difficulty or higher, you&#8217;ll begin to unlock runes and accrue chime points (cp) to purchase them.  Runes provide a variety of stat bonuses and come in 3 tiers (I, II, III). Higher tier runes give stronger bonuses but are much more expensive. At most, 30 runes can be active at any time - 9 Marks (red), 9 Seals (yellow), 9 Glyphs (blue), and 3 Quints (purple) - so choose which stats you want wisely!  Bonuses from adding or swapping runes are not applied to the current game; you&#8217;ll have to start a new game in order to see the effects of your updated rune page. </p>
+        <br/>
+
+        <h4>Hotkeys</h4>
+        <p>Try using hotkeys to speed up your play.  Here is the list of available hotkeys and their corresponding actions:
+          <ul>
+            <li><b>1</b> - Buy item 1.</li>
+            <li><b>2</b> - Buy item 2.</li>
+            <li><b>3</b> - Buy item 3.</li>
+            <li><b>4</b> - Buy item 4.</li>
+            <li><b>5</b> - Buy item 5.</li>
+            <li><b>6</b> - Buy item 6.</li>
+            <li><b>7</b> - Buy item 7.</li>
+            <br/>
+            <li><b>alt + #</b> - Buy upgrade for item #.</li>
+            <li><b>ctrl + #</b> - Buy 10 units of item #.</li>
+            <li><b>shift + #</b> - Buy 100 units of item #.</li>
+            <li><b>ctrl + shift + #</b> - Buy 1000 units of item #.</li>
+            <li><b>alt + ctrl + shift + #</b> - Buy 10000 units of item #.</li>
+
+            <br/>
+            <li><b>q</b> - Activate spell 1.</li>
+            <li><b>w</b> - Activate spell 2.</li>
+            <li><b>e</b> - Activate spell 3.</li>
+            <li><b>r</b> - Activate spell 4.</li>
+            <li><b>t</b> - Activate spell 5.</li>
+            <li><b>y</b> - Activate spell 6.</li>
+
+            <br/>
+            <li><b>a</b> - <b id="hotkey-previous" class="tooltip">Previous</b> monster.</li>
+            <li><b>s</b> - <b id="hotkey-next" class="tooltip">Next</b> monster.</li>
+            <li><b>d</b> - <b id="hotkey-meep" class="tooltip">Hide</b> Meep progress bar.</li>
+            <li><b>f</b> - <b id="hotkey-monster" class="tooltip">Hide</b> Monster health bar.</li>
+
+            <li><b>alt + s</b> - Save game.</li>
+            <li><b>p</b> - Pause game.</li>
+          </ul>
+        </p>
+        <br/>
+
+        <h4>Numbers</h4>
+        <p>Reference list of large number names:
+          <ul>
+            <li>10<sup>6</sup> - million (m)</li>
+            <li>10<sup>9</sup> - billion (b)</li>
+            <li>10<sup>12</sup> - trillion (t)</li>
+            <li>10<sup>15</sup> - quadrillion (qd)</li>
+            <li>10<sup>18</sup> - quintillion (qt)</li>
+            <li>10<sup>21</sup> - sextillion (sx)</li>
+            <li>10<sup>24</sup> - septillion (sp)</li>
+            <li>10<sup>27</sup> - octillion (o)</li>
+            <li>10<sup>30</sup> - nonillion (n)</li>
+            <li>10<sup>33</sup> - decillion (d)</li>
+            <li>10<sup>36</sup> - undecillion (ud)</li>
+            <li>10<sup>39</sup> - duodecillion (dd)</li>
+            <li>10<sup>42</sup> - tredecillion (td)</li>
+          </ul>
+        </p>
+        <br/>
+
+
+
+        <br/>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

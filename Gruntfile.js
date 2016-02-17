@@ -8,18 +8,18 @@ module.exports = function (grunt) {
       options: {
         legacy: true
       },
-      build: {
+      default: {
         files: {
-          'built/js/main.min.js': 'src/js/main.js',
-          'built/js/game.min.js': 'src/js/game.js',
-          'built/js/help.min.js': 'src/js/help.js',
-          'built/js/classes.min.js': ['src/js/classes/achievement.js',
-                                      'src/js/classes/item.js',
-                                      'src/js/classes/mastery.js',
-                                      'src/js/classes/monster.js',
-                                      'src/js/classes/rune.js',
-                                      'src/js/classes/spell.js',
-                                      'src/js/classes/upgrade.js']
+          src: ['src/js/main.js',
+                'src/js/game.js',
+                'src/js/help.js',
+                'src/js/classes/achievement.js',
+                'src/js/classes/item.js',
+                'src/js/classes/mastery.js',
+                'src/js/classes/monster.js',
+                'src/js/classes/rune.js',
+                'src/js/classes/spell.js',
+                'src/js/classes/upgrade.js']
         }
       }
     },
@@ -28,18 +28,18 @@ module.exports = function (grunt) {
       options: {
         reporter: require('jshint-stylish')
       },
-      build: {
+      default: {
         files: {
-          'built/js/main.min.js': 'src/js/main.js',
-          'built/js/game.min.js': 'src/js/game.js',
-          'built/js/help.min.js': 'src/js/help.js',
-          'built/js/classes.min.js': ['src/js/classes/achievement.js',
-                                      'src/js/classes/item.js',
-                                      'src/js/classes/mastery.js',
-                                      'src/js/classes/monster.js',
-                                      'src/js/classes/rune.js',
-                                      'src/js/classes/spell.js',
-                                      'src/js/classes/upgrade.js']
+          src: ['src/js/main.js',
+                'src/js/game.js',
+                'src/js/help.js',
+                'src/js/classes/achievement.js',
+                'src/js/classes/item.js',
+                'src/js/classes/mastery.js',
+                'src/js/classes/monster.js',
+                'src/js/classes/rune.js',
+                'src/js/classes/spell.js',
+                'src/js/classes/upgrade.js']
         }
       }
     },
@@ -48,27 +48,47 @@ module.exports = function (grunt) {
       options: {
         banner: '/*\n <%= pkg.name %> v<%=pkg.version%> <%= grunt.template.today("yyyy-mm-dd") %> \n*/\n'
       },
-      build: {
+      dev: {
         files: {
-          'built/js/main.min.js': 'src/js/main.js',
-          'built/js/game.min.js': 'src/js/game.js',
-          'built/js/help.min.js': 'src/js/help.js',
-          'built/js/classes.min.js': ['src/js/classes/achievement.js',
-                                      'src/js/classes/item.js',
-                                      'src/js/classes/mastery.js',
-                                      'src/js/classes/monster.js',
-                                      'src/js/classes/rune.js',
-                                      'src/js/classes/spell.js',
-                                      'src/js/classes/upgrade.js']
+          'built/dev/js/main.min.js': 'src/js/main.js',
+          'built/dev/js/game.min.js': 'src/js/game.js',
+          'built/dev/js/help.min.js': 'src/js/help.js',
+          'built/dev/js/classes.min.js': ['src/js/classes/achievement.js',
+                                          'src/js/classes/item.js',
+                                          'src/js/classes/mastery.js',
+                                          'src/js/classes/monster.js',
+                                          'src/js/classes/rune.js',
+                                          'src/js/classes/spell.js',
+                                          'src/js/classes/upgrade.js']
+        }
+      },
+      prod: {
+        files: {
+          'built/prod/js/main.min.js': 'src/js/main.js',
+          'built/prod/js/game.min.js': 'src/js/game.js',
+          'built/prod/js/help.min.js': 'src/js/help.js',
+          'built/prod/js/classes.min.js': ['src/js/classes/achievement.js',
+                                           'src/js/classes/item.js',
+                                           'src/js/classes/mastery.js',
+                                           'src/js/classes/monster.js',
+                                           'src/js/classes/rune.js',
+                                           'src/js/classes/spell.js',
+                                           'src/js/classes/upgrade.js']
         }
       }
     },
 
     sass: {
-      build: {
+      dev: {
         files: {
-          'built/css/style.css': 'src/scss/style.scss',
-          'built/css/subpage.css': 'src/scss/subpage.scss'
+          'built/dev/css/style.css': 'src/scss/style.scss',
+          'built/dev/css/subpage.css': 'src/scss/subpage.scss'
+        }
+      },
+      prod: {
+        files: {
+          'built/prod/css/style.css': 'src/scss/style.scss',
+          'built/prod/css/subpage.css': 'src/scss/subpage.scss'
         }
       }
     },
@@ -77,83 +97,127 @@ module.exports = function (grunt) {
       options: {
         banner: '/*\n <%= pkg.name %> v<%=pkg.version%> <%= grunt.template.today("yyyy-mm-dd") %> \n*/\n'
       },
-      build: {
+      dev: {
         files: {
-          'built/css/style.min.css': 'built/css/style.css',
-          'built/css/subpage.min.css': 'built/css/subpage.css',
-          'built/css/tooltipster.min.css': 'src/css/tooltipster.css'
+          'built/dev/css/style.min.css': 'built/dev/css/style.css',
+          'built/dev/css/subpage.min.css': 'built/dev/css/subpage.css',
+          'built/dev/css/tooltipster.min.css': 'src/css/tooltipster.css'
+        }
+      },
+      prod: {
+        files: {
+          'built/prod/css/style.min.css': 'built/prod/css/style.css',
+          'built/prod/css/subpage.min.css': 'built/prod/css/subpage.css',
+          'built/prod/css/tooltipster.min.css': 'src/css/tooltipster.css'
         }
       }
     },
 
     htmlmin: {
-      build: {
+      dev: {
         files: {
-          'built/about.html': 'src/about.html',
-          'built/help.html': 'src/help.html',
-          'built/index.html': 'src/index.html'
+          'built/dev/about.html': 'src/about.html',
+          'built/dev/help.html': 'src/help.html',
+          'built/dev/index.html': 'src/index.html'
+        }
+      },
+      prod: {
+        files: {
+          'built/prod/about.html': 'src/about.html',
+          'built/prod/help.html': 'src/help.html',
+          'built/prod/index.html': 'src/index.html'
         }
       }
     },
 
     imagemin: {
       options: {
-        optimizationLevel: 5
+        optimizationLevel: 4
       },
-      build: {
+      dev: {
         files: [{
           expand: true,
           cwd: 'src/',
           src: ['images/**/*.png'],
-          dest: 'built/'
+          dest: 'built/dev/'
+        }]
+      },
+      prod: {
+        files: [{
+          expand: true,
+          cwd: 'src/',
+          src: ['images/**/*.png'],
+          dest: 'built/prod/'
         }]
       }
     },
 
     copy: {
-      html: {
+      html_dev: {
         files: {
-          'built/about.html': 'src/about.html',
-          'built/help.html': 'src/help.html',
-          'built/index.html': 'src/index.html'
+          'built/dev/about.html': 'src/about.html',
+          'built/dev/help.html': 'src/help.html',
+          'built/dev/index.html': 'src/index.html'
         }
       },
 
-      css: {
+      css_dev: {
         files: {
-          'built/css/style.min.css': 'built/css/style.css',
-          'built/css/subpage.min.css': 'built/css/subpage.css',
-          'built/css/tooltipster.min.css': 'src/css/tooltipster.css'
+          'built/dev/css/style.min.css': 'built/dev/css/style.css',
+          'built/dev/css/subpage.min.css': 'built/dev/css/subpage.css',
+          'built/dev/css/tooltipster.min.css': 'src/css/tooltipster.css'
         }
       },
 
-      js: {
+      js_dev: {
         files: {
-          'built/js/main.min.js': 'src/js/main.js',
-          'built/js/game.min.js': 'src/js/game.js',
-          'built/js/help.min.js': 'src/js/help.js'
+          'built/dev/js/main.min.js': 'src/js/main.js',
+          'built/dev/js/game.min.js': 'src/js/game.js',
+          'built/dev/js/help.min.js': 'src/js/help.js'
         }
       },
 
-      vendor: {
+      js_prod: {
+        files: {
+          'built/prod/js/main.min.js': 'src/js/main.js',
+          'built/prod/js/game.min.js': 'src/js/game.js',
+          'built/prod/js/help.min.js': 'src/js/help.js'
+        }
+      },
+
+      vendor_dev: {
         files: [{
           expand: true,
           cwd: 'src/js/vendor/',
           src: ['*.js'],
-          dest: 'built/js/vendor/'
+          dest: 'built/dev/js/vendor/'
         }]
       },
 
-      favicon: {
+      vendor_prod: {
+        files: [{
+          expand: true,
+          cwd: 'src/js/vendor/',
+          src: ['*.js'],
+          dest: 'built/prod/js/vendor/'
+        }]
+      },
+
+      favicon_dev: {
         files: {
-          'built/favicon.ico' : 'src/favicon.ico'
+          'built/dev/favicon.ico' : 'src/favicon.ico'
+        }
+      },
+      favicon_prod: {
+        files: {
+          'built/prod/favicon.ico' : 'src/favicon.ico'
         }
       }
     },
 
     concat: {
-      classes: {
-        dest: 'built/js/classes.min.js',
+      classes_dev: {
+        dest: 'built/dev/js/classes.min.js',
         src: ['src/js/classes/achievement.js',
               'src/js/classes/item.js',
               'src/js/classes/mastery.js',
@@ -165,29 +229,67 @@ module.exports = function (grunt) {
     },
 
     watch: {
-      stylesheets: {
+      stylesheets_dev: {
         files: ['src/css/*.css', 'src/scss/*.scss'],
-        tasks: ['sass', 'copy:css']
+        tasks: ['sass:dev', 'copy:css_dev']
+      },
+      stylesheets_prod: {
+        files: ['src/css/*.css', 'src/scss/*.scss'],
+        tasks: ['sass:prod', 'cssmin:prod']
       },
 
-      scripts: {
-        files: 'src/**/*.js',
-        tasks: ['jshint', 'copy:js', 'copy:vendor', 'concat:classes']
+      scripts_dev: {
+        files: ['src/**/*.js'],
+        tasks: ['copy:js_dev', 'copy:vendor_dev', 'concat:classes_dev']
+      },
+      scripts_prod: {
+        files: ['src/**/*.js'],
+        tasks: ['uglify:prod', 'copy:vendor_prod', 'concat:classes_dev']
       },
 
-      html: {
-        files: 'src/*.html',
-        tasks: ['copy:html']
+      html_dev: {
+        files: ['src/*.html'],
+        tasks: ['copy:html_dev']
+      },
+      html_prod: {
+        files: ['src/*.html'],
+        tasks: ['htmlmin:prod']
       },
 
-      images: {
-        files: 'src/**/*.png',
-        tasks: ['imagemin']
+      images_dev: {
+        files: ['src/**/*.png'],
+        tasks: ['imagemin:build_dev', 'copy:favicon_dev']
+      },
+      images_prod: {
+        files: ['src/**/*.png'],
+        tasks: ['imagemin:build_prod', 'copy:favicon_prod']
+      }
+    },
+
+    concurrent: {
+      options: {
+        logConcurrentOutput: true
+      },
+      dev: {
+        tasks: ['watch:stylesheets_dev', 'watch:scripts_dev', 'watch:html_dev']
+      },
+      prod: {
+        tasks: ['watch:stylesheets_prod', 'watch:scripts_prod', 'watch:html_prod']
       }
     }
 
 
   });
-  grunt.registerTask('prod', '', ['jshint', 'uglify', 'copy:favicon', 'copy:vendor', 'sass', 'cssmin', 'htmlmin']);
-  grunt.registerTask('dev', '', ['jshint', 'sass', 'copy:html', 'copy:favicon', 'copy:css', 'copy:js', 'copy:vendor', 'concat:classes']);
-};
+
+  grunt.registerTask('dev', '', ['jshint', 'sass:dev', 'copy:html_dev', 'copy:favicon_dev', 'copy:css_dev', 'copy:js_dev', 'copy:vendor_dev', 'concat:classes_dev']);
+  grunt.registerTask('prod', '', ['jshint', 'uglify:prod', 'copy:favicon_prod', 'copy:vendor_prod', 'sass:prod', 'cssmin:prod', 'htmlmin:prod']);
+
+  grunt.registerTask('build', '', ['prod', 'dev']);
+  grunt.registerTask('build-dev', '', ['dev']);
+  grunt.registerTask('build-prod', '', ['prod']);
+  grunt.registerTask('build-images', '', ['imagemin:prod', 'imagemin:dev']);
+
+  grunt.registerTask('watch-dev', '', ['concurrent:dev']);
+  grunt.registerTask('watch-prod', '', ['concurrent:prod']);
+  grunt.registerTask('watch-all', '', ['watch-dev', 'watch-prod']);
+}

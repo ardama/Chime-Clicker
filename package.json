@@ -5,6 +5,7 @@
   "devDependencies": {
     "fixmyjs": "latest",
     "grunt": "^0.4.5",
+    "grunt-concurrent": "latest",
     "grunt-contrib-clean": "latest",
     "grunt-contrib-compress": "latest",
     "grunt-contrib-concat": "latest",

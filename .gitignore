@@ -10,4 +10,4 @@ KeyPair2.ppk
 node_modules
 
 # Built directory
-built
+built/prod
