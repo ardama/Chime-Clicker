@@ -1,4 +1,4 @@
-var version = '0.5.2';
+var version = '0.5.3';
 var home = 'http://chimeclicker.lol.s3-website-us-east-1.amazonaws.com/';
 ///// CONSTANTS ////////////////////
 // Items
@@ -813,22 +813,25 @@ function initializeButtons(game) {
 function initializeHotkeys(game) {
   // Spell hotkeys
   $(document).bind('keydown.q', function () {
-    game.spellClick(GHOST);
-  });
-  $(document).bind('keydown.w', function () {
-    game.spellClick(FLASH);
-  });
-  $(document).bind('keydown.e', function () {
     game.spellClick(SMITE);
   });
+  $(document).bind('keydown.w', function () {
+    game.spellClick(GHOST);
+  });
+  $(document).bind('keydown.e', function () {
+    game.spellClick(HEAL);
+  });
   $(document).bind('keydown.r', function () {
-    game.spellClick(EXHAUST);
+    game.spellClick(FLASH);
   });
   $(document).bind('keydown.t', function () {
-    game.spellClick(IGNITE);
+    game.spellClick(TELEPORT);
   });
   $(document).bind('keydown.y', function () {
-    game.spellClick(TELEPORT);
+    game.spellClick(EXHAUST);
+  });
+  $(document).bind('keydown.u', function () {
+    game.spellClick(IGNITE);
   });
   // Monster hotkeys
   $(document).bind('keydown.a', function () {

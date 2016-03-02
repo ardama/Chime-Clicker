@@ -53,6 +53,7 @@ Game.prototype.Init = function (scope, difficulty) {
   this.tributeBonus = 0;
   this.smiteBonus = 0;
   this.smiteDamageRate = 0;
+  this.healBonus = 1;
   this.ghostBonus = 1;
   this.flashBonus = 0.03;
   this.exhaustBonus = 1;
@@ -254,7 +255,7 @@ Game.prototype.updateStats = function () {
   this.attackrateStat = this.attackrateBase * this.runeStats.scalingAttackrate;
   this.chimesRate = this.defenseStat * this.movespeedStat * this.ghostBonus;
   // chimes collected equals base defenseStat + 3% of current cps
-  this.chimesPerClick = (this.defenseStat * this.ghostBonus + 0.03 * this.chimesRate) * this.runeStats.chimeClicking;
+  this.chimesPerClick = (this.defenseStat * this.ghostBonus + 0.03 * this.chimesRate) * this.healBonus * this.runeStats.chimeClicking;
   this.damageRate = this.damageStat * this.attackrateStat * this.exhaustBonus + this.smiteDamageRate;
   // damage dealt equals base damageStat + 3% of current dps
   this.damagePerClick = (this.exhaustBonus * this.damageStat + 0.03 * this.damageRate) * this.runeStats.monsterClicking;
@@ -896,6 +897,7 @@ Game.prototype.saveState = function (save) {
   obj.spoilsOfWarActive = this.spoilsOfWarActive;
   obj.smiteBonus = this.smiteBonus;
   obj.smiteDamageRate = this.smiteDamageRate;
+  obj.healBonus = this.healBonus;
   obj.ghostBonus = this.ghostBonus;
   obj.exhaustBonus = this.exhaustBonus;
   obj.igniteBonus = this.igniteBonus;
@@ -1114,6 +1116,7 @@ Game.prototype.loadProgress = function () {
         item = o[i];
         // convert string to index
         item.item = itemToIndex(item.item);
+        delete item.order;
         progress.items[indexToItem(item.item)] = item;
       }
     }
@@ -1127,6 +1130,7 @@ Game.prototype.loadProgress = function () {
         monster = o[i];
         // convert string to index
         monster.monster = monsterToIndex(monster.monster);
+        delete monster.order;
         progress.monsters[indexToMonster(monster.monster)] = monster;
       }
     }
@@ -1140,6 +1144,7 @@ Game.prototype.loadProgress = function () {
         spell = o[i];
         // convert string to index
         spell.spell = spellToIndex(spell.spell);
+        delete spell.order;
         progress.spells[indexToSpell(spell.spell)] = spell;
       }
     }
@@ -1152,6 +1157,7 @@ Game.prototype.loadProgress = function () {
       i = o.length;
       while (i--) {
         difficulty = o[i];
+        delete difficulty.order;
         progress.wins[difficulty.difficulty] = difficulty;
       }
     }
@@ -1163,6 +1169,7 @@ Game.prototype.loadProgress = function () {
       i = o.length;
       while (i--) {
         difficulty = o[i];
+        delete difficulty.order;
         progress.times[difficulty.difficulty] = difficulty;
       }
     }
@@ -1238,8 +1245,9 @@ Game.prototype.loadState = function (obj) {
   this.spoilsOfWarActive = obj.spoilsOfWarActive;
   this.smiteBonus = obj.smiteBonus;
   this.smiteDamageRate = obj.smiteDamageRate || 0;
-  this.ghostBonus = obj.ghostBonus;
-  this.exhaustBonus = obj.exhaustBonus;
+  this.healBonus = obj.healBonus || 1;
+  this.ghostBonus = obj.ghostBonus || 1;
+  this.exhaustBonus = obj.exhaustBonus || 1;
   this.igniteBonus = obj.igniteBonus || 1;
 };
 Game.prototype.loadItems = function (obj) {
