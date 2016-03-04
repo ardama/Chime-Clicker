@@ -1,4 +1,4 @@
-var version = '0.5.3';
+var version = '0.5.4';
 var home = 'http://chimeclicker.lol.s3-website-us-east-1.amazonaws.com/';
 ///// CONSTANTS ////////////////////
 // Items
@@ -55,6 +55,8 @@ var ZEAL = 'Zeal';
 var STATIKK_SHIV = 'Statikk Shiv';
 var PHANTOM_DANCER = 'Phantom Dancer';
 var TRINITY_FORCE = 'Trinity Force';
+var NINJA_TABI = 'Ninja Tabi';
+var BERSERKERS_GREAVES = 'Berserker\'s Greaves';
 var INDEX_TO_UPGRADE = [
   BOOTS_OF_SWIFTNESS,
   BOOTS_OF_MOBILITY,
@@ -87,7 +89,9 @@ var INDEX_TO_UPGRADE = [
   ZEAL,
   STATIKK_SHIV,
   PHANTOM_DANCER,
-  TRINITY_FORCE
+  TRINITY_FORCE,
+  NINJA_TABI,
+  BERSERKERS_GREAVES
 ];
 var UPGRADE_TO_INDEX = {};
 for (var i = 0; i < INDEX_TO_UPGRADE.length; i++) {
@@ -224,7 +228,8 @@ var IGNORE_PLURALS = [
   IONIAN_BOOTS_OF_LUCIDITY,
   SORCERERS_SHOES,
   MERCURYS_TREADS,
-  SPOILS_OF_WAR
+  SPOILS_OF_WAR,
+  BERSERKERS_GREAVES
 ];
 var SPECIAL_PLURALS = [
   ZHONYAS_HOURGLASS,
