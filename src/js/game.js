@@ -313,13 +313,17 @@ Game.prototype.unlockSpells = function () {
     }
   }
 };
-Game.prototype.applyCooldownReduction = function () {
+Game.prototype.calculateCooldownReduction = function () {
+  this.cooldownReduction = this.runeStats.cooldownReduction + this.runeStats.scalingCooldownReduction * this.level / MONSTERS.length;
   var oldCooldownReduction = Math.min(this.oldCooldownReduction, 0.4);
   var newCooldownReduction = Math.min(this.cooldownReduction, 0.4);
-  for (var spellName in this.spells) {
-    var spell = this.spells[spellName];
-    spell.cooldown *= (1 - newCooldownReduction) / (1 - oldCooldownReduction);
-    spell.cooldownLeft *= (1 - newCooldownReduction) / (1 - oldCooldownReduction);
+
+  if (oldCooldownReduction != newCooldownReduction) {
+    for (var spellName in this.spells) {
+      var spell = this.spells[spellName];
+      spell.cooldown *= (1 - newCooldownReduction) / (1 - oldCooldownReduction);
+      spell.cooldownLeft *= (1 - newCooldownReduction) / (1 - oldCooldownReduction);
+    }
   }
   this.oldCooldownReduction = this.cooldownReduction;
 };
@@ -596,6 +600,7 @@ Game.prototype.levelUp = function (levels) {
   this.unlockUpgrades();
   this.unlockMonsters(true);
   this.unlockSpells();
+  this.calculateCooldownReduction();
 };
 Game.prototype.win = function () {
   if (!this.won) {
@@ -1213,7 +1218,6 @@ Game.prototype.calculateStartState = function () {
   this.movespeedBase += this.runeStats.movespeed;
   this.damageBase += this.runeStats.damage;
   this.attackrateBase += this.runeStats.attackrate;
-  this.cooldownReduction = this.runeStats.cooldownReduction + this.runeStats.scalingCooldownReduction * this.level / MONSTERS.length;
 };
 Game.prototype.loadGame = function () {
   var save = JSON.parse(localStorage.getItem('save'));
@@ -1428,7 +1432,7 @@ Game.prototype.recalculateState = function () {
   this.spoilsOfWarBonus = this.getSpoilsOfWarBonus() / 100;
   this.tributeBonus = this.getTributeBonus() / 100;
   this.igniteDamage = this.getIgniteDamage();
-  this.applyCooldownReduction();
+  this.calculateCooldownReduction();
 };
 Game.prototype.newGame = function (reset, difficulty) {
   if (reset) {
