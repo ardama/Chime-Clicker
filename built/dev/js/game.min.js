@@ -68,6 +68,7 @@ Game.prototype.Init = function (scope, difficulty) {
   this.items = Item.Create(this);
   this.spells = Spell.Create(this);
   this.upgrades = Upgrade.Create(this);
+  this.upgradeStats = Upgrade.CreateStatsObject();
   this.monsters = Monster.Create(this);
   this.runes = Rune.Create(this);
   this.masteries = Mastery.Create(this);
