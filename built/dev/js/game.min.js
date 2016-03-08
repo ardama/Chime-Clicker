@@ -172,7 +172,7 @@ Game.prototype.addDamage = function (damage, user) {
   this.monsters[this.monster].currentHealth -= damage;
 };
 Game.prototype.addGold = function (gold) {
-  gold *= this.runeStats.scalingGold;
+  gold *= this.runeStats.scalingGold * this.upgradeStats.goldBonus;
   this.gold += gold;
   this.progress.general.goldEarned += gold;
 };
@@ -465,6 +465,22 @@ Game.prototype.buyUpgrade = function (name) {
     else if (name == FACE_OF_THE_MOUNTAIN)
       this.spoilsOfWarBonus = this.getSpoilsOfWarBonus() / 100;
   }
+};
+Game.prototype.activateUpgrade = function (name) {
+  var upgrade = this.upgrades[name];
+  var item = this.items[upgrade.item];
+  if (item.upgradeCooldown > 0)
+    return;
+
+  var upgradeActive = item.upgradeActive;
+  if (upgradeActive)
+    this.upgrades[upgradeActive].deactivate(this);
+
+  upgrade.activate(this);
+  item.upgradeActive = name;
+  // TODO: item.upgradeCooldown = 60000;
+
+  this.updateStats();
 };
 Game.prototype.buyRune = function (rune, count) {
   if (!rune)
