@@ -1769,10 +1769,10 @@ body {
   background-size: contain;
   background-position: 50%;
   background-color: #111;
-  -webkit-transition: box-shadow 100ms, top 100ms;
-  -moz-transition: box-shadow 100ms, top 100ms;
-  -o-transition: box-shadow 100ms, top 100ms;
-  transition: box-shadow 100ms, top 100ms;
+  -webkit-transition: box-shadow 100ms, top 100ms, background-image 250ms;
+  -moz-transition: box-shadow 100ms, top 100ms, background-image 250ms;
+  -o-transition: box-shadow 100ms, top 100ms, background-image 250ms;
+  transition: box-shadow 100ms, top 100ms, background-image 250ms;
   -webkit-box-shadow: 0 20px 30px -19px white inset, 0 -20px 30px -18px #000000 inset, 0 4px 10px -2px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 20px 30px -19px white inset, 0 -20px 30px -18px #000000 inset, 0 4px 10px -2px rgba(0, 0, 0, 0.75);
   box-shadow: 0 20px 30px -19px white inset, 0 -20px 30px -18px #000000 inset, 0 4px 10px -2px rgba(0, 0, 0, 0.75);
@@ -1906,7 +1906,6 @@ body {
   margin-top: 4px; }
 
 .item-left:active {
-  background-color: #455A64;
   margin-top: 5px; }
 
 .item-left-shadow {
@@ -1939,9 +1938,13 @@ body {
   float: left;
   width: 100px;
   height: 100px;
-  border-radius: 1px;
+  border-radius: 0 0 1px 1px;
   background-repeat: no-repeat;
-  background-size: cover; }
+  background-size: cover;
+  -webkit-transition: background-image 250ms;
+  -moz-transition: background-image 250ms;
+  -o-transition: background-image 250ms;
+  transition: background-image 250ms; }
 
 .item-locked .item-left {
   float: none;
@@ -1962,20 +1965,20 @@ body {
 
 .item-middle {
   float: left;
-  width: 120px;
+  width: 118px;
   height: 100px;
   margin-top: 8px;
   border-right: 1px solid #000000; }
 
 .item-right {
   float: left;
-  width: calc(100% - 232px);
+  width: calc(100% - 230px);
   height: 100px;
   margin-top: 8px; }
 
 .item-stats {
   float: left;
-  width: 74px;
+  width: 72px;
   text-align: right;
   font-size: 14px;
   line-height: 19px; }
@@ -2009,39 +2012,66 @@ body {
   float: left;
   width: calc(100% - 137px);
   height: 100%;
-  overflow-x: auto;
   border-left: 1px solid #1E272C;
   border-right: 1px solid #000000; }
-
-.item-upgrades-wrapper::-webkit-scrollbar {
-  width: 6px;
-  height: 6px; }
-
-.item-upgrades-wrapper::-webkit-scrollbar-track {
-  background-color: #191919; }
-
-.item-upgrades-wrapper::-webkit-scrollbar-thumb {
-  background: rgba(245, 245, 245, 0.7); }
-
-.item-upgrades-wrapper::-webkit-scrollbar-thumb:hover {
-  background: whitesmoke; }
 
 .item-upgrades {
   float: left;
   display: flex;
-  flex-wrap: nowrap; }
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  height: 100%; }
 
 .item-upgrade {
-  float: left;
-  width: 40px;
-  height: 40px;
-  margin: 30px 8px 0;
-  border-radius: 20px;
+  position: relative;
+  flex-grow: 0;
+  width: calc(14% - 16px);
+  min-width: 36px;
+  max-width: 56px;
+  margin: 0 8px 0;
+  border-radius: 50%;
   background-size: cover;
-  -webkit-box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.75) inset;
-  -moz-box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.75) inset;
-  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.75) inset; }
+  cursor: pointer; }
 
+.item-upgrade-image {
+  position: absolute;
+  width: 100%;
+  margin-top: -50%;
+  padding-bottom: 100%;
+  border-radius: 50%;
+  background-size: cover;
+  -webkit-box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.75) inset;
+  -moz-box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.75) inset;
+  box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.75) inset;
+  -webkit-transition: box-shadow 100ms;
+  -moz-transition: box-shadow 100ms;
+  -o-transition: box-shadow 100ms;
+  transition: box-shadow 100ms; }
+
+.item-upgrade-overlay {
+  position: absolute;
+  width: 100%;
+  margin-top: -50%;
+  padding-bottom: 100%;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.38);
+  -webkit-transition: background-color 100ms;
+  -moz-transition: background-color 100ms;
+  -o-transition: background-color 100ms;
+  transition: background-color 100ms; }
+
+.item-upgrade.active .item-upgrade-image {
+  -webkit-box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.75); }
+.item-upgrade.active .item-upgrade-overlay {
+  background-color: transparent; }
+
+@media screen and (max-width: 1000px) {
+  .item-upgrade {
+    width: calc(14% - 8px);
+    margin: 0 4px 0; } }
 /* UPGRADES ///////////////////////////////////// */
 .upgrade-wrapper {
   float: right;

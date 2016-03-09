@@ -1,8 +1,8 @@
-var Item = function(game, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income) {
-  this.Init(game, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income);
+var Item = function(game, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income, upgrades) {
+  this.Init(game, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income, upgrades);
 };
 
-Item.prototype.Init = function(game, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income) {
+Item.prototype.Init = function(game, cost, level, defenseStat, movespeedStat, damageStat, attackrateStat, income, upgrades) {
   this.game = game;
   this.cost = cost;
   this.level = level;
@@ -20,7 +20,8 @@ Item.prototype.Init = function(game, cost, level, defenseStat, movespeedStat, da
   this.status = LOCKED;
   this.count = 0;
 
-  this.upgrades = [];
+  this.upgrades = upgrades;
+  this.upgradesPurchased = [];
   this.upgradesAvailable = [];
   this.upgradeActive = null;
   this.upgradeCooldown = 0;
@@ -63,13 +64,13 @@ Item.convertIndexToUpgrade = function(indices) {
 Item.Create = function(game) {
   var items = {};
 
-  items[RELIC_SHIELD] = new Item(game, 250, 1,      2, 0, 0, 0, 1);
-  items[ANCIENT_COIN] = new Item(game, 250, 1,      0, 0, 0, 0, 5);
-  items[SPELLTHIEFS_EDGE] = new Item(game, 250, 1,  0, 0, 10, 0, 3);
-  items[BOOTS_OF_SPEED] = new Item(game, 750, 2,    0, 1, 0, 0, 0);
-  items[RUBY_CRYSTAL] = new Item(game, 750, 2,      10, 0, 0, 0, 0);
-  items[AMPLIFYING_TOME] = new Item(game, 3000, 3,  0, 0, 50, 0, 0);
-  items[DAGGER] = new Item(game, 3000, 3,           0, 0, 0, 1, 0);
+  items[RELIC_SHIELD] = new Item(game, 250, 1,      2,  0, 0,  0, 1, [TARGONS_BRACE, FACE_OF_THE_MOUNTAIN]);
+  items[ANCIENT_COIN] = new Item(game, 250, 1,      0,  0, 0,  0, 5, [NOMADS_MEDALLION, TALISMAN_OF_ASCENSION]);
+  items[SPELLTHIEFS_EDGE] = new Item(game, 250, 1,  0,  0, 10, 0, 3, [FROSTFANG, FROST_QUEENS_CLAIM]);
+  items[BOOTS_OF_SPEED] = new Item(game, 750, 2,    0,  1, 0,  0, 0, [BOOTS_OF_SWIFTNESS, NINJA_TABI, IONIAN_BOOTS_OF_LUCIDITY, BOOTS_OF_MOBILITY, MERCURYS_TREADS, SORCERERS_SHOES, BERSERKERS_GREAVES]);
+  items[RUBY_CRYSTAL] = new Item(game, 750, 2,      10, 0, 0,  0, 0, [CRYSTALLINE_BRACER, KINDLEGEM, GIANTS_BELT, WARMOGS_ARMOR, RIGHTEOUS_GLORY, SPIRIT_VISAGE, FROZEN_MALLET]);
+  items[AMPLIFYING_TOME] = new Item(game, 3000, 3,  0,  0, 50, 0, 0, [FIENDISH_CODEX, AETHER_WISP, NEEDLESSLY_LARGE_ROD, MORELLONOMICON, LUDENS_ECHO, RYLAIS_CRYSTAL_SCEPTER, RABADONS_DEATHCAP]);
+  items[DAGGER] = new Item(game, 3000, 3,           0,  0, 0,  1, 0, [RECURVE_BOW, RUNAANS_HURRICANE, ZEAL, WITS_END, STATIKK_SHIV, PHANTOM_DANCER, TRINITY_FORCE]);
 
   return items;
 };

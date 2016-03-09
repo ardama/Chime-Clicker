@@ -135,7 +135,7 @@ Upgrade.Create = function(game) {
       return "+5% chimes gathered.";
     }
   );
-  upgrades[NINJA_TABI] = new Upgrade(game, BOOTS_OF_SPEED,                1000000, 7, 0, 3, 0, 0, 0, [],
+  upgrades[NINJA_TABI] = new Upgrade(game, BOOTS_OF_SPEED,                1000000, 7, 5, 3, 0, 0, 0, [],
     function(game) {
       game.upgradeStats.chimeClickPercent += 0.05;
     },
@@ -143,7 +143,7 @@ Upgrade.Create = function(game) {
       game.upgradeStats.chimeClickPercent -= 0.05;
     },
     function(game) {
-      return "Manual chime clicks gather bonus chimes equal to 5% of total CPS.";
+      return "Chime clicks gather 5% CPS bonus chimes.";
     }
   );
   upgrades[IONIAN_BOOTS_OF_LUCIDITY] = new Upgrade(game, BOOTS_OF_SPEED,  20000000, 9, 0, 4, 0, 1, 0, [],
@@ -189,7 +189,7 @@ Upgrade.Create = function(game) {
       game.upgradeStats.monsterClickPercent -= 0.03;
     },
     function(game) {
-      return "Manual monster clicks deal bonus damage equal to 3% of total DPS.";
+      return "Monster clicks deal 3% DPS bonus damage.";
     }
   );
   upgrades[BERSERKERS_GREAVES] = new Upgrade(game, BOOTS_OF_SPEED,        10000000000000, 17, 0, 10, 0, 4, 0, [],
@@ -214,7 +214,7 @@ Upgrade.Create = function(game) {
       game.upgradeStats.chimeClickBonus -= 0.3;
     },
     function(game) {
-      return "Manual chime clicks gather 30% more chimes.";
+      return "Chime clicks gather 30% more chimes.";
     }
   );
   upgrades[KINDLEGEM] = new Upgrade(game, RUBY_CRYSTAL,                   1000000, 7, 15, 0, 0, 1, 0, [],
@@ -247,7 +247,7 @@ Upgrade.Create = function(game) {
       game.upgradeStats.warmogBonus -= 0.1;
     },
     function(game) {
-      return "+10% chimes gathered. Effect is disabled for 6 seconds upon monster click.";
+      return "+10% chimes gathered. Disabled for 6 seconds upon monster click.";
     }
   );
   upgrades[RIGHTEOUS_GLORY] = new Upgrade(game, RUBY_CRYSTAL,             18000000000, 13, 70, 5, 0, 0, 0, [CRYSTALLINE_BRACER],
@@ -315,7 +315,7 @@ Upgrade.Create = function(game) {
       game.upgradeStats.monsterClickBonus -= 0.3;
     },
     function(game) {
-      return "Manual monster clicks deal 30% more damage.";
+      return "Monster clicks deal 30% more damage.";
     }
   );
   upgrades[MORELLONOMICON] = new Upgrade(game, AMPLIFYING_TOME,           4000000000, 12, 0, 0, 200, 4, 0, [FIENDISH_CODEX],
@@ -336,7 +336,7 @@ Upgrade.Create = function(game) {
       game.upgradeStats.ludenCount = 0;
     },
     function(game) {
-      return "After 10 spell casts, next monster click deals bonus damage equal to 3x DPS.";
+      return "After 10 spell casts, next monster click deals 3x DPS bonus damage.";
     }
   );
   upgrades[RYLAIS_CRYSTAL_SCEPTER] = new Upgrade(game, AMPLIFYING_TOME,   2000000000000, 16, 50, 0, 350, 0, 0, [NEEDLESSLY_LARGE_ROD],
@@ -382,7 +382,7 @@ Upgrade.Create = function(game) {
       game.upgradeStats.monsterClickPercent -= 0.03;
     },
     function(game) {
-      return "Manual monster clicks deal bonus damage equal to 3% of total DPS.";
+      return "Monster clicks deal 3% DPS bonus damage.";
     }
   );
   upgrades[ZEAL] = new Upgrade(game, DAGGER,                              450000000, 10, 0, 3, 0, 4, 0, [],
@@ -393,7 +393,7 @@ Upgrade.Create = function(game) {
       game.upgradeStats.chimeClickPercent -= 0.05;
     },
     function(game) {
-      return "Manual chime clicks gather bonus chimes equal to 5% of total CPS";
+      return "Chime clicks gather 5% CPS bonus chimes.";
     }
   );
   upgrades[WITS_END] = new Upgrade(game, DAGGER,                          9000000000, 12, 50, 0, 60, 5, 0, [RECURVE_BOW],
@@ -403,7 +403,7 @@ Upgrade.Create = function(game) {
       game.upgradeStats.witCount = 0;
     },
     function(game) {
-      return "Monster clicks grant 2% bonus cps for 3 seconds, stacking up to 5 times (10% total).";
+      return "Monster clicks grant 2% bonus CPS for 3 seconds, stacking up to 5 times.";
     }
   );
   upgrades[STATIKK_SHIV] = new Upgrade(game, DAGGER,                      150000000000, 14, 0, 3, 90, 5, 0, [ZEAL],
@@ -413,7 +413,7 @@ Upgrade.Create = function(game) {
       game.upgradeStats.statikkCount = 0;
     },
     function(game) {
-      return "Every 40 monster clicks, deal bonus damage equal to 2x DPS.";
+      return "Every 40 monster clicks, deal 2x DPS bonus damage.";
     }
   );
   upgrades[PHANTOM_DANCER] = new Upgrade(game, DAGGER,                    4500000000000, 16, 0, 4, 0, 10, 0, [ZEAL],
@@ -439,7 +439,7 @@ Upgrade.Create = function(game) {
       game.upgradeStats.cooldownReduction -= 0.05;
     },
     function(game) {
-      return "+2% chimes gathered, +1% damage dealt, +5% spell cooldown reduction.";
+      return "+2% chimes gathered, +1% damage dealt, +5% cooldown reduction.";
     }
   );
 

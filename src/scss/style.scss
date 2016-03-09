@@ -476,7 +476,7 @@ body {
 	background-position: 50%;
 	background-color: #111;
 
-	@include transition(box-shadow 100ms, top 100ms);
+	@include transition(box-shadow 100ms, top 100ms, background-image 250ms);
 
 	@include box-shadow(0 20px 30px -19px $lightTextPrimary inset,
 											0 -20px 30px -18px $black inset,
@@ -674,7 +674,6 @@ body {
 }
 
 .item-left:active {
-	background-color: $primary700;
 	margin-top: 5px;
 }
 
@@ -713,10 +712,14 @@ body {
 	width: 100px;
 	height: 100px;
 
-	border-radius: 1px;
+	border-radius: 0 0 1px 1px;
 	background-repeat: no-repeat;
 	background-size: cover;
+
+	@include transition(background-image 250ms);
+
 }
+
 .item-locked .item-left {
 	float: none;
 	margin: 5px auto;
@@ -746,7 +749,7 @@ body {
 .item-middle {
 	float: left;
 
-	width: 120px;
+	width: 118px;
 	height: 100px;
 
 	margin-top: 8px;
@@ -758,7 +761,7 @@ body {
 .item-right {
 	float: left;
 
-	width: calc(100% - 232px);
+	width: calc(100% - 230px);
 	height: 100px;
 
 	margin-top: 8px;
@@ -768,7 +771,7 @@ body {
 .item-stats {
 	float: left;
 
-	width: 74px;
+	width: 72px;
 
 	text-align: right;
 	font-size: 14px;
@@ -818,46 +821,74 @@ body {
 	width: calc(100% - 137px);
 	height: 100%;
 
-	overflow-x: auto;
-
 	border-left: 1px solid $dividerLight;
 	border-right: 1px solid $dividerDark;
-}
-
-.item-upgrades-wrapper::-webkit-scrollbar {
-	width: 6px;
-	height: 6px;
-}
-
-.item-upgrades-wrapper::-webkit-scrollbar-track {
-	background-color: rgba($gray1000, 1);
-}
-
-.item-upgrades-wrapper::-webkit-scrollbar-thumb {
-  background: rgba($gray100, .7);
-}
-
-.item-upgrades-wrapper::-webkit-scrollbar-thumb:hover {
-  background: rgba($gray100, 1);
 }
 
 .item-upgrades {
 	float: left;
 	display: flex;
-	flex-wrap: nowrap;
+	flex-wrap: wrap;
+	align-items: center;
+	width: 100%;
+	height: 100%;
 }
 
 .item-upgrade {
-	float: left;
+	position: relative;
+	flex-grow: 0;
 
-	width: 40px;
-	height: 40px;
+	width: calc(14% - 16px);
+	min-width: 36px;
+	max-width: 56px;
 
-	margin: 30px 8px 0;
-	border-radius: 20px;
+	margin: 0 8px 0;
+	border-radius: 50%;
 
 	background-size: cover;
-	@include box-shadow(0 0 2px 2px $boxShadow inset);
+	cursor: pointer;
+}
+
+.item-upgrade-image {
+	position: absolute;
+	width: 100%;
+	margin-top: -50%;
+	padding-bottom: 100%;
+
+	border-radius: 50%;
+
+	background-size: cover;
+	@include box-shadow(0 0 3px 3px $boxShadow inset);
+	@include transition(box-shadow 100ms);
+}
+
+.item-upgrade-overlay {
+	position: absolute;
+
+	width: 100%;
+	margin-top: -50%;
+	padding-bottom: 100%;
+
+	border-radius: 50%;
+	background-color: $darkTextDisabled;
+	@include transition(background-color 100ms);
+};
+
+.item-upgrade.active {
+	.item-upgrade-image {
+		@include box-shadow(0 0 3px 3px $boxShadow);
+	}
+
+	.item-upgrade-overlay {
+		background-color: $transparent;
+	}
+}
+
+@media screen and (max-width: 1000px) {
+	.item-upgrade {
+		width: calc(14% - 8px);
+		margin: 0 4px 0;
+	}
 }
 
 /* UPGRADES ///////////////////////////////////// */

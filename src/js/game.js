@@ -445,7 +445,7 @@ Game.prototype.buyUpgrade = function (name) {
     item.damageStat += upgrade.damageStat;
     item.attackrateStat += upgrade.attackrateStat;
     item.income += upgrade.income;
-    item.upgrades.push(name);
+    item.upgradesPurchased.push(name);
     item.upgradesAvailable.splice(item.upgradesAvailable.indexOf(name), 1);
     // Upgrade all previously bought items
     var count = item.count;
@@ -473,12 +473,16 @@ Game.prototype.activateUpgrade = function (name) {
     return;
 
   var upgradeActive = item.upgradeActive;
-  if (upgradeActive)
+  if (upgradeActive) {
     this.upgrades[upgradeActive].deactivate(this);
+    item.upgradeActive = null;
+  }
 
-  upgrade.activate(this);
-  item.upgradeActive = name;
-  // TODO: item.upgradeCooldown = 60000;
+  if (upgradeActive != name) {
+    upgrade.activate(this);
+    item.upgradeActive = name;
+    // TODO: item.upgradeCooldown = 60000;
+  }
 
   this.updateStats();
 };
@@ -705,6 +709,12 @@ Game.prototype.getExperiencePercent = function () {
 };
 Game.prototype.getExperienceText = function () {
   return this.won ? 'You Win!' : prettyIntBig(this.experience) + ' / ' + prettyIntBig(this.experienceNeeded) + ' xp';
+};
+Game.prototype.getItemName = function (name) {
+  var item = this.items[name];
+  if (item && item.upgradeActive)
+    return item.upgradeActive
+  return name;
 };
 Game.prototype.getSpellTimePercent = function (spellName) {
   var spell = this.spells[spellName];
@@ -934,8 +944,9 @@ Game.prototype.saveItems = function (save) {
       var itemData = {};
       itemData.name = itemToIndex(itemName);
       itemData.count = item.count;
-      itemData.upgrades = Item.convertUpgradeToIndex(item.upgrades);
+      itemData.upgradesPurchased = Item.convertUpgradeToIndex(item.upgradesPurchased);
       itemData.upgradesAvailable = Item.convertUpgradeToIndex(item.upgradesAvailable);
+      itemData.upgradeActive = upgradeToIndex(item.upgradeActive);
       itemData.cost = item.cost;
       obj.push(itemData);
     }
@@ -1284,8 +1295,10 @@ Game.prototype.loadItems = function (obj) {
       item = this.items[indexToItem(data.name)];
       if (data && item) {
         item.count = data.count;
-        item.upgrades = Item.convertIndexToUpgrade(data.upgrades);
+        var upgrades = data.upgradesPurchased || data.upgrades;
+        item.upgradesPurchased = Item.convertIndexToUpgrade(upgrades);
         item.upgradesAvailable = Item.convertIndexToUpgrade(data.upgradesAvailable);
+        item.upgradeActive = indexToUpgrade(data.upgradeActive);
         item.cost = item.startCost + item.startCost * SCALE_ITEM_COST * item.count * (item.count + 1) / 2;
         item.cost10 = item.calculatePurchaseCost(10);
         item.cost100 = item.calculatePurchaseCost(100);
@@ -1300,7 +1313,8 @@ Game.prototype.loadItems = function (obj) {
         item = this.items[name];
         if (data && item) {
           item.count = data.count;
-          item.upgrades = data.upgrades;
+          var upgrades = data.upgradesPurchased || data.upgrades;
+          item.upgrades = upgrades;
           item.upgradesAvailable = data.upgradesAvailable;
           item.cost = item.startCost + item.startCost * SCALE_ITEM_COST * item.count * (item.count + 1) / 2;
           item.cost10 = item.calculatePurchaseCost(10);

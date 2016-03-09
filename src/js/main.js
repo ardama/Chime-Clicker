@@ -1,4 +1,4 @@
-var version = '0.5.7';
+var version = '0.5.8';
 var home = 'http://chimeclicker.lol.s3-website-us-east-1.amazonaws.com/';
 ///// CONSTANTS ////////////////////
 // Items
@@ -233,7 +233,10 @@ var IGNORE_PLURALS = [
   SORCERERS_SHOES,
   MERCURYS_TREADS,
   SPOILS_OF_WAR,
-  BERSERKERS_GREAVES
+  BERSERKERS_GREAVES,
+  FACE_OF_THE_MOUNTAIN,
+  TALISMAN_OF_ASCENSION,
+  RIGHTEOUS_GLORY
 ];
 var SPECIAL_PLURALS = [
   ZHONYAS_HOURGLASS,
@@ -467,7 +470,7 @@ function updateButtons(force) {
   });
 }
 function updateTooltips(scroll) {
-  $('.spell-wrapper, .item-buy, .active-rune-image').each(function () {
+  $('.spell-wrapper, .item-buy, .active-rune-image', '.item-upgrade-overlay').each(function () {
     // TODO: figure out how to position off-screen tooltips properly
     if (scroll) {
       return;

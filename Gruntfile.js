@@ -287,7 +287,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', '', ['prod', 'dev']);
   grunt.registerTask('build-dev', '', ['dev']);
   grunt.registerTask('build-prod', '', ['prod']);
-  grunt.registerTask('build-images', '', ['imagemin:prod', 'imagemin:dev']);
+  grunt.registerTask('build-images', '', ['imagemin:dev', 'imagemin:prod']);
 
   grunt.registerTask('watch-dev', '', ['concurrent:dev']);
   grunt.registerTask('watch-prod', '', ['concurrent:prod']);
