@@ -47,32 +47,32 @@ Spell.Create = function (game) {
     return this.status == LOCKED ? '' : 'Deal <b>' + prettyIntBigCompact(game.getSmiteDamage()) + '</b> damage ' + (!game.isMonsterChampion(game.monster) ? 'instantly' : 'over 5 seconds') + '.  Damage scales with level and experience.</br></br>Non-champion kills with smite grant +20% gold.</br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(Q)</b>';
   });
   spells[GHOST] = new Spell(game, 10, 90, SPELL_ACTIVE, MONSTER_ALL, function (game) {
-    game.ghostBonus = 2;
+    game.ghostBonus = 1 + 1 * game.upgradeStats.ghostBonus;
   }, function (game) {
     game.ghostBonus = 1;
   }, function (game) {
     return game.level >= 4;
   }, function (game) {
-    return this.status == LOCKED ? '' : '+100% chime gathering for 10 seconds.  </br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(W)</b>';
+    return this.status == LOCKED ? '' : '+' + 100 * game.upgradeStats.ghostBonus + '% chime gathering for 10 seconds.  </br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(W)</b>';
   });
   spells[HEAL] = new Spell(game, 5, 120, SPELL_ACTIVE, MONSTER_ALL, function (game) {
-    game.healBonus = 5;
+    game.healBonus = 5 * game.upgradeStats.healBonus;
     game.updateStats();
   }, function (game) {
     game.healBonus = 1;
   }, function (game) {
     return game.level >= 6;
   }, function (game) {
-    return this.status == LOCKED ? '' : '5x chimes per click for 5 seconds.</br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(E)</b>';
+    return this.status == LOCKED ? '' : 5 * game.upgradeStats.healBonus + 'x chimes per click for 5 seconds.</br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(E)</b>';
   });
   spells[FLASH] = new Spell(game, 0, 180, SPELL_ACTIVE, MONSTER_ALL, function (game) {
-    game.addMeeps(Math.ceil(game.meepsEarned * game.flashBonus), true);
+    game.addMeeps(Math.ceil(game.meepsEarned * game.flashBonus * game.upgradeStats.flashBonus), true);
     showRing(FLASH, RING_DURATION);
   }, function (game) {
   }, function (game) {
     return game.level >= 10;
   }, function (game) {
-    return this.status == LOCKED ? '' : '+3% meeps earned from chimes.</br>(<b>' + prettyIntBigCompact(Math.ceil(game.meepsEarned * game.flashBonus)) + '</b>)</br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(R)</b>';
+    return this.status == LOCKED ? '' : '+' + Math.round(100 * game.flashBonus * game.upgradeStats.flashBonus) + '% meeps earned from chimes.</br>(<b>' + prettyIntBigCompact(Math.ceil(game.meepsEarned * game.flashBonus * game.upgradeStats.flashBonus)) + '</b>)</br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(R)</b>';
   });
   spells[TELEPORT] = new Spell(game, 0, 300, SPELL_ACTIVE, MONSTER_ALL, function (game) {
   }, function (game) {
@@ -96,16 +96,16 @@ Spell.Create = function (game) {
     return this.status == LOCKED ? '' : 'Reset cooldowns of all spells.  </br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(T)</b>';
   });
   spells[EXHAUST] = new Spell(game, 10, 90, SPELL_ACTIVE, MONSTER_CHAMPION, function (game) {
-    game.exhaustBonus = 2;
+    game.exhaustBonus = 1 + 1 * game.upgradeStats.exhaustBonus;
   }, function (game) {
     game.exhaustBonus = 1;
   }, function (game) {
     return game.level >= 16;
   }, function (game) {
-    return this.status == LOCKED ? '' : '+100% damage dealt for 10 seconds.  Only works against champions.  </br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(Y)</b>';
+    return this.status == LOCKED ? '' : '+' + 100 * game.upgradeStats.exhaustBonus + ' damage dealt for 10 seconds.  Only works against champions.  </br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(Y)</b>';
   });
   spells[IGNITE] = new Spell(game, 0, 120, SPELL_ACTIVE, MONSTER_ALL, function (game) {
-    game.igniteBonus += 0.05;
+    game.igniteBonus += 0.05 * game.upgradeStats.igniteBonus;
     game.updateStats();
     showRing(IGNITE + '1', RING_DURATION);
   }, function (game) {
@@ -113,7 +113,7 @@ Spell.Create = function (game) {
   }, function (game) {
     return game.level >= 17;
   }, function (game) {
-    return this.status == LOCKED ? '' : '+5% damage from items.</br>(<b>' + prettyIntBigCompact(Math.ceil(game.damageBought * 0.05)) + '</b>)</br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(U)</b>';
+    return this.status == LOCKED ? '' : '+' + Math.round(5  * game.upgradeStats.igniteBonus) + '% damage from items.</br>(<b>' + prettyIntBigCompact(Math.ceil(game.damageBought * 0.05 * game.upgradeStats.igniteBonus)) + '</b>)</br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(U)</b>';
   });
   spells[SPOILS_OF_WAR] = new Spell(game, 0, 45, SPELL_PASSIVE, MONSTER_JUNGLE, function (game) {
     game.spoilsOfWarActive = 1;

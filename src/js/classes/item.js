@@ -22,6 +22,8 @@ Item.prototype.Init = function(game, cost, level, defenseStat, movespeedStat, da
 
   this.upgrades = [];
   this.upgradesAvailable = [];
+  this.upgradeActive = null;
+  this.upgradeCooldown = 0;
 
   this.cost10 = this.calculatePurchaseCost(10);
   this.cost100 = this.calculatePurchaseCost(100);
