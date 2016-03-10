@@ -44,26 +44,30 @@ Upgrade.Create = function(game) {
     function(game) {
       game.upgradeStats.goldBonus += 0.03;
       game.upgradeStats.priceBonus += 0.015;
+      game.updateItemPrices();
     },
     function(game) {
       game.upgradeStats.goldBonus -= 0.03;
       game.upgradeStats.priceBonus -= 0.015;
+      game.updateItemPrices();
     },
     function(game) {
-      return "+3% gold earned, +1.5% item and upgrade costs.";
+      return "+3% gold earned, +1.5% item costs.";
     }
   );
   upgrades[TALISMAN_OF_ASCENSION] = new Upgrade(game, ANCIENT_COIN,       9000000, 8, 0, 4, 0, 2, 180, [NOMADS_MEDALLION],
     function(game) {
       game.upgradeStats.goldBonus -= 0.015;
       game.upgradeStats.priceBonus -= 0.03;
+      game.updateItemPrices();
     },
     function(game) {
       game.upgradeStats.goldBonus += 0.015;
       game.upgradeStats.priceBonus += 0.03;
+      game.updateItemPrices();
     },
     function(game) {
-      return "-1.5% gold earned, -3% item and upgrade costs.";
+      return "-1.5% gold earned, -3% item costs.";
     }
   );
 
@@ -149,9 +153,11 @@ Upgrade.Create = function(game) {
   upgrades[IONIAN_BOOTS_OF_LUCIDITY] = new Upgrade(game, BOOTS_OF_SPEED,  20000000, 9, 0, 4, 0, 1, 0, [],
     function(game) {
       game.upgradeStats.cooldownReduction += 0.05;
+      game.calculateCooldownReduction();
     },
     function(game) {
       game.upgradeStats.cooldownReduction -= 0.05;
+      game.calculateCooldownReduction();
     },
     function(game) {
       return "5% spell cooldown reduction.";
@@ -220,9 +226,11 @@ Upgrade.Create = function(game) {
   upgrades[KINDLEGEM] = new Upgrade(game, RUBY_CRYSTAL,                   1000000, 7, 15, 0, 0, 1, 0, [],
     function(game) {
       game.upgradeStats.cooldownReduction += 0.05;
+      game.calculateCooldownReduction();
     },
     function(game) {
       game.upgradeStats.cooldownReduction -= 0.05;
+      game.calculateCooldownReduction();
     },
     function(game) {
       return "5% spell cooldown reduction.";
@@ -241,10 +249,10 @@ Upgrade.Create = function(game) {
   );
   upgrades[WARMOGS_ARMOR] = new Upgrade(game, RUBY_CRYSTAL,               750000000, 11, 70, 0, 0, 0, 0, [GIANTS_BELT],
     function(game) {
-      game.upgradeStats.warmogBonus += 0.1;
+      game.upgradeStats.warmogBonus = 1.1;
     },
     function(game) {
-      game.upgradeStats.warmogBonus -= 0.1;
+      game.upgradeStats.warmogBonus = 1;
     },
     function(game) {
       return "+10% chimes gathered. Disabled for 6 seconds upon monster click.";
@@ -288,9 +296,11 @@ Upgrade.Create = function(game) {
   upgrades[FIENDISH_CODEX] = new Upgrade(game, AMPLIFYING_TOME,           300000, 6, 0, 0, 50, 1, 0, [],
     function(game) {
       game.upgradeStats.cooldownReduction += 0.05;
+      game.calculateCooldownReduction();
     },
     function(game) {
       game.upgradeStats.cooldownReduction -= 0.05;
+      game.calculateCooldownReduction();
     },
     function(game) {
       return "+5% spell cooldown reduction.";
@@ -403,7 +413,7 @@ Upgrade.Create = function(game) {
       game.upgradeStats.witCount = 0;
     },
     function(game) {
-      return "Monster clicks grant 2% bonus CPS for 3 seconds, stacking up to 5 times.";
+      return "Monster clicks grant 2% bonus chime gathering for 3 seconds, stacking up to 5 times.";
     }
   );
   upgrades[STATIKK_SHIV] = new Upgrade(game, DAGGER,                      150000000000, 14, 0, 3, 90, 5, 0, [ZEAL],
@@ -432,11 +442,13 @@ Upgrade.Create = function(game) {
       game.upgradeStats.chimeBonus += 0.02;
       game.upgradeStats.damageBonus += 0.01;
       game.upgradeStats.cooldownReduction += 0.05;
+      game.calculateCooldownReduction();
     },
     function(game) {
       game.upgradeStats.chimeBonus -= 0.02;
       game.upgradeStats.damageBonus -= 0.01;
       game.upgradeStats.cooldownReduction -= 0.05;
+      game.calculateCooldownReduction();
     },
     function(game) {
       return "+2% chimes gathered, +1% damage dealt, +5% cooldown reduction.";
@@ -449,25 +461,25 @@ Upgrade.Create = function(game) {
 Upgrade.CreateStatsObject = function() {
   var obj = {};
 
-  obj.goldBonus = 1; //
-  obj.priceBonus = 1;
+  obj.goldBonus = 1; // game.js
+  obj.priceBonus = 1; // item.js
 
-  obj.chimeBonus = 1;
-  obj.damageBonus = 1;
+  obj.chimeBonus = 1; // game.js
+  obj.damageBonus = 1; // game.js
 
-  obj.chimeClickBonus = 0;
-  obj.monsterClickBonus = 0;
+  obj.chimeClickBonus = 1; // game.js
+  obj.monsterClickBonus = 1; // game.js
 
-  obj.chimeClickPercent = 0;
-  obj.monsterClickPercent = 0;
+  obj.chimeClickPercent = 0; // game.js
+  obj.monsterClickPercent = 0; // game.js
 
-  obj.cooldownReduction = 0;
+  obj.cooldownReduction = 0; // upgrade.js
 
-  obj.flashBonus = 1; //
-  obj.healBonus = 1; //
-  obj.ghostBonus = 1; //
-  obj.exhaustBonus = 1; //
-  obj.igniteBonus = 1; //
+  obj.flashBonus = 1; // spell.js
+  obj.healBonus = 1; // spell.js
+  obj.ghostBonus = 1; // spell.js
+  obj.exhaustBonus = 1; // spell.js
+  obj.igniteBonus = 1; // spell.js
 
   obj.aetherBonus = 1;
   obj.warmogBonus = 1;
@@ -477,12 +489,14 @@ Upgrade.CreateStatsObject = function() {
   obj.rabadonBonus = 1;
 
   obj.ludenCount = 0;
-  obj.statikkCount = 0;
+  obj.statikkCount = 0; // game.js
   obj.witCount = 0;
 
-  obj.aetherTime = null;
-  obj.warmogTime = null;
-  obj.witTime = null;
+  obj.aetherTime = 0;
+  obj.warmogTime = 0;
+  obj.frozenTime = 0;
+  obj.rylaiTime = 0;
+  obj.witTime = 0;
 
   return obj;
 };

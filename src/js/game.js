@@ -8,6 +8,7 @@ Game.prototype.Init = function (scope, difficulty) {
   this.fps = 18;
   this.stepSize = 1 / this.fps;
   this.steps = 0;
+  this.updateRequired = true;
   this.timePlayed = 0;
   this.stepStart = new Date();
   this.stepEnd = new Date();
@@ -64,24 +65,23 @@ Game.prototype.Init = function (scope, difficulty) {
   this[GLYPH] = [];
   this[QUINT] = [];
   // Object arrays
+  this.runeStats = Rune.CreateStatsObject();
+  this.tempRuneStats = Rune.CreateStatsObject();
+  this.upgradeStats = Upgrade.CreateStatsObject();
   this.monstersAvailable = [];
   this.items = Item.Create(this);
   this.spells = Spell.Create(this);
   this.upgrades = Upgrade.Create(this);
-  this.upgradeStats = Upgrade.CreateStatsObject();
   this.monsters = Monster.Create(this);
   this.runes = Rune.Create(this);
   this.masteries = Mastery.Create(this);
   this.achievements = Achievement.Create(this);
   this.runesChanged = false;
-  this.runeStats = Rune.CreateStatsObject();
-  this.tempRuneStats = Rune.CreateStatsObject();
   this.load();
   this.unlockItems();
   this.unlockSpells();
   this.unlockUpgrades();
   this.unlockMonsters(false);
-  this.updateStats();
 };
 Game.prototype.start = function () {
   this.step();
@@ -108,6 +108,10 @@ Game.prototype.step = function (step) {
       thisref.addSpellTime(elapsedTime);
       thisref.timePlayed += elapsedTime;
       thisref.progress.general.timePlayed += elapsedTime;
+      if (thisref.updateRequired) {
+        thisref.updateStats();
+        thisref.updateRequired = false;
+      }
     });
   } else {
     this.scope.$apply();
@@ -202,9 +206,10 @@ Game.prototype.addMeeps = function (meeps, flash) {
   }
   this.meeps = newMeeps;
   this.progress.general.totalMeeps += meeps;
-  this.updateStats();
+  this.updateRequired = true;
 };
 Game.prototype.addSpellTime = function (time) {
+  var update = false;
   var activeSpells = this.getObjectsByStatus(this.spells, ACTIVE);
   var cooldownSpells = this.getObjectsByStatus(this.spells, COOLDOWN);
   var unavailableSpells = this.getObjectsByStatus(this.spells, UNAVAILABLE);
@@ -217,7 +222,7 @@ Game.prototype.addSpellTime = function (time) {
       activeSpell.end(this);
       activeSpell.status = COOLDOWN;
       activeSpell.cooldownLeft = activeSpell.cooldown;
-      this.updateStats();
+      this.updateRequired = true;
     }
   }
   len = cooldownSpells.length;
@@ -243,23 +248,64 @@ Game.prototype.addSpellTime = function (time) {
       unavailableSpell.end(this);
       unavailableSpell.status = COOLDOWN;
       unavailableSpell.cooldownLeft = unavailableSpell.cooldown;
-      this.updateStats();
+      this.updateRequired = true;
+    }
+  }
+
+  // Subtract time from item passive timers.
+  // If any timers dropped to 0, trigger update.
+  if (this.upgradeStats.aetherTime > 0) {
+    this.upgradeStats.aetherTime -= time;
+    if (this.upgradeStats.aetherTime <= 0) {
+      this.updateRequired = true;
+    }
+  }
+  if (this.upgradeStats.warmogTime > 0) {
+    this.upgradeStats.warmogTime -= time;
+    if (this.upgradeStats.warmogTime <= 0) {
+      this.updateRequired = true;
+    }
+  }
+  if (this.upgradeStats.frozenTime > 0) {
+    this.upgradeStats.frozenTime -= time;
+    if (this.upgradeStats.frozenTime <= 0) {
+      this.updateRequired = true;
+    }
+  }
+  if (this.upgradeStats.rylaiTime > 0) {
+    this.upgradeStats.rylaiTime -= time;
+    if (this.upgradeStats.rylaiTime <= 0) {
+      this.updateRequired = true;
+    }
+  }
+  if (this.upgradeStats.witTime > 0) {
+    this.upgradeStats.witTime -= time;
+    if (this.upgradeStats.witTime <= 0) {
+      this.updateRequired = true;
+      this.upgradeStats.witCount = 0;
     }
   }
 };
 // Update Functions
 Game.prototype.updateStats = function () {
-  this.damageBase = this.runeStats.damage + this.damageBought * this.igniteBonus + this.meeps * this.meepDamage;
+  this.damageBase = this.runeStats.damage + this.damageBought * this.igniteBonus * this.upgradeStats.rabadonBonus + this.meeps * this.meepDamage;
   this.defenseStat = this.defenseBase * this.runeStats.scalingDefense;
   this.movespeedStat = this.movespeedBase * this.runeStats.scalingMovespeed;
   this.damageStat = this.damageBase * this.runeStats.scalingDamage;
   this.attackrateStat = this.attackrateBase * this.runeStats.scalingAttackrate;
-  this.chimesRate = this.defenseStat * this.movespeedStat * this.ghostBonus;
-  // chimes collected equals base defenseStat + 3% of current cps
-  this.chimesPerClick = (this.defenseStat * this.ghostBonus + 0.03 * this.chimesRate) * this.healBonus * this.runeStats.chimeClicking;
-  this.damageRate = this.damageStat * this.attackrateStat * this.exhaustBonus + this.smiteDamageRate;
-  // damage dealt equals base damageStat + 3% of current dps
-  this.damagePerClick = (this.exhaustBonus * this.damageStat + 0.03 * this.damageRate) * this.runeStats.monsterClicking;
+
+  var chimeUpgradeBonus = this.upgradeStats.chimeBonus * (1 + .02 * this.upgradeStats.witCount);
+  chimeUpgradeBonus *= this.upgradeStats.aetherTime > 0 ? this.upgradeStats.aetherBonus : 1;
+  chimeUpgradeBonus *= this.upgradeStats.warmogTime > 0 ? 1 : this.upgradeStats.warmogBonus;
+  this.chimesRate = this.defenseStat * this.movespeedStat * this.ghostBonus * chimeUpgradeBonus;
+  this.chimesPerClick = (this.defenseStat * this.ghostBonus + this.upgradeStats.chimeClickPercent * this.chimesRate) * this.healBonus * this.runeStats.chimeClicking * this.upgradeStats.chimeClickBonus * chimeUpgradeBonus;
+
+  var damageUpgradeBonus = this.upgradeStats.damageBonus;
+  damageUpgradeBonus *= this.upgradeStats.rylaiTime > 0 ? this.upgradeStats.rylaiBonus : 1;
+  damageUpgradeBonus *= this.upgradeStats.frozenTime > 0 ? this.upgradeStats.frozenBonus : 1;
+  damageUpgradeBonus *= this.getMonsterHealthPercent < 40 ? this.upgradeStats.morelloBonus : 1;
+  this.damageRate = this.damageStat * this.attackrateStat * this.exhaustBonus * damageUpgradeBonus + this.smiteDamageRate;
+  this.damagePerClick = (this.exhaustBonus * this.damageStat + this.upgradeStats.monsterClickPercent * this.damageRate) * this.runeStats.monsterClicking * this.upgradeStats.monsterClickBonus * damageUpgradeBonus;
 };
 Game.prototype.unlockItems = function () {
   var items = this.getObjectsByStatus(this.items, LOCKED);
@@ -269,6 +315,15 @@ Game.prototype.unlockItems = function () {
     if (item.unlock(this)) {
       item.status = AVAILABLE;
     }
+  }
+};
+Game.prototype.updateItemPrices = function () {
+  for (var itemName in this.items) {
+    var item = this.items[itemName];
+    item.cost = item.calculatePurchaseCost(1);
+    item.cost10 = item.calculatePurchaseCost(10);
+    item.cost100 = item.calculatePurchaseCost(100);
+    item.cost1000 = item.calculatePurchaseCost(1000);
   }
 };
 Game.prototype.unlockUpgrades = function () {
@@ -315,7 +370,7 @@ Game.prototype.unlockSpells = function () {
   }
 };
 Game.prototype.calculateCooldownReduction = function () {
-  this.cooldownReduction = this.runeStats.cooldownReduction + this.runeStats.scalingCooldownReduction * this.level / MONSTERS.length;
+  this.cooldownReduction = this.runeStats.cooldownReduction + this.runeStats.scalingCooldownReduction * this.level / MONSTERS.length + this.upgradeStats.cooldownReduction;
   var oldCooldownReduction = Math.min(this.oldCooldownReduction, 0.4);
   var newCooldownReduction = Math.min(this.cooldownReduction, 0.4);
 
@@ -370,12 +425,49 @@ Game.prototype.chimesClick = function () {
 };
 Game.prototype.damageClick = function () {
   if (!this.addClick()) return;
-  if (this.spells[TRIBUTE].status == AVAILABLE)
-    this.activateSpell(TRIBUTE);
-  this.addDamage(this.damagePerClick, true);
-  this.progress.general.clickDamage += this.damagePerClick;
+
+  var damage = this.damagePerClick;
+  if (this.items[DAGGER].upgradeActive == STATIKK_SHIV) {
+    if (this.upgradeStats.statikkCount >= 40) {
+      damage += this.damageRate * 2;
+      this.upgradeStats.statikkCount = 0;
+    }
+    else {
+      this.upgradeStats.statikkCount = Math.min(this.upgradeStats.statikkCount + 1, 40);
+    }
+  }
+
+  if (this.items[AMPLIFYING_TOME].upgradeActive == LUDENS_ECHO) {
+    if (this.upgradeStats.ludenCount >= 10) {
+      damage += this.damageRate * 3;
+      this.upgradeStats.ludenCount = 0;
+    }
+  }
+
+  this.addDamage(damage, true);
+  this.progress.general.clickDamage += damage;
   this.progress.general.totalClicks++;
   this.progress.general.damageClicks++;
+
+  if (this.items[RUBY_CRYSTAL].upgradeActive == WARMOGS_ARMOR) {
+    this.upgradeStats.warmogTime = 6;
+    this.updateRequired = true;
+  }
+  else if (this.items[RUBY_CRYSTAL].upgradeActive == FROZEN_MALLET) {
+    this.upgradeStats.frozenTime = 2;
+    this.updateRequired = true;
+  }
+
+  if (this.items[DAGGER].upgradeActive == WITS_END) {
+    this.upgradeStats.witTime = 3;
+    this.upgradeStats.witCount = Math.min(this.upgradeStats.witCount + 1, 5);
+    this.updateRequired = true;
+  }
+
+  if (this.spells[TRIBUTE].status == AVAILABLE)
+    this.activateSpell(TRIBUTE);
+
+  return damage;
 };
 Game.prototype.spellClick = function (name) {
   var spell = this.spells[name];
@@ -394,7 +486,14 @@ Game.prototype.activateSpell = function (name) {
   spell.durationLeft = spell.duration;
   spell.status = ACTIVE;
   this.progress.spells[name].count++;
-  this.updateStats();
+
+  if (this.items[AMPLIFYING_TOME].upgradeActive == LUDENS_ECHO)
+    this.upgradeStats.ludenCount = Math.min(this.upgradeStats.ludenCount + 1, 10);
+  else if (this.items[AMPLIFYING_TOME].upgradeActive == AETHER_WISP)
+    this.upgradeStats.aetherTime = 3;
+  else if (this.items[AMPLIFYING_TOME].upgradeActive == RYLAIS_CRYSTAL_SCEPTER)
+    this.upgradeStats.rylaiTime = 4;
+  this.updateRequired = true;
 };
 Game.prototype.buyItem = function (name, count) {
   if (this.paused)
@@ -402,11 +501,11 @@ Game.prototype.buyItem = function (name, count) {
   count = count ? count : 1;
   var item = this.items[name];
   var bought = 0;
+  var spent = 0;
   while (count--) {
     if (this.gold >= item.cost) {
       this.gold -= item.cost;
-      this.progress.items[name].goldSpent += item.cost;
-      this.progress.general.goldSpent += item.cost;
+      spent += item.cost;
       item.count++;
       item.cost += item.startCost * SCALE_ITEM_COST * item.count;
       bought++;
@@ -423,13 +522,15 @@ Game.prototype.buyItem = function (name, count) {
   item.cost100 = item.calculatePurchaseCost(100);
   item.cost1000 = item.calculatePurchaseCost(1000);
   this.progress.items[name].count += bought;
+  this.progress.items[name].goldSpent += spent;
+  this.progress.general.goldSpent += spent;
   if (this.spells[FAVOR].status != LOCKED && name == ANCIENT_COIN)
     this.favorBonus = this.getFavorBonus() / 100;
   else if (this.spells[TRIBUTE].status != LOCKED && name == SPELLTHIEFS_EDGE)
     this.tributeBonus = this.getTributeBonus() / 100;
   else if (this.spells[SPOILS_OF_WAR].status != LOCKED && name == RELIC_SHIELD)
     this.spoilsOfWarBonus = this.getSpoilsOfWarBonus() / 100;
-  this.updateStats();
+  this.updateRequired = true;
 };
 Game.prototype.buyUpgrade = function (name) {
   if (this.paused)
@@ -457,7 +558,7 @@ Game.prototype.buyUpgrade = function (name) {
     this.progress.general.goldSpent += upgrade.cost;
     this.unlockUpgrades();
     this.unlockSpells();
-    this.updateStats();
+    this.updateRequired = true;
     if (name == TALISMAN_OF_ASCENSION)
       this.favorBonus = this.getFavorBonus() / 100;
     else if (name == FROST_QUEENS_CLAIM)
@@ -483,8 +584,7 @@ Game.prototype.activateUpgrade = function (name) {
     item.upgradeActive = name;
     // TODO: item.upgradeCooldown = 60000;
   }
-
-  this.updateStats();
+  this.updateRequired = true;
 };
 Game.prototype.buyRune = function (rune, count) {
   if (!rune)
@@ -616,7 +716,7 @@ Game.prototype.levelUp = function (levels) {
     levels--;
   }
   this.igniteDamage = this.getIgniteDamage();
-  this.updateStats();
+  this.updateRequired = true;
   this.unlockItems();
   this.unlockUpgrades();
   this.unlockMonsters(true);
@@ -1453,12 +1553,15 @@ Game.prototype.recalculateState = function () {
     this.damageBought += item.count * item.damageStat;
     this.attackrateBase += item.count * item.attackrateStat;
     this.income += item.count * item.income;
+    if (item.upgradeActive) {
+      this.upgrades[item.upgradeActive].activate(this);
+    }
   }
   var monsters = this.getObjectsByStatus(this.monsters, AVAILABLE);
   for (i = 0; i < monsters.length; i++) {
     this.monsters[monsters[i]].experience /= 5;
   }
-  this.damageStat = this.damageBought * this.igniteBonus + this.meeps * this.meepDamage;
+  this.damageStat = this.damageBought * this.igniteBonus * this.upgradeStats.rabadonBonus + this.meeps * this.meepDamage;
   this.favorBonus = this.getFavorBonus() / 100;
   this.spoilsOfWarBonus = this.getSpoilsOfWarBonus() / 100;
   this.tributeBonus = this.getTributeBonus() / 100;

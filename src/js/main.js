@@ -1,4 +1,4 @@
-var version = '0.5.8';
+var version = '0.5.9';
 var home = 'http://chimeclicker.lol.s3-website-us-east-1.amazonaws.com/';
 ///// CONSTANTS ////////////////////
 // Items
@@ -470,7 +470,7 @@ function updateButtons(force) {
   });
 }
 function updateTooltips(scroll) {
-  $('.spell-wrapper, .item-buy, .active-rune-image', '.item-upgrade-overlay').each(function () {
+  $('.spell-wrapper, .item-buy, .active-rune-image, .item-upgrade-overlay').each(function () {
     // TODO: figure out how to position off-screen tooltips properly
     if (scroll) {
       return;
@@ -807,9 +807,11 @@ function initializeButtons(game) {
   $('#monster-button').click(function (e) {
     if (game.paused)
       return;
-    game.damageClick();
-    var text = '-' + prettyIntBigCompact(game.damagePerClick);
-    createFloatingText($(this), text, e);
+    var damage = game.damageClick();
+    if (damage) {
+      var text = '-' + prettyIntBigCompact(damage);
+      createFloatingText($(this), text, e);
+    }
   });
   $('.dropdown-button').click(function () {
     $(this).find('.rotate').toggleClass('down');

@@ -128,7 +128,7 @@ ga('send', 'pageview');
 									</div>
 									<div id="monster-gold" data-toggle="tooltip" data-title="Gold on kill." data-position="right">
 										<i class="fa fa-database fa-sm icon-gold"></i>
-										{{prettyIntCompact(game.monsters[game.monster].gold)}}
+										{{prettyIntCompact(game.monsters[game.monster].gold * game.upgradeStats.goldBonus)}}
 									</div>
 									<div id="monster-experience" data-toggle="tooltip" data-title="Experience on kill." data-position="left">
 										{{prettyIntCompact(game.monsters[game.monster].experience)}} xp
@@ -189,7 +189,7 @@ ga('send', 'pageview');
 								<div id="income-value">
 									<div>Income</div>
 									<i class="fa fa-database fa-sm icon-gold"></i>
-									{{prettyInt(game.income)}}
+									{{prettyInt(game.income * game.upgradeStats.goldBonus)}}
 								</div>
 							</div>
 							<div id="game-stats">
@@ -238,6 +238,7 @@ ga('send', 'pageview');
 								{{prettyIntCompact(game.items[item].cost)}}
 							</div>
 							<div ng-style="{'background-image':'url(' + game.getItemImageUrl(game.getItemName(item)) + ')'}" class="item-image">
+								<div class="item-text" ng-bind="game.items[item].getItemText()" ng-class="game.items[item].getItemClass()"></div>
 							</div>
 							<div class="item-left-shadow">
 							</div>
@@ -324,7 +325,7 @@ ga('send', 'pageview');
 									<div class="item-upgrades">
 										<div class="item-upgrade" ng-repeat="upgrade in game.items[item].upgrades"
 												 ng-click="game.activateUpgrade(upgrade)" ng-class="upgrade == game.items[item].upgradeActive ? 'active': ''"
-												 data-status="game.upgrades[upgrade].status">
+												 data-status="{{game.upgrades[upgrade].status}}">
 											<div class="item-upgrade-image"  ng-style="{'background-image':'url(' + game.getItemImageUrl(upgrade) + ')'}"></div>
 											<div class="item-upgrade-overlay" data-toggle="tooltip" data-title="{{game.upgrades[upgrade].tooltip(game)}}" data-position="top"></div>
 										</div>
