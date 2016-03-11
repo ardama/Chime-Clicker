@@ -252,6 +252,13 @@ Game.prototype.addSpellTime = function (time) {
     }
   }
 
+  // Subtract time from global item cooldowns
+  for (var itemName in this.items) {
+    var item = this.items[itemName];
+    if (item.upgradeCooldown > 0)
+      item.upgradeCooldown -= time;
+  }
+
   // Subtract time from item passive timers.
   // If any timers dropped to 0, trigger update.
   if (this.upgradeStats.aetherTime > 0) {
@@ -294,7 +301,7 @@ Game.prototype.updateStats = function () {
   this.damageStat = this.damageBase * this.runeStats.scalingDamage;
   this.attackrateStat = this.attackrateBase * this.runeStats.scalingAttackrate;
 
-  var chimeUpgradeBonus = this.upgradeStats.chimeBonus * (1 + .02 * this.upgradeStats.witCount);
+  var chimeUpgradeBonus = this.upgradeStats.chimeBonus * (1 + 0.02 * this.upgradeStats.witCount);
   chimeUpgradeBonus *= this.upgradeStats.aetherTime > 0 ? this.upgradeStats.aetherBonus : 1;
   chimeUpgradeBonus *= this.upgradeStats.warmogTime > 0 ? 1 : this.upgradeStats.warmogBonus;
   this.chimesRate = this.defenseStat * this.movespeedStat * this.ghostBonus * chimeUpgradeBonus;
@@ -570,8 +577,6 @@ Game.prototype.buyUpgrade = function (name) {
 Game.prototype.activateUpgrade = function (name) {
   var upgrade = this.upgrades[name];
   var item = this.items[upgrade.item];
-  if (item.upgradeCooldown > 0)
-    return;
 
   var upgradeActive = item.upgradeActive;
   if (upgradeActive) {
@@ -579,10 +584,10 @@ Game.prototype.activateUpgrade = function (name) {
     item.upgradeActive = null;
   }
 
-  if (upgradeActive != name) {
+  if (upgradeActive != name && item.upgradeCooldown <= 0) {
     upgrade.activate(this);
     item.upgradeActive = name;
-    // TODO: item.upgradeCooldown = 60000;
+    item.upgradeCooldown = 20;
   }
   this.updateRequired = true;
 };
@@ -813,8 +818,12 @@ Game.prototype.getExperienceText = function () {
 Game.prototype.getItemName = function (name) {
   var item = this.items[name];
   if (item && item.upgradeActive)
-    return item.upgradeActive
+    return item.upgradeActive;
   return name;
+};
+Game.prototype.getItemTimePercent = function (itemName) {
+  var item = this.items[itemName];
+  return Math.max(100 * item.upgradeCooldown / 20, 0);
 };
 Game.prototype.getSpellTimePercent = function (spellName) {
   var spell = this.spells[spellName];
@@ -1047,6 +1056,7 @@ Game.prototype.saveItems = function (save) {
       itemData.upgradesPurchased = Item.convertUpgradeToIndex(item.upgradesPurchased);
       itemData.upgradesAvailable = Item.convertUpgradeToIndex(item.upgradesAvailable);
       itemData.upgradeActive = upgradeToIndex(item.upgradeActive);
+      itemData.upgradeCooldown = Math.round(item.upgradeCooldown);
       itemData.cost = item.cost;
       obj.push(itemData);
     }
@@ -1066,6 +1076,20 @@ Game.prototype.saveUpgrades = function (save) {
     }
   }
   save.upgrades = jsonh.pack(obj);
+
+  // Upgrade stats
+  var stats = {};
+  stats.ludenCount = this.upgradeStats.ludenCount;
+  stats.statikkCount = this.upgradeStats.statikkCount;
+  stats.witCount = this.upgradeStats.witCount;
+
+  stats.aetherTime = this.upgradeStats.aetherTime;
+  stats.warmogTime = this.upgradeStats.warmogTime;
+  stats.frozenTime = this.upgradeStats.frozenTime;
+  stats.rylaiTime = this.upgradeStats.rylaiTime;
+  stats.witTime = this.upgradeStats.witTime;
+
+  save.upgradeStats = stats;
 };
 Game.prototype.saveSpells = function (save) {
   var spells = this.spells;
@@ -1352,7 +1376,7 @@ Game.prototype.loadGame = function () {
   if (save) {
     this.loadState(save.state);
     this.loadItems(save.items);
-    this.loadUpgrades(save.upgrades);
+    this.loadUpgrades(save.upgrades, save.upgradeStats);
     this.loadSpells(save.spells);
     this.loadMonsters(save.monsters);
   }
@@ -1386,7 +1410,7 @@ Game.prototype.loadItems = function (obj) {
   if (!obj)
     return;
 
-  var data, item;
+  var data, item, upgrades;
   if (obj.constructor === Array) {
     obj = jsonh.unpack(obj);
     var i = obj.length;
@@ -1395,10 +1419,11 @@ Game.prototype.loadItems = function (obj) {
       item = this.items[indexToItem(data.name)];
       if (data && item) {
         item.count = data.count;
-        var upgrades = data.upgradesPurchased || data.upgrades;
+        upgrades = data.upgradesPurchased || data.upgrades;
         item.upgradesPurchased = Item.convertIndexToUpgrade(upgrades);
         item.upgradesAvailable = Item.convertIndexToUpgrade(data.upgradesAvailable);
         item.upgradeActive = indexToUpgrade(data.upgradeActive);
+        item.upgradeCooldown = data.upgradeCooldown || 0;
         item.cost = item.startCost + item.startCost * SCALE_ITEM_COST * item.count * (item.count + 1) / 2;
         item.cost10 = item.calculatePurchaseCost(10);
         item.cost100 = item.calculatePurchaseCost(100);
@@ -1413,7 +1438,7 @@ Game.prototype.loadItems = function (obj) {
         item = this.items[name];
         if (data && item) {
           item.count = data.count;
-          var upgrades = data.upgradesPurchased || data.upgrades;
+          upgrades = data.upgradesPurchased || data.upgrades;
           item.upgrades = upgrades;
           item.upgradesAvailable = data.upgradesAvailable;
           item.cost = item.startCost + item.startCost * SCALE_ITEM_COST * item.count * (item.count + 1) / 2;
@@ -1425,7 +1450,7 @@ Game.prototype.loadItems = function (obj) {
     }
   }
 };
-Game.prototype.loadUpgrades = function (obj) {
+Game.prototype.loadUpgrades = function (obj, stats) {
   if (!obj)
     return;
 
@@ -1467,6 +1492,19 @@ Game.prototype.loadUpgrades = function (obj) {
         }
       }
     }
+  }
+
+  // Upgrade stats
+  if (stats) {
+    this.upgradeStats.ludenCount = stats.ludenCount || 0;
+    this.upgradeStats.statikkCount = stats.statikkCount || 0;
+    this.upgradeStats.witCount = stats.witCount || 0;
+
+    this.upgradeStats.aetherTime = stats.aetherTime || 0;
+    this.upgradeStats.warmogTime = stats.warmogTime || 0;
+    this.upgradeStats.frozenTime = stats.frozenTime || 0;
+    this.upgradeStats.rylaiTime = stats.rylaiTime || 0;
+    this.upgradeStats.witTime = stats.witTime || 0;
   }
 };
 Game.prototype.loadSpells = function (obj) {

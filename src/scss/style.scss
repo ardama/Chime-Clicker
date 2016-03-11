@@ -883,7 +883,6 @@ body {
 	margin: 0 8px 0;
 	border-radius: 50%;
 
-	background-size: cover;
 	cursor: pointer;
 }
 
@@ -899,6 +898,7 @@ body {
 	padding-bottom: 100%;
 
 	border-radius: 50%;
+	overflow: hidden;
 
 	background-size: cover;
 	@include box-shadow(0 0 3px 3px $boxShadow inset);
@@ -917,12 +917,23 @@ body {
 	@include transition(background-color 100ms);
 };
 
+.item-upgrade-image-overlay {
+	position: absolute;
+
+	width: 100%;
+	padding-bottom: 0%;
+
+	background-color: $boxShadow;
+	@include transition(padding-bottom 100ms);
+};
+
 .item-upgrade.active {
 	.item-upgrade-image {
 		@include box-shadow(0 0 3px 3px $boxShadow);
 	}
 
-	.item-upgrade-overlay {
+	.item-upgrade-overlay,
+	.item-upgrade-image-overlay {
 		background-color: $transparent;
 	}
 }
@@ -1107,7 +1118,7 @@ body {
 	border-radius: 1px;
 }
 
-.spell-image-overlay {
+.spell-overlay {
 	position: absolute;
 
 	top: 0;
@@ -1169,7 +1180,7 @@ body {
 }
 
 // ACTIVE
-.spell[data-status='4'] .spell-image-overlay {
+.spell[data-status='4'] .spell-overlay {
 	background-color: $lightTextTertiary;
 }
 
@@ -1182,7 +1193,7 @@ body {
 }
 
 // COOLDOWN
-.spell[data-status='5'] .spell-image-overlay {
+.spell[data-status='5'] .spell-overlay {
 	background-color: $darkTextPrimary;
 }
 

@@ -2069,7 +2069,6 @@ body {
   max-width: 56px;
   margin: 0 8px 0;
   border-radius: 50%;
-  background-size: cover;
   cursor: pointer; }
 
 .item-upgrade[data-status='3'] {
@@ -2081,6 +2080,7 @@ body {
   margin-top: -50%;
   padding-bottom: 100%;
   border-radius: 50%;
+  overflow: hidden;
   background-size: cover;
   -webkit-box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.75) inset;
   -moz-box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.75) inset;
@@ -2102,11 +2102,22 @@ body {
   -o-transition: background-color 100ms;
   transition: background-color 100ms; }
 
+.item-upgrade-image-overlay {
+  position: absolute;
+  width: 100%;
+  padding-bottom: 0%;
+  background-color: rgba(0, 0, 0, 0.75);
+  -webkit-transition: padding-bottom 100ms;
+  -moz-transition: padding-bottom 100ms;
+  -o-transition: padding-bottom 100ms;
+  transition: padding-bottom 100ms; }
+
 .item-upgrade.active .item-upgrade-image {
   -webkit-box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.75);
   box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.75); }
-.item-upgrade.active .item-upgrade-overlay {
+.item-upgrade.active .item-upgrade-overlay,
+.item-upgrade.active .item-upgrade-image-overlay {
   background-color: transparent; }
 
 @media screen and (max-width: 1000px) {
@@ -2238,7 +2249,7 @@ body {
   background-size: cover;
   border-radius: 1px; }
 
-.spell-image-overlay {
+.spell-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -2288,7 +2299,7 @@ body {
   opacity: 1;
   color: rgba(255, 255, 255, 0.35); }
 
-.spell[data-status='4'] .spell-image-overlay {
+.spell[data-status='4'] .spell-overlay {
   background-color: rgba(255, 255, 255, 0.35); }
 
 .spell[data-status='4'] .spell-time {
@@ -2296,7 +2307,7 @@ body {
   color: white;
   text-shadow: 0 0 2px rgba(255, 255, 255, 0.2); }
 
-.spell[data-status='5'] .spell-image-overlay {
+.spell[data-status='5'] .spell-overlay {
   background-color: rgba(0, 0, 0, 0.87); }
 
 .spell[data-status='5'] .spell-time {

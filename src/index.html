@@ -326,7 +326,9 @@ ga('send', 'pageview');
 										<div class="item-upgrade" ng-repeat="upgrade in game.items[item].upgrades"
 												 ng-click="game.activateUpgrade(upgrade)" ng-class="upgrade == game.items[item].upgradeActive ? 'active': ''"
 												 data-status="{{game.upgrades[upgrade].status}}">
-											<div class="item-upgrade-image"  ng-style="{'background-image':'url(' + game.getItemImageUrl(upgrade) + ')'}"></div>
+											<div class="item-upgrade-image" ng-style="{'background-image':'url(' + game.getItemImageUrl(upgrade) + ')'}">
+												<div class="item-upgrade-image-overlay" style="padding-bottom: {{game.getItemTimePercent(item)}}%"></div>
+											</div>
 											<div class="item-upgrade-overlay" data-toggle="tooltip" data-title="{{game.upgrades[upgrade].tooltip(game)}}" data-position="top"></div>
 										</div>
 									</div>
@@ -364,7 +366,7 @@ ga('send', 'pageview');
 							 data-status="{{game.spells[spell].status}}" data-type="{{game.spells[spell].type}}">
 						<div class="spell-wrapper touch-target" data-toggle="tooltip" data-title="{{game.spells[spell].tooltip(game)}}" ng-click="game.spellClick(spell)">
 							<div class="spell-image" ng-style="{'background-image':'url(' + game.getSpellImageUrl(spell) + ')'}"></div>
-							<div class="spell-image-overlay" style="height: {{game.getSpellTimePercent(spell)}}%"></div>
+							<div class="spell-overlay" style="height: {{game.getSpellTimePercent(spell)}}%"></div>
 							<div class="spell-locked-image"><i class="fa fa-2x fa-lock"></i></div>
 							<div class="spell-time">{{game.spells[spell].getSpellTime()}}</div>
 							<div class="spell-text" ng-if="spell == 'Smite'" data-smite="{{game.isMonsterChampion(game.monster) ? 'challenging' : 'smite'}}">

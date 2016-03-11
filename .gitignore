@@ -1,5 +1,6 @@
-# SASS cache
+# SASS
 *.sass-cache
+*.css.map
 
 #KeyPair
 KeyPair1.pem

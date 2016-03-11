@@ -1,4 +1,4 @@
-var version = '0.5.9';
+var version = '0.5.10';
 var home = 'http://chimeclicker.lol.s3-website-us-east-1.amazonaws.com/';
 ///// CONSTANTS ////////////////////
 // Items
