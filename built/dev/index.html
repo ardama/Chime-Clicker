@@ -71,6 +71,7 @@ ga('send', 'pageview');
 				<div id="meeps-row" class="row">
 					<div id="meeps-container" class="container">
 						<div id="ghost-pulse" class="pulse {{game.spells['Ghost'].status == ACTIVE ? 'active': ''}}"></div>
+						<div id="heal-pulse" class="pulse {{game.spells['Heal'].status == ACTIVE ? 'active': ''}}"></div>
 						<div id="meeps-status" class="status {{game.spells['Flash'].status == ACTIVE ? 'flash-active' : '';}}">
 							<div id="meeps-wrapper" data-toggle="tooltip" data-title="Collect chimes to earn meeps.  Meeps grant {{game.meepDamage}} Damage." data-position="right">
 								<text>
@@ -168,6 +169,8 @@ ga('send', 'pageview');
 								<div id="spoils-ring" class="ring"></div>
 								<div id="tribute-ring" class="ring"></div>
 								<div id="smite-ring" class="ring"></div>
+								<div id="luden-ring" class="ring"></div>
+								<div id="statikk-ring" class="ring"></div>
 								<div id="ignite-ring-1" class="ring"></div>
 								<div id="ignite-ring-2" class="ring"></div>
 							</div>

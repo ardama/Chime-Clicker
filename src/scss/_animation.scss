@@ -19,6 +19,10 @@
 	background-color: $ghost2;
 }
 
+#heal-pulse {
+	background-color: $heal2;
+}
+
 #smite-pulse {
 	background-color: $challenging2;
 	animation-iteration-count: 8;
@@ -87,9 +91,19 @@
 	border-color: rgba($ignite2, .8);
 }
 
+#luden-ring {
+	border-color: rgba($luden2, .7);
+}
+
+#statikk-ring {
+	border-color: rgba($smite2, .7);
+}
+
 #teemo-ring {
 	border-color: rgba($primary900, .5);
 }
+
+
 
 @-webkit-keyframes ring {
     0% {border-width: 0px; top: -0px; left: -0px; opacity: 0.0;}

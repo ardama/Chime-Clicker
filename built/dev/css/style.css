@@ -713,6 +713,9 @@
 #ghost-pulse {
   background-color: #0B4D80; }
 
+#heal-pulse {
+  background-color: #76CC52; }
+
 #smite-pulse {
   background-color: #D35342;
   animation-iteration-count: 8; }
@@ -789,6 +792,12 @@
 
 #ignite-ring-2 {
   border-color: rgba(209, 72, 26, 0.8); }
+
+#luden-ring {
+  border-color: rgba(114, 42, 204, 0.7); }
+
+#statikk-ring {
+  border-color: rgba(245, 195, 46, 0.7); }
 
 #teemo-ring {
   border-color: rgba(38, 50, 56, 0.5); }
@@ -1972,7 +1981,7 @@ body {
   box-shadow: 0 -36px 20px -20px rgba(0, 0, 0, 0.75) inset; }
 
 .item-text.ludens {
-  color: #cba6d3; }
+  color: #d7c0ef; }
 
 .item-text.wits {
   color: #cba6d3; }

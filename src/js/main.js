@@ -1,4 +1,4 @@
-var version = '0.5.10';
+var version = '0.5.11';
 var home = 'http://chimeclicker.lol.s3-website-us-east-1.amazonaws.com/';
 ///// CONSTANTS ////////////////////
 // Items
@@ -640,7 +640,7 @@ function stirlingApproximation(n) {
 function stirlingSum(n) {
   return -0.75 * Math.pow(n, 2) + 1.41894 * n + (0.5 * n - 0.5) * n * Math.log(n);
 }
-function createFloatingText(parent, text, event) {
+function createFloatingText(parent, text, spell, event) {
   var posX;
   var posY;
   if (!event.pageX && !event.pageY) {
@@ -653,11 +653,23 @@ function createFloatingText(parent, text, event) {
   }
   posX -= parent.offset().left + 10;
   posY -= parent.offset().top + 30;
+
+  var color = '#fff';
+  if (spell == HEAL)
+    color = '#76CC52';
+  else if (spell == STATIKK_SHIV)
+    color = '#F3E1A8';
+  else if (spell == LUDENS_ECHO)
+    color = '#A46FDA';
+  else if (spell == TRIBUTE)
+    color = '#2382DD';
+
   var $obj = $('<div>', { class: 'counter' });
   $obj.html(text);
   $obj.css({
     left: posX + 'px',
-    top: posY + 'px'
+    top: posY + 'px',
+    color: color
   });
   parent.append($obj);
   var children = parent.children();
@@ -684,6 +696,10 @@ function showRing(spellName, duration) {
     id = '#challenging-smite-ring';
   else if (spellName == FLASH)
     id = '#flash-ring';
+  else if (spellName == LUDENS_ECHO)
+    id = '#luden-ring';
+  else if (spellName == STATIKK_SHIV)
+    id = '#statikk-ring';
   else if (spellName == IGNITE + '1')
     id = '#ignite-ring-1';
   else if (spellName == IGNITE + '2')
@@ -800,17 +816,17 @@ function initializeButtons(game) {
   $('#chimes-button').click(function (e) {
     if (game.paused)
       return;
-    game.chimesClick();
-    var text = '+' + prettyIntBigCompact(game.chimesPerClick);
-    createFloatingText($(this), text, e);
+    var args = game.chimesClick();
+    var text = '+' + prettyIntBigCompact(args.value);
+    createFloatingText($(this), text, args.spell, e);
   });
   $('#monster-button').click(function (e) {
     if (game.paused)
       return;
-    var damage = game.damageClick();
-    if (damage) {
-      var text = '-' + prettyIntBigCompact(damage);
-      createFloatingText($(this), text, e);
+    var args = game.damageClick();
+    if (args.value) {
+      var text = '-' + prettyIntBigCompact(args.value);
+      createFloatingText($(this), text, args.spell, e);
     }
   });
   $('.dropdown-button').click(function () {

@@ -425,19 +425,29 @@ Game.prototype.unlockRunes = function () {
 // Action Functions
 Game.prototype.chimesClick = function () {
   if (!this.addClick()) return;
-  this.addChimes(this.chimesPerClick);
-  this.progress.general.clickChimes += this.chimesPerClick;
+  var chimes = this.chimesPerClick
+  this.addChimes(chimes);
+  this.progress.general.clickChimes += chimes;
   this.progress.general.totalClicks++;
   this.progress.general.chimeClicks++;
+
+  var spell;
+  if (this.spells[HEAL].status == ACTIVE)
+    spell = HEAL;
+
+  return {value: chimes, spell: spell};
 };
 Game.prototype.damageClick = function () {
   if (!this.addClick()) return;
 
+  var spell;
   var damage = this.damagePerClick;
   if (this.items[DAGGER].upgradeActive == STATIKK_SHIV) {
     if (this.upgradeStats.statikkCount >= 40) {
-      damage += this.damageRate * 2;
+      damage += (this.damageRate - this.smiteDamageRate) * 2;
       this.upgradeStats.statikkCount = 0;
+      spell = STATIKK_SHIV;
+      showRing(STATIKK_SHIV, RING_DURATION);
     }
     else {
       this.upgradeStats.statikkCount = Math.min(this.upgradeStats.statikkCount + 1, 40);
@@ -446,8 +456,10 @@ Game.prototype.damageClick = function () {
 
   if (this.items[AMPLIFYING_TOME].upgradeActive == LUDENS_ECHO) {
     if (this.upgradeStats.ludenCount >= 10) {
-      damage += this.damageRate * 3;
+      damage += (this.damageRate - this.smiteDamageRate) * 3;
       this.upgradeStats.ludenCount = 0;
+      spell = LUDENS_ECHO;
+      showRing(LUDENS_ECHO, RING_DURATION);
     }
   }
 
@@ -471,10 +483,15 @@ Game.prototype.damageClick = function () {
     this.updateRequired = true;
   }
 
-  if (this.spells[TRIBUTE].status == AVAILABLE)
+  if (this.spells[TRIBUTE].status == AVAILABLE) {
     this.activateSpell(TRIBUTE);
+    if (this.monsters[this.monster].type == MONSTER_CHAMPION)
+      damage += (this.damageRate - this.smiteDamageRate) * 4;
+    if (!spell)
+      spell = TRIBUTE;
+  }
 
-  return damage;
+  return {value: damage, spell: spell};
 };
 Game.prototype.spellClick = function (name) {
   var spell = this.spells[name];
