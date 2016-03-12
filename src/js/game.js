@@ -431,7 +431,7 @@ Game.prototype.unlockRunes = function () {
 // Action Functions
 Game.prototype.chimesClick = function () {
   if (!this.addClick()) return;
-  var chimes = this.chimesPerClick
+  var chimes = this.chimesPerClick;
   this.addChimes(chimes);
   this.progress.general.clickChimes += chimes;
   this.progress.general.totalClicks++;

@@ -504,7 +504,7 @@ function initializeUpgradeTooltips() {
       $(this).tooltipster('disable');
     }
   });
-};
+}
 function updateLastItem() {
   if ($(window).hasHScrollBar()) {
     $('.item').last().css('margin-bottom', '16px');
