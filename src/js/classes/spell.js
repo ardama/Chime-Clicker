@@ -46,7 +46,7 @@ Spell.Create = function (game) {
   }, function (game) {
     return this.status == LOCKED ? '' : 'Deal <b>' + prettyIntBigCompact(game.getSmiteDamage()) + '</b> damage ' + (!game.isMonsterChampion(game.monster) ? 'instantly' : 'over 5 seconds') + '.  Damage scales with level and experience.</br></br>Non-champion kills with smite grant +20% gold.</br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(Q)</b>';
   });
-  spells[GHOST] = new Spell(game, 10, 90, SPELL_ACTIVE, MONSTER_ALL, function (game) {
+  spells[GHOST] = new Spell(game, 10, 120, SPELL_ACTIVE, MONSTER_ALL, function (game) {
     game.ghostBonus = 1 + 1 * game.upgradeStats.ghostBonus;
   }, function (game) {
     game.ghostBonus = 1;
@@ -55,7 +55,7 @@ Spell.Create = function (game) {
   }, function (game) {
     return this.status == LOCKED ? '' : '+' + 100 * game.upgradeStats.ghostBonus + '% chime gathering for 10 seconds.  </br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(W)</b>';
   });
-  spells[HEAL] = new Spell(game, 5, 120, SPELL_ACTIVE, MONSTER_ALL, function (game) {
+  spells[HEAL] = new Spell(game, 7, 120, SPELL_ACTIVE, MONSTER_ALL, function (game) {
     game.healBonus = 5 * game.upgradeStats.healBonus;
     game.updateStats();
   }, function (game) {
@@ -63,7 +63,7 @@ Spell.Create = function (game) {
   }, function (game) {
     return game.level >= 6;
   }, function (game) {
-    return this.status == LOCKED ? '' : 5 * game.upgradeStats.healBonus + 'x chimes per click for 5 seconds.</br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(E)</b>';
+    return this.status == LOCKED ? '' : 5 * game.upgradeStats.healBonus + 'x chimes per click for 7 seconds.</br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(E)</b>';
   });
   spells[FLASH] = new Spell(game, 0, 180, SPELL_ACTIVE, MONSTER_ALL, function (game) {
     game.addMeeps(Math.ceil(game.meepsEarned * game.flashBonus * game.upgradeStats.flashBonus), true);
@@ -95,7 +95,7 @@ Spell.Create = function (game) {
   }, function (game) {
     return this.status == LOCKED ? '' : 'Reset cooldowns of all spells.  </br></br>' + Math.round(this.cooldown) + ' second cooldown. <b>(T)</b>';
   });
-  spells[EXHAUST] = new Spell(game, 10, 90, SPELL_ACTIVE, MONSTER_CHAMPION, function (game) {
+  spells[EXHAUST] = new Spell(game, 10, 120, SPELL_ACTIVE, MONSTER_CHAMPION, function (game) {
     game.exhaustBonus = 1 + 1 * game.upgradeStats.exhaustBonus;
   }, function (game) {
     game.exhaustBonus = 1;
@@ -124,7 +124,7 @@ Spell.Create = function (game) {
   }, function (game) {
     return game.upgrades[FACE_OF_THE_MOUNTAIN].status == PURCHASED;
   }, function (game) {
-    return this.status == LOCKED ? '' : 'Execute monsters below 25% max health on click, gaining <b>+' + (game.spoilsOfWarBonus * 100).toFixed(1) + '%</b> reward gold.  Gold scales with Relic Shields owned.  Does not work against champions. </br></br>' + Math.round(this.cooldown) + ' second cooldown.';
+    return this.status == LOCKED ? '' : 'Execute monsters below 20% max health on click, gaining <b>+' + (game.spoilsOfWarBonus * 100).toFixed(1) + '%</b> reward gold.  Gold scales with Relic Shields owned.  Does not work against champions. </br></br>' + Math.round(this.cooldown) + ' second cooldown.';
   });
   spells[FAVOR] = new Spell(game, 0, 0, SPELL_PASSIVE, MONSTER_ALL, function (game) {
   }, function (game) {
@@ -133,7 +133,7 @@ Spell.Create = function (game) {
   }, function (game) {
     return game.spells[FAVOR].status == LOCKED ? '' : 'Passively gain <b>+' + (game.favorBonus * 100).toFixed(1) + '%</b> gold from kills.  Gold scales with Ancient Coins owned. </br></br>No cooldown.';
   });
-  spells[TRIBUTE] = new Spell(game, 0, 30, SPELL_PASSIVE, MONSTER_ALL, function (game) {
+  spells[TRIBUTE] = new Spell(game, 0, 40, SPELL_PASSIVE, MONSTER_ALL, function (game) {
     var monster = game.monsters[game.monster];
     var gold = Math.ceil(monster.gold * game.tributeBonus);
     gold /= game.monster == TEEMO ? 15 : 1;

@@ -770,10 +770,10 @@
   height: 100%;
   border-style: solid;
   border-radius: 100%;
-  -webkit-animation: ring 0.3s 1 ease-out;
-  -moz-animation: ring 0.3s 1 ease-out;
-  -o-animation: ring 0.3s 1 ease-out;
-  animation: ring 0.3s 1 ease-out; }
+  -webkit-animation: ring 0.5s 1 ease-out;
+  -moz-animation: ring 0.5s 1 ease-out;
+  -o-animation: ring 0.5s 1 ease-out;
+  animation: ring 0.5s 1 ease-out; }
 
 #flash-ring {
   border-color: rgba(224, 217, 135, 0.8); }
@@ -2142,6 +2142,7 @@ body {
   border-left: 1px solid #1E272C; }
 
 .upgrade {
+  display: none;
   float: right;
   width: 126px;
   height: 90px;
@@ -2155,6 +2156,9 @@ body {
   -o-transition: background-color 100ms;
   transition: background-color 100ms;
   cursor: pointer; }
+
+.upgrade.first {
+  display: block; }
 
 .upgrade:hover {
   margin-top: -1px;

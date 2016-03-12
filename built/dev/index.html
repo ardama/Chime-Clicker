@@ -295,7 +295,8 @@ ga('send', 'pageview');
 						<div class="item-right">
 							<div class="item-upgrade-container">
 								<div class="upgrade-wrapper">
-									<div ng-repeat="upgradeAvailable in game.items[item].upgradesAvailable.slice(0, 1)" class="upgrade container touch-target" ng-click="game.buyUpgrade(upgradeAvailable)">
+									<div ng-repeat="upgradeAvailable in game.items[item].upgradesAvailable" class="upgrade container touch-target" ng-click="game.buyUpgrade(upgradeAvailable)"
+											 data-toggle="tooltip" data-title="{{game.upgrades[upgradeAvailable].tooltip(game)}}" data-position="top" ng-class="game.items[item].upgradesAvailable.indexOf(upgradeAvailable) == 0 ? 'first' : ''">
 										<div class="upgrade-stats">
 											<div class="upgrade-stat {{game.upgrades[upgradeAvailable].isZero('defenseStat')}}">
 													+{{game.upgrades[upgradeAvailable].defenseStat}}

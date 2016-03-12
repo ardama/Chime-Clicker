@@ -8,7 +8,8 @@ Game.prototype.Init = function (scope, difficulty) {
   this.fps = 18;
   this.stepSize = 1 / this.fps;
   this.steps = 0;
-  this.updateRequired = true;
+  this.statsUpdateRequired = true;
+  this.tooltipUpdateRequired = true;
   this.timePlayed = 0;
   this.stepStart = new Date();
   this.stepEnd = new Date();
@@ -90,7 +91,8 @@ Game.prototype.start = function () {
   }, 200);
   var thisref = this;
   window.setInterval(function () {
-    thisref.save();
+    if (!thisref.paused)
+      thisref.save();
   }, 20000);
 };
 // Increment functions
@@ -108,13 +110,17 @@ Game.prototype.step = function (step) {
       thisref.addSpellTime(elapsedTime);
       thisref.timePlayed += elapsedTime;
       thisref.progress.general.timePlayed += elapsedTime;
-      if (thisref.updateRequired) {
+      if (thisref.statsUpdateRequired) {
         thisref.updateStats();
-        thisref.updateRequired = false;
+        thisref.statsUpdateRequired = false;
       }
     });
   } else {
     this.scope.$apply();
+  }
+  if (this.tooltipUpdateRequired) {
+    initializeUpgradeTooltips();
+    this.tooltipUpdateRequired = false;
   }
   this.stepEnd = this.stepStart;
   window.setTimeout(function () {
@@ -150,7 +156,7 @@ Game.prototype.addDamage = function (damage, user) {
   if (this.monster == TEEMO)
     damage *= this.runeStats.teemoSlayer;
   this.progress.general.totalDamage += damage;
-  var executeThreshold = 0.25 * this.monsters[this.monster].maxHealth;
+  var executeThreshold = 0.20 * this.monsters[this.monster].maxHealth;
   var currentHealth = this.monsters[this.monster].currentHealth;
   if (user && this.spells[SPOILS_OF_WAR].status == AVAILABLE && currentHealth - damage <= executeThreshold) {
     if (currentHealth > executeThreshold)
@@ -206,10 +212,9 @@ Game.prototype.addMeeps = function (meeps, flash) {
   }
   this.meeps = newMeeps;
   this.progress.general.totalMeeps += meeps;
-  this.updateRequired = true;
+  this.statsUpdateRequired = true;
 };
 Game.prototype.addSpellTime = function (time) {
-  var update = false;
   var activeSpells = this.getObjectsByStatus(this.spells, ACTIVE);
   var cooldownSpells = this.getObjectsByStatus(this.spells, COOLDOWN);
   var unavailableSpells = this.getObjectsByStatus(this.spells, UNAVAILABLE);
@@ -222,7 +227,7 @@ Game.prototype.addSpellTime = function (time) {
       activeSpell.end(this);
       activeSpell.status = COOLDOWN;
       activeSpell.cooldownLeft = activeSpell.cooldown;
-      this.updateRequired = true;
+      this.statsUpdateRequired = true;
     }
   }
   len = cooldownSpells.length;
@@ -248,7 +253,7 @@ Game.prototype.addSpellTime = function (time) {
       unavailableSpell.end(this);
       unavailableSpell.status = COOLDOWN;
       unavailableSpell.cooldownLeft = unavailableSpell.cooldown;
-      this.updateRequired = true;
+      this.statsUpdateRequired = true;
     }
   }
 
@@ -264,31 +269,31 @@ Game.prototype.addSpellTime = function (time) {
   if (this.upgradeStats.aetherTime > 0) {
     this.upgradeStats.aetherTime -= time;
     if (this.upgradeStats.aetherTime <= 0) {
-      this.updateRequired = true;
+      this.statsUpdateRequired = true;
     }
   }
   if (this.upgradeStats.warmogTime > 0) {
     this.upgradeStats.warmogTime -= time;
     if (this.upgradeStats.warmogTime <= 0) {
-      this.updateRequired = true;
+      this.statsUpdateRequired = true;
     }
   }
   if (this.upgradeStats.frozenTime > 0) {
     this.upgradeStats.frozenTime -= time;
     if (this.upgradeStats.frozenTime <= 0) {
-      this.updateRequired = true;
+      this.statsUpdateRequired = true;
     }
   }
   if (this.upgradeStats.rylaiTime > 0) {
     this.upgradeStats.rylaiTime -= time;
     if (this.upgradeStats.rylaiTime <= 0) {
-      this.updateRequired = true;
+      this.statsUpdateRequired = true;
     }
   }
   if (this.upgradeStats.witTime > 0) {
     this.upgradeStats.witTime -= time;
     if (this.upgradeStats.witTime <= 0) {
-      this.updateRequired = true;
+      this.statsUpdateRequired = true;
       this.upgradeStats.witCount = 0;
     }
   }
@@ -310,7 +315,7 @@ Game.prototype.updateStats = function () {
   var damageUpgradeBonus = this.upgradeStats.damageBonus;
   damageUpgradeBonus *= this.upgradeStats.rylaiTime > 0 ? this.upgradeStats.rylaiBonus : 1;
   damageUpgradeBonus *= this.upgradeStats.frozenTime > 0 ? this.upgradeStats.frozenBonus : 1;
-  damageUpgradeBonus *= this.getMonsterHealthPercent < 40 ? this.upgradeStats.morelloBonus : 1;
+  damageUpgradeBonus *= this.getMonsterHealthPercent() < 40 ? this.upgradeStats.morelloBonus : 1;
   this.damageRate = this.damageStat * this.attackrateStat * this.exhaustBonus * damageUpgradeBonus + this.smiteDamageRate;
   this.damagePerClick = (this.exhaustBonus * this.damageStat + this.upgradeStats.monsterClickPercent * this.damageRate) * this.runeStats.monsterClicking * this.upgradeStats.monsterClickBonus * damageUpgradeBonus;
 };
@@ -344,6 +349,7 @@ Game.prototype.unlockUpgrades = function () {
       item.upgradesAvailable.push(upgrades[i]);
     }
   }
+  this.tooltipUpdateRequired = true;
 };
 Game.prototype.unlockSpells = function () {
   var spell, monster;
@@ -455,7 +461,7 @@ Game.prototype.damageClick = function () {
   }
 
   if (this.items[AMPLIFYING_TOME].upgradeActive == LUDENS_ECHO) {
-    if (this.upgradeStats.ludenCount >= 10) {
+    if (this.upgradeStats.ludenCount >= 6) {
       damage += (this.damageRate - this.smiteDamageRate) * 3;
       this.upgradeStats.ludenCount = 0;
       spell = LUDENS_ECHO;
@@ -470,17 +476,17 @@ Game.prototype.damageClick = function () {
 
   if (this.items[RUBY_CRYSTAL].upgradeActive == WARMOGS_ARMOR) {
     this.upgradeStats.warmogTime = 6;
-    this.updateRequired = true;
+    this.statsUpdateRequired = true;
   }
   else if (this.items[RUBY_CRYSTAL].upgradeActive == FROZEN_MALLET) {
     this.upgradeStats.frozenTime = 2;
-    this.updateRequired = true;
+    this.statsUpdateRequired = true;
   }
 
   if (this.items[DAGGER].upgradeActive == WITS_END) {
     this.upgradeStats.witTime = 3;
     this.upgradeStats.witCount = Math.min(this.upgradeStats.witCount + 1, 5);
-    this.updateRequired = true;
+    this.statsUpdateRequired = true;
   }
 
   if (this.spells[TRIBUTE].status == AVAILABLE) {
@@ -512,12 +518,12 @@ Game.prototype.activateSpell = function (name) {
   this.progress.spells[name].count++;
 
   if (this.items[AMPLIFYING_TOME].upgradeActive == LUDENS_ECHO)
-    this.upgradeStats.ludenCount = Math.min(this.upgradeStats.ludenCount + 1, 10);
+    this.upgradeStats.ludenCount = Math.min(this.upgradeStats.ludenCount + 1, 6);
   else if (this.items[AMPLIFYING_TOME].upgradeActive == AETHER_WISP)
     this.upgradeStats.aetherTime = 3;
   else if (this.items[AMPLIFYING_TOME].upgradeActive == RYLAIS_CRYSTAL_SCEPTER)
     this.upgradeStats.rylaiTime = 4;
-  this.updateRequired = true;
+  this.statsUpdateRequired = true;
 };
 Game.prototype.buyItem = function (name, count) {
   if (this.paused)
@@ -554,7 +560,7 @@ Game.prototype.buyItem = function (name, count) {
     this.tributeBonus = this.getTributeBonus() / 100;
   else if (this.spells[SPOILS_OF_WAR].status != LOCKED && name == RELIC_SHIELD)
     this.spoilsOfWarBonus = this.getSpoilsOfWarBonus() / 100;
-  this.updateRequired = true;
+  this.statsUpdateRequired = true;
 };
 Game.prototype.buyUpgrade = function (name) {
   if (this.paused)
@@ -582,7 +588,7 @@ Game.prototype.buyUpgrade = function (name) {
     this.progress.general.goldSpent += upgrade.cost;
     this.unlockUpgrades();
     this.unlockSpells();
-    this.updateRequired = true;
+    this.statsUpdateRequired = true;
     if (name == TALISMAN_OF_ASCENSION)
       this.favorBonus = this.getFavorBonus() / 100;
     else if (name == FROST_QUEENS_CLAIM)
@@ -592,13 +598,17 @@ Game.prototype.buyUpgrade = function (name) {
   }
 };
 Game.prototype.activateUpgrade = function (name) {
+  if (this.paused)
+    return;
   var upgrade = this.upgrades[name];
   var item = this.items[upgrade.item];
 
   var upgradeActive = item.upgradeActive;
   if (upgradeActive) {
-    this.upgrades[upgradeActive].deactivate(this);
-    item.upgradeActive = null;
+    if (upgradeActive == name || item.upgradeCooldown <= 0) {
+      this.upgrades[upgradeActive].deactivate(this);
+      item.upgradeActive = null;
+    }
   }
 
   if (upgradeActive != name && item.upgradeCooldown <= 0) {
@@ -606,7 +616,7 @@ Game.prototype.activateUpgrade = function (name) {
     item.upgradeActive = name;
     item.upgradeCooldown = 20;
   }
-  this.updateRequired = true;
+  this.statsUpdateRequired = true;
 };
 Game.prototype.buyRune = function (rune, count) {
   if (!rune)
@@ -738,7 +748,7 @@ Game.prototype.levelUp = function (levels) {
     levels--;
   }
   this.igniteDamage = this.getIgniteDamage();
-  this.updateRequired = true;
+  this.statsUpdateRequired = true;
   this.unlockItems();
   this.unlockUpgrades();
   this.unlockMonsters(true);
@@ -823,7 +833,9 @@ Game.prototype.getMeepProgressPercent = function () {
 };
 Game.prototype.getMonsterHealthPercent = function () {
   var monster = this.monsters[this.monster];
-  return 100 * monster.currentHealth / monster.maxHealth;
+  if (monster)
+    return 100 * monster.currentHealth / monster.maxHealth;
+  return 100;
 };
 Game.prototype.getExperiencePercent = function () {
   var percent = 100 * this.experience / this.experienceNeeded;
@@ -1158,6 +1170,7 @@ Game.prototype.load = function () {
   this.calculateStartState();
   this.loadGame();
   this.recalculateState();
+  this.updateStats();
 };
 Game.prototype.loadProgress = function () {
   obj = {};
@@ -1538,7 +1551,7 @@ Game.prototype.loadSpells = function (obj) {
       if (data && spell) {
         spell.durationLeft = data.durationLeft;
         spell.cooldownLeft = data.cooldownLeft;
-        if (data.duration)
+        if (data.duration && indexToSpell(data.name) == SMITE)
           spell.duration = data.duration;
         spell.status = data.status;
       }

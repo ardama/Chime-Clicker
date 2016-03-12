@@ -85,7 +85,7 @@ Upgrade.Create = function(game) {
       return "+3% gold earned, -1.5% damage dealt.";
     }
   );
-  upgrades[FROST_QUEENS_CLAIM] = new Upgrade(game, SPELLTHIEFS_EDGE,      5000000, 8, 0, 0, 70, 2, 90, [FROSTFANG],
+  upgrades[FROST_QUEENS_CLAIM] = new Upgrade(game, SPELLTHIEFS_EDGE,      6000000, 8, 0, 0, 70, 2, 90, [FROSTFANG],
     function(game) {
       game.upgradeStats.goldBonus -= 0.015;
       game.upgradeStats.damageBonus += 0.03;
@@ -113,7 +113,7 @@ Upgrade.Create = function(game) {
       return "+3% gold earned, -3% chimes gathered.";
     }
   );
-  upgrades[FACE_OF_THE_MOUNTAIN] = new Upgrade(game, RELIC_SHIELD,        5000000, 8, 18, 0, 0, 2, 85, [TARGONS_BRACE],
+  upgrades[FACE_OF_THE_MOUNTAIN] = new Upgrade(game, RELIC_SHIELD,        6000000, 8, 18, 0, 0, 2, 85, [TARGONS_BRACE],
     function(game) {
       game.upgradeStats.goldBonus -= 0.015;
       game.upgradeStats.chimeBonus += 0.06;
@@ -223,7 +223,7 @@ Upgrade.Create = function(game) {
       return "Chime clicks gather 30% more chimes.";
     }
   );
-  upgrades[KINDLEGEM] = new Upgrade(game, RUBY_CRYSTAL,                   1000000, 7, 15, 0, 0, 1, 0, [],
+  upgrades[KINDLEGEM] = new Upgrade(game, RUBY_CRYSTAL,                   2000000, 7, 15, 0, 0, 1, 0, [],
     function(game) {
       game.upgradeStats.cooldownReduction += 0.05;
       game.calculateCooldownReduction();
@@ -346,7 +346,7 @@ Upgrade.Create = function(game) {
       game.upgradeStats.ludenCount = 0;
     },
     function(game) {
-      return "After 10 spell casts, next monster click deals 3x DPS bonus damage.";
+      return "After 6 spell casts, next monster click deals 3x DPS bonus damage.";
     }
   );
   upgrades[RYLAIS_CRYSTAL_SCEPTER] = new Upgrade(game, AMPLIFYING_TOME,   2000000000000, 16, 50, 0, 350, 0, 0, [NEEDLESSLY_LARGE_ROD],
@@ -461,25 +461,25 @@ Upgrade.Create = function(game) {
 Upgrade.CreateStatsObject = function() {
   var obj = {};
 
-  obj.goldBonus = 1; // game.js
-  obj.priceBonus = 1; // item.js
+  obj.goldBonus = 1;
+  obj.priceBonus = 1;
 
-  obj.chimeBonus = 1; // game.js
-  obj.damageBonus = 1; // game.js
+  obj.chimeBonus = 1;
+  obj.damageBonus = 1;
 
-  obj.chimeClickBonus = 1; // game.js
-  obj.monsterClickBonus = 1; // game.js
+  obj.chimeClickBonus = 1;
+  obj.monsterClickBonus = 1;
 
-  obj.chimeClickPercent = 0; // game.js
-  obj.monsterClickPercent = 0; // game.js
+  obj.chimeClickPercent = 0;
+  obj.monsterClickPercent = 0;
 
-  obj.cooldownReduction = 0; // upgrade.js
+  obj.cooldownReduction = 0;
 
-  obj.flashBonus = 1; // spell.js
-  obj.healBonus = 1; // spell.js
-  obj.ghostBonus = 1; // spell.js
-  obj.exhaustBonus = 1; // spell.js
-  obj.igniteBonus = 1; // spell.js
+  obj.flashBonus = 1;
+  obj.healBonus = 1;
+  obj.ghostBonus = 1;
+  obj.exhaustBonus = 1;
+  obj.igniteBonus = 1;
 
   obj.aetherBonus = 1;
   obj.warmogBonus = 1;
@@ -489,7 +489,7 @@ Upgrade.CreateStatsObject = function() {
   obj.rabadonBonus = 1;
 
   obj.ludenCount = 0;
-  obj.statikkCount = 0; // game.js
+  obj.statikkCount = 0;
   obj.witCount = 0;
 
   obj.aetherTime = 0;

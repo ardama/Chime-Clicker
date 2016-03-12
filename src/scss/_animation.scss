@@ -64,7 +64,7 @@
 
 	border-style: solid;
 	border-radius: 100%;
-	@include animation(ring .3s 1 ease-out);
+	@include animation(ring .5s 1 ease-out);
 }
 
 #flash-ring {

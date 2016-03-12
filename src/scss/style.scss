@@ -465,7 +465,7 @@ body {
 	position: absolute;
 	top: 10px;
 	left: 10px;
-	display:none;
+	display: none;
 
 	z-index: 1;
 
@@ -960,6 +960,7 @@ body {
 }
 
 .upgrade {
+	display: none;
 	float: right;
 
 	width: 126px;
@@ -972,6 +973,10 @@ body {
 	@include transition(background-color 100ms);
 
 	cursor: pointer;
+}
+
+.upgrade.first {
+	display: block;
 }
 
 .upgrade:hover {

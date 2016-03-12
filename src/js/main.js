@@ -1,4 +1,4 @@
-var version = '0.5.11';
+var version = '0.6.0';
 var home = 'http://chimeclicker.lol.s3-website-us-east-1.amazonaws.com/';
 ///// CONSTANTS ////////////////////
 // Items
@@ -360,10 +360,10 @@ var RUNE_PRICES = {
 var STARTING_GOLD = 375;
 var CHIMES_PER_MEEP = 7;
 var CHIMES_EXPERIENCE = {
-  'easy': 1,
-  'medium': 0.75,
-  'hard': 0.5,
-  'marathon': 0.25,
+  'easy': 0.8,
+  'medium': 0.6,
+  'hard': 0.4,
+  'marathon': 0.2,
   'impossible': 0
 };
 var MEEPS_DAMAGE = {
@@ -378,11 +378,11 @@ var MONSTER_HEALTH = 200;
 var MONSTER_EXPERIENCE = 65;
 var MONSTER_REWARD = 20;
 var POINT_BONUS = {
-  'easy': 1,
+  'easy': 2,
   'medium': 6,
   'hard': 15,
-  'marathon': 40,
-  'impossible': 150
+  'marathon': 50,
+  'impossible': 200
 };
 var SMITE_PERCENT = {
   'easy': 0.12,
@@ -425,7 +425,7 @@ var COOLDOWN = 5;
 var LOG2 = Math.log(2);
 var STIRLING_CONST = Math.log(2 * Math.PI) / 2;
 ///// STYLING ////////////////////
-var RING_DURATION = 300;
+var RING_DURATION = 500;
 // update this if style changes
 var buttonYMargin = 35;
 var buttonXMargin = 45;
@@ -488,6 +488,23 @@ function updateTooltips(scroll) {
     }
   });
 }
+function initializeUpgradeTooltips() {
+  $('.upgrade').each(function () {
+    var content = $(this).attr('data-title');
+    var position = $(this).attr('data-position') || 'left';
+    $(this).tooltipster({
+      'theme': 'tooltipster-custom',
+      'maxWidth': 200,
+      'position': position,
+      'content': content,
+      'contentAsHTML': true,
+      'updateAnimation': false
+    });
+    if (content.length === 0) {
+      $(this).tooltipster('disable');
+    }
+  });
+};
 function updateLastItem() {
   if ($(window).hasHScrollBar()) {
     $('.item').last().css('margin-bottom', '16px');
